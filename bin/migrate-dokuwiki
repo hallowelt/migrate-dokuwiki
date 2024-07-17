@@ -1,0 +1,37 @@
+#!/usr/bin/env php
+<?php
+
+require __DIR__.'/../vendor/autoload.php';
+
+use HalloWelt\MediaWiki\Lib\Migration\CliApp;
+use HalloWelt\MigrateDokuwiki\Command\CheckResult;
+
+$config = [
+	'analyzers' => [
+		'HalloWelt\MigrateDokuwiki\Analyzer\DokuwikiAnalyzer::factory'
+	],
+	'extractors' => [
+		'HalloWelt\MigrateDokuwiki\Extractor\ConfluenceExtractor::factory'
+	],
+	'converters' => [
+		'HalloWelt\MigrateDokuwiki\Converter\ConfluenceConverter::factory'
+	],
+	'composers' => [
+		'HalloWelt\MigrateDokuwiki\Composer\ConfluenceComposer::factory'
+	],
+	'command-overrides' => [
+		'analyze' => [
+			'factory' => 'HalloWelt\MigrateDokuwiki\Command\Analyze::factory'
+		],
+		'extract' => [
+			'factory' => 'HalloWelt\MigrateDokuwiki\Command\Extract::factory'
+		],
+		'convert' => [
+			'factory' => 'HalloWelt\MigrateDokuwiki\Command\Convert::factory'
+		]
+	]
+];
+
+$application = new CliApp( $config );
+$application->add( new CheckResult() );
+$application->run();

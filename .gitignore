@@ -1,0 +1,5 @@
+vendor/
+input/
+workspace/
+.phpunit.result.cache
+dist/migrate-dokuwiki.phar

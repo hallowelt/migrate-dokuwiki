@@ -1,0 +1,66 @@
+{
+	"name": "hallowelt/migrate-dokuwiki",
+	"type": "project",
+	"description": "Tool to convert Dokuwiki Export into MediaWiki import XML",
+	"keywords": [
+		"wiki",
+		"MediaWiki",
+		"Dokuwiki"
+	],
+	"license": "GPL-3.0-only",
+	"authors": [
+		{
+			"name": "Daniel Vogel",
+			"email": "daniel.vogel@hallowelt.com"
+		}
+	],
+	"repositories": [{
+		"type": "composer",
+		"url": "https://packages.bluespice.com/"
+	}],
+	"require": {
+		"psr/log": "~1.1",
+		"hallowelt/mediawiki-lib-mediawikixml": "~1",
+		"hallowelt/mediawiki-lib-commandline-tools": "~1",
+		"hallowelt/mediawiki-lib-migration": "~1",
+		"hallowelt/mediawiki-lib-wikitext": "~1",
+		"ext-dom": "*",
+		"symfony/yaml": "~4"
+	},
+	"require-dev": {
+		"mediawiki/mediawiki-codesniffer": "43.0.0",
+		"mediawiki/mediawiki-phan-config": "0.14.0",
+		"mediawiki/minus-x": "1.1.1",
+		"php-parallel-lint/php-console-highlighter": "1.0.0",
+		"php-parallel-lint/php-parallel-lint": "1.4.0",
+		"phpunit/phpunit": "^8"
+	},
+	"autoload": {
+		"psr-4": {
+			"HalloWelt\\MigrateDokuwiki\\": "src/",
+			"HalloWelt\\MigrateDokuwiki\\Tests\\": "tests/phpunit/"
+		}
+	},
+	"scripts": {
+		"unittest": [
+			"vendor/phpunit/phpunit/phpunit --configuration .phpunit.xml"
+		],
+		"test": [
+			"parallel-lint . --exclude vendor --exclude node_modules",
+			"minus-x check .",
+			"phpcs -sp"
+		],
+		"fix": [
+			"minus-x fix .",
+			"phpcbf"
+		],
+		"lint": [
+			"phan --no-progress-bar -m text | sed 's, ,:,'"
+		]
+	},
+	"config": {
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		}
+	}
+}
