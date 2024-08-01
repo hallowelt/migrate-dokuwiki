@@ -1,6 +1,6 @@
 <?php
 
-namespace HalloWelt\MigrateDokuwiki;
+namespace HalloWelt\MigrateDokuwiki\Utility;
 
 class TitleBuilder {
 
@@ -9,22 +9,29 @@ class TitleBuilder {
 
 	/**
 	 * @param array $paths
+	 * @param bool $history
 	 * @return string
 	 */
-	public function build( array $paths ) {
-		$title = $this->makeTitleFromPaths( $paths );
+	public function build( array $paths, $history = false ) {
+		$this->titleSegments = [];
+		$title = $this->makeTitleFromPaths( $paths, $history );
 		return $title;
 	}
 
 	/**
 	 * @param array $paths
+	 * @param bool $history
 	 * @return string
 	 */
-	private function makeTitleFromPaths( array $paths ): string {
+	private function makeTitleFromPaths( array $paths, $history = false ): string {
 		$namespace = array_shift( $paths );
 		$subpageName = array_pop( $paths );
-		$suppageParts = explode( '.', $subpageName );
-		$subpageName = $suppageParts[0];
+		$subpageParts = explode( '.', $subpageName );
+		$fileExtension = array_pop( $subpageParts );
+		if ( $history ) {
+			$historyTimestamp = array_pop( $subpageParts );
+		}
+		$subpageName = implode( '.', $subpageParts );
 
 		for ( $index = 0; $index < count( $paths ); $index++ ) {
 			if ( ( $index === count( $paths ) - 1 )

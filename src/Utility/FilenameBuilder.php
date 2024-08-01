@@ -1,6 +1,6 @@
 <?php
 
-namespace HalloWelt\MigrateDokuwiki;
+namespace HalloWelt\MigrateDokuwiki\Utility;
 
 class FilenameBuilder {
 
@@ -12,27 +12,28 @@ class FilenameBuilder {
 
 	/**
 	 * @param array $paths
-	 * @param bool $attic
+	 * @param bool $history
 	 * @param bool $nsFileRepoCompat
 	 * @return string
 	 */
-	public function build( array $paths, bool $attic = false, $nsFileRepoCompat = false ) {
+	public function build( array $paths, bool $history = false, $nsFileRepoCompat = false ) {
 		$this->nsFileRepoCompat = $nsFileRepoCompat;
-		$title = $this->makeTitleFromPaths( $paths, $attic );
+		$this->titleSegments = [];
+		$title = $this->makeTitleFromPaths( $paths, $history );
 		return $title;
 	}
 
 	/**
 	 * @param array $paths
-	 * @param bool $attic
+	 * @param bool $history
 	 * @return string
 	 */
-	private function makeTitleFromPaths( array $paths, bool $attic ): string {
+	private function makeTitleFromPaths( array $paths, bool $history ): string {
 		$namespace = array_shift( $paths );
 		$filename = array_pop( $paths );
 		$filenameParts = explode( '.', $filename );
 		$fileExtension = array_pop( $filenameParts );
-		if ( $attic ) {
+		if ( $history ) {
 			$timestamp = array_pop( $filenameParts );
 		}
 		$filename = implode( '_', $filenameParts );
@@ -54,11 +55,11 @@ class FilenameBuilder {
 
 		if ( $namespace !== 'GENERAL' ) {
 			$prefix = $namespace . '_';
-			$title = $prefix . $title;
 			if ( $this->nsFileRepoCompat ) {
 				$prefix = $namespace . ':';
-				$title = $prefix . ucfirst( $title );
+				$title = ucfirst( $title );
 			}
+			$title = $prefix . $title;
 		}
 
 		return ucfirst( $title );

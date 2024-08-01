@@ -11,13 +11,13 @@ $config = [
 		'HalloWelt\MigrateDokuwiki\Analyzer\DokuwikiAnalyzer::factory'
 	],
 	'extractors' => [
-		'HalloWelt\MigrateDokuwiki\Extractor\ConfluenceExtractor::factory'
+		'HalloWelt\MigrateDokuwiki\Extractor\DokuwikiExtractor::factory'
 	],
 	'converters' => [
-		'HalloWelt\MigrateDokuwiki\Converter\ConfluenceConverter::factory'
+		'HalloWelt\MigrateDokuwiki\Converter\DokuwikiConverter::factory'
 	],
 	'composers' => [
-		'HalloWelt\MigrateDokuwiki\Composer\ConfluenceComposer::factory'
+		'HalloWelt\MigrateDokuwiki\Composer\DokuwikiComposer::factory'
 	],
 	'command-overrides' => [
 		'analyze' => [

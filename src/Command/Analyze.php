@@ -42,8 +42,7 @@ class Analyze extends CliCommandBase {
 	 * @inheritDoc
 	 */
 	protected function getBucketKeys() {
-		return [
-		];
+		return [];
 	}
 
 	protected function beforeProcessFiles() {

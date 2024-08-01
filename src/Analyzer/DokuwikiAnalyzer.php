@@ -7,9 +7,9 @@ use HalloWelt\MediaWiki\Lib\Migration\DataBuckets;
 use HalloWelt\MediaWiki\Lib\Migration\IAnalyzer;
 use HalloWelt\MediaWiki\Lib\Migration\IOutputAwareInterface;
 use HalloWelt\MediaWiki\Lib\Migration\Workspace;
-use HalloWelt\MigrateDokuwiki\FilenameBuilder;
+use HalloWelt\MigrateDokuwiki\Utility\FilenameBuilder;
 use HalloWelt\MigrateDokuwiki\ISourcePathAwareInterface;
-use HalloWelt\MigrateDokuwiki\TitleBuilder;
+use HalloWelt\MigrateDokuwiki\Utility\TitleBuilder;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
@@ -63,13 +63,14 @@ class DokuwikiAnalyzer
 		$this->customBuckets = new DataBuckets( [
 			'namespaces-map',
 			'pages-map',
+			'page-titles',
 			'media-map',
+			'media-titles',
 			'page-meta-map',
 			'page-changes-map',
 			'attic-namespaces-map',
 			'attic-pages-map',
 			'attic-media-map',
-			'attic-meta-map',
 		] );
 		$this->logger = new NullLogger();
 		$this->titleBuilder = new TitleBuilder();
@@ -146,6 +147,7 @@ class DokuwikiAnalyzer
 		$filepath = str_replace( $this->src, '', $file->getPathname() );
 		$paths = explode( '/', trim( $filepath, '/' ) );
 		if ( $paths[0] !== 'data' ) {
+			// Sub directory in input folder
 			unset( $paths[0] );
 			$paths = array_values( $paths );
 		}
@@ -201,6 +203,7 @@ class DokuwikiAnalyzer
 
 		$title = $this->makeTitle( $paths );
 		$this->output->writeln( "Add title:  $title" );
+		$this->customBuckets->addData( 'page-titles', 'pages_titles', $title, true, false );
 		$this->customBuckets->addData( 'pages-map', $title, $file->getPathname(), true, false );
 	}
 
@@ -224,7 +227,7 @@ class DokuwikiAnalyzer
 		$namespace = $paths[0];
 		$this->customBuckets->addData( 'attic-namespaces-map', 'namespaces', $namespace, true, true );
 
-		$title = $this->makeTitle( $paths );
+		$title = $this->makeTitle( $paths, true );
 		$this->output->writeln( "Add history version of:  $title" );
 		$this->customBuckets->addData( 'attic-pages-map', $title, $file->getPathname(), true, false );
 	}
@@ -252,6 +255,7 @@ class DokuwikiAnalyzer
 
 		$filename = $this->makeFilename( $paths );
 		$this->output->writeln( "Add media: $filename" );
+		$this->customBuckets->addData( 'media-titles', 'media_titles', $filename, true, false );
 		$this->customBuckets->addData( 'media-map', $filename, $file->getPathname(), true, true );
 	}
 
@@ -310,19 +314,20 @@ class DokuwikiAnalyzer
 
 	/**
 	 * @param array $paths
+	 * @param bool $history
 	 * @return string
 	 */
-	private function makeTitle( array $paths ): string {
-		return $this->titleBuilder->build( $paths );
+	private function makeTitle( array $paths, bool $history = false ): string {
+		return $this->titleBuilder->build( $paths, $history );
 	}
 
 	/**
 	 * @param array $paths
-	 * @param bool $attic
+	 * @param bool $history
 	 * @param bool $nsFileRepoCompat
 	 * @return string
 	 */
-	private function makeFilename( array $paths, $attic = false, $nsFileRepoCompat = false ): string {
-		return $this->filenameBuilder->build( $paths, $attic, $nsFileRepoCompat );
+	private function makeFilename( array $paths, $history = false, $nsFileRepoCompat = false ): string {
+		return $this->filenameBuilder->build( $paths, $history, $nsFileRepoCompat );
 	}
 }
