@@ -87,6 +87,7 @@ class Extract extends Command {
 			'attic-meta-map',
 			'page-id-to-title-map',
 			'page-id-to-attic-page-id',
+			'media-name-title-map',
 		];
 	}
 
