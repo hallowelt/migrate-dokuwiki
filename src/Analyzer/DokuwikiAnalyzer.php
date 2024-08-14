@@ -7,8 +7,8 @@ use HalloWelt\MediaWiki\Lib\Migration\DataBuckets;
 use HalloWelt\MediaWiki\Lib\Migration\IAnalyzer;
 use HalloWelt\MediaWiki\Lib\Migration\IOutputAwareInterface;
 use HalloWelt\MediaWiki\Lib\Migration\Workspace;
-use HalloWelt\MigrateDokuwiki\Utility\FilenameBuilder;
 use HalloWelt\MigrateDokuwiki\ISourcePathAwareInterface;
+use HalloWelt\MigrateDokuwiki\Utility\FilenameBuilder;
 use HalloWelt\MigrateDokuwiki\Utility\TitleBuilder;
 use HalloWelt\MigrateDokuwiki\Utility\TitleKeyBuilder;
 use Psr\Log\LoggerAwareInterface;
@@ -321,7 +321,7 @@ class DokuwikiAnalyzer
 	 * @param array $paths
 	 * @return string
 	 */
-	private function makeTitleKey( array $paths): string {
+	private function makeTitleKey( array $paths ): string {
 		return $this->titleKeyBuilder->build( $paths );
 	}
 

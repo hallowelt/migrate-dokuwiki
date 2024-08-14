@@ -19,7 +19,6 @@ class TitleKeyBuilder {
 
 	/**
 	 * @param array $paths
-	 * @param bool $history
 	 * @return string
 	 */
 	private function makeTitleKeyFromPaths( array $paths ): string {

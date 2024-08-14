@@ -31,11 +31,11 @@ class DokuwikiComposer extends ComposerBase implements IOutputAwareInterface {
 		parent::__construct( $config, $workspace, $buckets );
 
 		$this->dataBuckets = new DataBuckets( [
-			
+
 		] );
 
 		$this->customBuckets = new DataBuckets( [
-			
+
 		] );
 
 		$this->dataBuckets->loadFromWorkspace( $this->workspace );

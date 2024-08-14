@@ -7,12 +7,12 @@ use HalloWelt\MediaWiki\Lib\Migration\IFileProcessorEventHandler;
 use HalloWelt\MediaWiki\Lib\Migration\IOutputAwareInterface;
 use HalloWelt\MediaWiki\Lib\Migration\Workspace;
 use HalloWelt\MigrateDokuwiki\IExtractor;
+use SplFileInfo;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputDefinition;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use SplFileInfo;
 
 class Extract extends Command {
 
@@ -89,7 +89,7 @@ class Extract extends Command {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	protected function beforeProcessFiles() {
 		$workspaceDir = new SplFileInfo( $this->dest );
@@ -118,7 +118,7 @@ class Extract extends Command {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	protected function runBeforeProcessFilesEventHandlers() {
 		foreach ( $this->eventhandlers as $handler ) {
@@ -127,7 +127,7 @@ class Extract extends Command {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	protected function runAfterProcessFilesEventHandlers() {
 		foreach ( $this->eventhandlers as $handler ) {

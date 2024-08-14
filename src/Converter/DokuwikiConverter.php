@@ -2,13 +2,13 @@
 
 namespace HalloWelt\MigrateDokuwiki\Converter;
 
+use HalloWelt\MediaWiki\Lib\Migration\DataBuckets;
+use HalloWelt\MediaWiki\Lib\Migration\IOutputAwareInterface;
+use HalloWelt\MediaWiki\Lib\Migration\Workspace;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Image as ImagePostProcessor;
 use HalloWelt\MigrateDokuwiki\Converter\Processors\Image as ImageProcessor;
 use HalloWelt\MigrateDokuwiki\Converter\Processors\Link;
 use HalloWelt\MigrateDokuwiki\IProcessor;
-use HalloWelt\MediaWiki\Lib\Migration\DataBuckets;
-use HalloWelt\MediaWiki\Lib\Migration\IOutputAwareInterface;
-use HalloWelt\MediaWiki\Lib\Migration\Workspace;
 use SplFileInfo;
 use Symfony\Component\Console\Output\Output;
 
@@ -173,7 +173,7 @@ class DokuwikiConverter extends PandocDokuwiki implements IOutputAwareInterface 
 	 * @param string $text
 	 * @return string
 	 */
-	private function decorateWikiText( string $text ): string {	
+	private function decorateWikiText( string $text ): string {
 		return $text;
 	}
 
@@ -181,7 +181,7 @@ class DokuwikiConverter extends PandocDokuwiki implements IOutputAwareInterface 
 	 * @return string
 	 */
 	private function getCurrentPageTitle(): string {
-		//$spaceIdPrefixMap = $this->dataBuckets->getBucketData( 'pages-map' );
+		// $spaceIdPrefixMap = $this->dataBuckets->getBucketData( 'pages-map' );
 		$currentPageTitle = '';
 		return $currentPageTitle;
 	}

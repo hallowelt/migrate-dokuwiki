@@ -2,7 +2,6 @@
 
 namespace HalloWelt\MigrateDokuwiki\Tests\Utility;
 
-use DOMDocument;
 use HalloWelt\MigrateDokuwiki\Utility\FilenameBuilder;
 use PHPUnit\Framework\TestCase;
 
@@ -55,7 +54,7 @@ class FilenameBuilderTest extends TestCase {
 	}
 
 	/**
-	 * @retrun array
+	 * @return array
 	 */
 	private function getPageFilePaths(): array {
 		return [
@@ -66,7 +65,7 @@ class FilenameBuilderTest extends TestCase {
 	}
 
 	/**
-	 * @retrun array
+	 * @return array
 	 */
 	private function getAtticPageFilePaths(): array {
 		return [
@@ -77,7 +76,7 @@ class FilenameBuilderTest extends TestCase {
 	}
 
 	/**
-	 * @retrun array
+	 * @return array
 	 */
 	private function getExpectedTitles(): array {
 		return [
@@ -88,7 +87,7 @@ class FilenameBuilderTest extends TestCase {
 	}
 
 	/**
-	 * @retrun array
+	 * @return array
 	 */
 	private function getExpectedTitlesWithNSFileRepoCompatibility(): array {
 		return [

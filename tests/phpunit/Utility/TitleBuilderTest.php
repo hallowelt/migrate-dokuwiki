@@ -2,7 +2,6 @@
 
 namespace HalloWelt\MigrateDokuwiki\Tests\Utility;
 
-use DOMDocument;
 use HalloWelt\MigrateDokuwiki\Utility\TitleBuilder;
 use PHPUnit\Framework\TestCase;
 
@@ -35,7 +34,7 @@ class TitleBuilderTest extends TestCase {
 	}
 
 	/**
-	 * @retrun array
+	 * @return array
 	 */
 	private function getPageFilePaths(): array {
 		return [
@@ -47,7 +46,7 @@ class TitleBuilderTest extends TestCase {
 	}
 
 	/**
-	 * @retrun array
+	 * @return array
 	 */
 	private function getExpectedTitles(): array {
 		return [
@@ -59,7 +58,7 @@ class TitleBuilderTest extends TestCase {
 	}
 
 	/**
-	 * @retrun array
+	 * @return array
 	 */
 	private function getAtticPageFilePaths(): array {
 		return [

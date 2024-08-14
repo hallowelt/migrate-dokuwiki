@@ -10,26 +10,26 @@ class ImageTest extends TestCase {
 	 * @covers \HalloWelt\MigrateDokuwiki\Converter\Processor\Image::process()
 	 */
 	public function testProcess() {
-        $map = $this->getMap();
+		$map = $this->getMap();
 		$processor = new Image( $map );
 
-        $dataDir = dirname( __DIR__, 2 ) . '/data/Converter/Processor';
+		$dataDir = dirname( __DIR__, 2 ) . '/data/Converter/Processor';
 		$input = file_get_contents( "$dataDir/image-input.txt" );
-        $expected = file_get_contents( "$dataDir/image-output.txt" );
-        $actual = $processor->process( $input );
+		$expected = file_get_contents( "$dataDir/image-output.txt" );
+		$actual = $processor->process( $input );
 		$this->assertEquals( $expected, $actual );
 	}
 
-    /**
-     * @return array
-     */
-    private function getMap(): array {
-        return [
-            'start.png' => [ 'Start.png' ],
+	/**
+	 * @return array
+	 */
+	private function getMap(): array {
+		return [
+			'start.png' => [ 'Start.png' ],
 			'projects:types:ab.type_01.png' => [ 'Projects_types_ab.type_01.png' ],
 			'tools:toolbox:wrench.jpg' => [ 'Tools_toolbox_wrench.jpg' ],
 			'tools:toolbox:hammer.01.svg' => [ 'Tools_toolbox_hammer.01.svg' ],
-        ];
-    }
+		];
+	}
 
 }

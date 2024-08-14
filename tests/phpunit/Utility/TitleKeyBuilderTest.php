@@ -2,7 +2,6 @@
 
 namespace HalloWelt\MigrateDokuwiki\Tests\Utility;
 
-use DOMDocument;
 use HalloWelt\MigrateDokuwiki\Utility\TitleKeyBuilder;
 use PHPUnit\Framework\TestCase;
 
@@ -25,7 +24,7 @@ class TitleKeyBuilderTest extends TestCase {
 	}
 
 	/**
-	 * @retrun array
+	 * @return array
 	 */
 	private function getPageFilePaths(): array {
 		return [
@@ -37,7 +36,7 @@ class TitleKeyBuilderTest extends TestCase {
 	}
 
 	/**
-	 * @retrun array
+	 * @return array
 	 */
 	private function getExpectedTitles(): array {
 		return [
