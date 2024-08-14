@@ -10,6 +10,7 @@ use HalloWelt\MediaWiki\Lib\Migration\Workspace;
 use HalloWelt\MigrateDokuwiki\Utility\FilenameBuilder;
 use HalloWelt\MigrateDokuwiki\ISourcePathAwareInterface;
 use HalloWelt\MigrateDokuwiki\Utility\TitleBuilder;
+use HalloWelt\MigrateDokuwiki\Utility\TitleKeyBuilder;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
@@ -23,7 +24,7 @@ class DokuwikiAnalyzer
 {
 
 	/** @var DataBuckets */
-	private $customBuckets = null;
+	private $dataBuckets = null;
 
 	/** @var LoggerInterface */
 	private $logger = null;
@@ -49,6 +50,9 @@ class DokuwikiAnalyzer
 	/** @var TitleBuilder */
 	private $titleBuilder = null;
 
+	/** @var TitleKeyBuilder */
+	private $titleKeyBuilder = null;
+
 	/** @var FilenameBuilder */
 	private $filenameBuilder = null;
 
@@ -60,12 +64,14 @@ class DokuwikiAnalyzer
 	 */
 	public function __construct( $config, Workspace $workspace, DataBuckets $buckets ) {
 		parent::__construct( $config, $workspace, $buckets );
-		$this->customBuckets = new DataBuckets( [
+		$this->dataBuckets = new DataBuckets( [
 			'namespaces-map',
 			'pages-map',
 			'page-titles',
+			'page-key-to-title-map',
 			'media-map',
 			'media-titles',
+			'media-key-to-title-map',
 			'page-meta-map',
 			'page-changes-map',
 			'attic-namespaces-map',
@@ -74,6 +80,7 @@ class DokuwikiAnalyzer
 		] );
 		$this->logger = new NullLogger();
 		$this->titleBuilder = new TitleBuilder();
+		$this->titleKeyBuilder = new TitleKeyBuilder();
 		$this->filenameBuilder = new FilenameBuilder();
 
 		if ( isset( $this->config['config'] ) ) {
@@ -127,10 +134,10 @@ class DokuwikiAnalyzer
 	 * @return bool
 	 */
 	public function analyze( SplFileInfo $file ): bool {
-		$this->customBuckets->loadFromWorkspace( $this->workspace );
+		$this->dataBuckets->loadFromWorkspace( $this->workspace );
 		$result = parent::analyze( $file );
 
-		$this->customBuckets->saveToWorkspace( $this->workspace );
+		$this->dataBuckets->saveToWorkspace( $this->workspace );
 		return $result;
 	}
 
@@ -194,17 +201,16 @@ class DokuwikiAnalyzer
 			unset( $paths[0] );
 			$paths = array_values( $paths );
 		}
-		if ( count( $paths ) === 1 ) {
-			array_unshift( $paths, 'GENERAL' );
-		}
 
 		$namespace = $paths[0];
-		$this->customBuckets->addData( 'namespaces-map', 'namespaces', $namespace, true, true );
+		$this->dataBuckets->addData( 'namespaces-map', 'namespaces', $namespace, true, true );
 
+		$key = $this->makeTitleKey( $paths );
 		$title = $this->makeTitle( $paths );
 		$this->output->writeln( "Add title:  $title" );
-		$this->customBuckets->addData( 'page-titles', 'pages_titles', $title, true, false );
-		$this->customBuckets->addData( 'pages-map', $title, $file->getPathname(), true, false );
+		$this->dataBuckets->addData( 'page-key-to-title-map', $key, $title, true, false );
+		$this->dataBuckets->addData( 'page-titles', 'pages_titles', $title, true, false );
+		$this->dataBuckets->addData( 'pages-map', $title, $file->getPathname(), true, false );
 	}
 
 	/**
@@ -220,16 +226,13 @@ class DokuwikiAnalyzer
 			unset( $paths[0] );
 			$paths = array_values( $paths );
 		}
-		if ( count( $paths ) === 1 ) {
-			array_unshift( $paths, 'GENERAL' );
-		}
 
 		$namespace = $paths[0];
-		$this->customBuckets->addData( 'attic-namespaces-map', 'namespaces', $namespace, true, true );
+		$this->dataBuckets->addData( 'attic-namespaces-map', 'namespaces', $namespace, true, true );
 
 		$title = $this->makeTitle( $paths, true );
 		$this->output->writeln( "Add history version of:  $title" );
-		$this->customBuckets->addData( 'attic-pages-map', $title, $file->getPathname(), true, false );
+		$this->dataBuckets->addData( 'attic-pages-map', $title, $file->getPathname(), true, false );
 	}
 
 	/**
@@ -249,14 +252,13 @@ class DokuwikiAnalyzer
 			unset( $paths[0] );
 			$paths = array_values( $paths );
 		}
-		if ( count( $paths ) === 1 ) {
-			array_unshift( $paths, 'GENERAL' );
-		}
 
+		$key = $this->makeTitleKey( $paths );
 		$filename = $this->makeFilename( $paths );
 		$this->output->writeln( "Add media: $filename" );
-		$this->customBuckets->addData( 'media-titles', 'media_titles', $filename, true, false );
-		$this->customBuckets->addData( 'media-map', $filename, $file->getPathname(), true, true );
+		$this->dataBuckets->addData( 'media-key-to-title-map', $key, $filename, true, false );
+		$this->dataBuckets->addData( 'media-titles', 'media_titles', $filename, true, false );
+		$this->dataBuckets->addData( 'media-map', $filename, $file->getPathname(), true, true );
 	}
 
 	/**
@@ -272,13 +274,10 @@ class DokuwikiAnalyzer
 			unset( $paths[0] );
 			$paths = array_values( $paths );
 		}
-		if ( count( $paths ) === 1 ) {
-			array_unshift( $paths, 'GENERAL' );
-		}
 
 		$filename = $this->makeFilename( $paths, true );
 		$this->output->writeln( "Add history version of media: $filename" );
-		$this->customBuckets->addData( 'attic-media-map', $filename, $file->getPathname(), true, true );
+		$this->dataBuckets->addData( 'attic-media-map', $filename, $file->getPathname(), true, true );
 	}
 
 	/**
@@ -299,16 +298,13 @@ class DokuwikiAnalyzer
 			unset( $paths[0] );
 			$paths = array_values( $paths );
 		}
-		if ( count( $paths ) === 1 ) {
-			array_unshift( $paths, 'GENERAL' );
-		}
 
 		$title = $this->makeTitle( $paths );
 		$this->output->writeln( "Add meta for: $title" );
 		if ( $file->getExtension() === 'meta' ) {
-			$this->customBuckets->addData( 'page-meta-map', $title, $file->getPathname(), true, true );
+			$this->dataBuckets->addData( 'page-meta-map', $title, $file->getPathname(), true, true );
 		} else {
-			$this->customBuckets->addData( 'page-changes-map', $title, $file->getPathname(), true, true );
+			$this->dataBuckets->addData( 'page-changes-map', $title, $file->getPathname(), true, true );
 		}
 	}
 
@@ -319,6 +315,14 @@ class DokuwikiAnalyzer
 	 */
 	private function makeTitle( array $paths, bool $history = false ): string {
 		return $this->titleBuilder->build( $paths, $history );
+	}
+
+	/**
+	 * @param array $paths
+	 * @return string
+	 */
+	private function makeTitleKey( array $paths): string {
+		return $this->titleKeyBuilder->build( $paths );
 	}
 
 	/**

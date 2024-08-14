@@ -29,7 +29,10 @@ class FilenameBuilder {
 	 * @return string
 	 */
 	private function makeTitleFromPaths( array $paths, bool $history ): string {
-		$namespace = array_shift( $paths );
+		$namespace = '';
+		if ( count( $paths ) > 1 ) {
+			$namespace = array_shift( $paths );
+		}
 		$filename = array_pop( $paths );
 		$filenameParts = explode( '.', $filename );
 		$fileExtension = array_pop( $filenameParts );
@@ -53,7 +56,7 @@ class FilenameBuilder {
 		$title = implode( '_', $this->titleSegments );
 		$title .= ".$fileExtension";
 
-		if ( $namespace !== 'GENERAL' ) {
+		if ( $namespace !== '' ) {
 			$prefix = $namespace . '_';
 			if ( $this->nsFileRepoCompat ) {
 				$prefix = $namespace . ':';

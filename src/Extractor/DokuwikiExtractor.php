@@ -2,8 +2,6 @@
 
 namespace HalloWelt\MigrateDokuwiki\Extractor;
 
-use DOMDocument;
-use DOMElement;
 use HalloWelt\MediaWiki\Lib\Migration\DataBuckets;
 use HalloWelt\MediaWiki\Lib\Migration\IOutputAwareInterface;
 use HalloWelt\MediaWiki\Lib\Migration\Workspace;
@@ -29,7 +27,7 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 	protected $workspace = null;
 
 	/** @var DataBuckets */
-	protected $buckets = null;
+	protected $dataBuckets = null;
 
 	/** @var array */
 	private $categories = [];
@@ -37,12 +35,12 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 	/**
 	 * @param array $config
 	 * @param Workspace $workspace
-	 * @param DataBuckets $buckets
 	 */
-	public function __construct( $config, Workspace $workspace, DataBuckets $buckets ) {
+	public function __construct( $config, Workspace $workspace ) {
 		$this->config = $config;
 		$this->workspace = $workspace;
-		$this->buckets = $buckets;
+		$this->dataBuckets = new DataBuckets( $this->getBucketKeys() );
+		$this->dataBuckets->loadFromWorkspace( $this->workspace );
 		if ( isset( $this->config['config']['categories'] ) ) {
 			$this->categories = $this->config['config']['categories'];
 		}
@@ -51,11 +49,36 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 	/**
 	 * @param array $config
 	 * @param Workspace $workspace
-	 * @param DataBuckets $buckets
 	 * @return IExtractor
 	 */
-	public static function factory( $config, Workspace $workspace, DataBuckets $buckets ): IExtractor {
-		return new static( $config, $workspace, $buckets );
+	public static function factory( $config, Workspace $workspace ): IExtractor {
+		return new static( $config, $workspace );
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	protected function getBucketKeys() {
+		return [
+			// From this step
+			'namespaces-map',
+			'pages-map',
+			'page-titles',
+			'page-changes-map',
+			'page-meta-map',
+			'media-map',
+			'media-titles',
+			'page-meta-map',
+			'page-changes-map',
+			'attic-namespaces-map',
+			'attic-pages-map',
+			'attic-media-map',
+			'attic-meta-map',
+			'page-id-to-title-map',
+			'page-id-to-attic-page-id',
+			'media-key-title-map',
+			'used-media-key-title-map'
+		];
 	}
 
 	/**
@@ -79,8 +102,8 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 	 * @return bool
 	 */
 	protected function doExtract(): bool {
-		$pageTitles = $this->buckets->getBucketData( 'page-titles' );
-		$mediaTitles = $this->buckets->getBucketData( 'media-titles' );
+		$pageTitles = $this->dataBuckets->getBucketData( 'page-titles' );
+		$mediaTitles = $this->dataBuckets->getBucketData( 'media-titles' );
 
 		$titles = [];
 		if ( isset( $pageTitles['pages_titles'] ) ) {
@@ -92,13 +115,14 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 			$media = $mediaTitles['media_titles'];
 		}
 
-		#$this->extractCurrentPageRevisions( $titles );
-		#$this->extractHistoryPageRevisions( $titles );
-		#$this->extractCurrentMediaRevisions(  $media );
-		#$this->extractHistoryMediaRevisions( $media );
-		#$this->extractPageChanges( $titles );
+		$this->extractCurrentPageRevisions( $titles );
+		$this->extractHistoryPageRevisions( $titles );
+		$this->extractCurrentMediaRevisions(  $media );
+		$this->extractHistoryMediaRevisions( $media );
+		$this->extractPageChanges( $titles );
 		$this->extractPageMeta( $titles );
 		
+		$this->dataBuckets->saveToWorkspace( $this->workspace );
 		return true;
 	}
 
@@ -106,7 +130,7 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 	 * @param array $titles
 	 */
 	private function extractCurrentPageRevisions( array $titles ) {
-		$pagesMap = $this->buckets->getBucketData( 'pages-map' );
+		$pagesMap = $this->dataBuckets->getBucketData( 'pages-map' );
 		
 		$this->output->writeln( "Extract current revisons of page:" );
 
@@ -129,9 +153,9 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 	 * @param array $titles
 	 */
 	private function extractHistoryPageRevisions( array $titles ) {
-		$pagesMap = $this->buckets->getBucketData( 'pages-map' );
-		$historyPageTitles = $this->buckets->getBucketData( 'attic-pages-map' );
-		$pageTitles = $this->buckets->getBucketData( 'page-titles' );
+		$pagesMap = $this->dataBuckets->getBucketData( 'pages-map' );
+		$historyPageTitles = $this->dataBuckets->getBucketData( 'attic-pages-map' );
+		$pageTitles = $this->dataBuckets->getBucketData( 'page-titles' );
 
 		$this->output->writeln( "Extract history revisons of page:" );
  
@@ -158,7 +182,7 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 	 * @param array $media
 	 */
 	private function extractCurrentMediaRevisions( array $media ) {
-		$mediaMap = $this->buckets->getBucketData( 'media-map' );
+		$mediaMap = $this->dataBuckets->getBucketData( 'media-map' );
 		
 		$this->output->writeln( "Extract current revision of media:" );
 
@@ -181,8 +205,8 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 	 * @param array $media
 	 */
 	private function extractHistoryMediaRevisions( array $media ) {
-		$mediaMap = $this->buckets->getBucketData( 'media-map' );
-		$historyMediaTitles = $this->buckets->getBucketData( 'attic-media-map' );
+		$mediaMap = $this->dataBuckets->getBucketData( 'media-map' );
+		$historyMediaTitles = $this->dataBuckets->getBucketData( 'attic-media-map' );
 		
 		$this->output->writeln( "Extract history revision of media:" );
 
@@ -212,8 +236,8 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 	private function extractCurrentPageRevision( string $title, string $filepath, string $id ) {
 		$content = file_get_contents( $filepath );
 		$targetFileName = $this->workspace->saveRawContent( $id, $content );
-		$this->buckets->addData( 'page-id-to-title-map', $id, $title, true, true );
-		$this->buckets->addData( 'page-id-to-page-contents', $id, $targetFileName, true, true );
+		$this->dataBuckets->addData( 'page-id-to-title-map', $id, $title, true, true );
+		$this->dataBuckets->addData( 'page-id-to-page-contents', $id, $targetFileName, true, true );
 		$this->output->writeln( "\t - Extract current revision of title: $title" );
 	}
 
@@ -232,7 +256,7 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 		$filename = $this->makeFilenameForHistoryVersion( $filenameParts );
 		$content = file_get_contents( $filepath );
 		$targetFileName = $this->workspace->saveRawContent( $filename, $content, 'content/history/raw/' . md5( $title ) );
-		$this->buckets->addData( 'page-id-to-attic-page-contents', $id, $targetFileName, true, true );
+		$this->dataBuckets->addData( 'page-id-to-attic-page-contents', $id, $targetFileName, true, true );
 		$this->output->writeln( "\t - $title (" . $this->getHumanReadableTimestamp( $timestamp ) . ")" );
 	}
 
@@ -241,7 +265,7 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 	 * @param string $titles
 	 */
 	private function extractPageChanges( array $titles ) {
-		$changesMap = $this->buckets->getBucketData( 'page-changes-map' );
+		$changesMap = $this->dataBuckets->getBucketData( 'page-changes-map' );
 
 		foreach ( $titles as $title ) {
 			if ( !isset( $changesMap[$title] ) || empty( $changesMap[$title] ) ) {
@@ -289,7 +313,7 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 	 * @param string $titles
 	 */
 	private function extractPageMeta( array $titles ) {
-		$metaMap = $this->buckets->getBucketData( 'page-meta-map' );
+		$metaMap = $this->dataBuckets->getBucketData( 'page-meta-map' );
 
 		$titleBuilder = new FilenameBuilder();
 
@@ -317,11 +341,11 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 					$paths = explode( ':', $name );
 					$fileTitle = $titleBuilder->build( $paths );
 
-					$this->buckets->addData( 'media-name-title-map', $name, $fileTitle, true, true );
+					$this->dataBuckets->addData( 'used-key-name-title-map', $name, $fileTitle, true, true );
 				}
 			}
 
-			// TODO: Run extract meta bevore extract media and extract only medai linked in $meta['current']['relation']['media']
+			// TODO: Run extract meta bevore extract media and extract only media linked in $meta['current']['relation']['media']
 
 			$this->workspace->saveData( $id, $meta, $path = 'content/meta' );
 		}
@@ -336,8 +360,8 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 	private function extractCurrentMediaRevision( string $title, string $filepath, string $id ) {
 		$content = file_get_contents( $filepath );
 		$targetFileName = $this->workspace->saveUploadFile( $title, $content );
-		$this->buckets->addData( 'media-id-to-title-map', $id, $title, true, true );
-		$this->buckets->addData( 'media-id-to-media-contents', $id, $targetFileName, true, true );
+		$this->dataBuckets->addData( 'media-id-to-title-map', $id, $title, true, true );
+		$this->dataBuckets->addData( 'media-id-to-media-contents', $id, $targetFileName, true, true );
 		$this->output->writeln( "\t - $title" );
 	}
 
@@ -355,7 +379,7 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 		$filename = $this->makeFilenameForHistoryVersion( $filenameParts );
 		$content = file_get_contents( $filepath );
 		$targetFileName = $this->workspace->saveUploadFile( $filename, $content, 'content/history/images/' . $id );
-		$this->buckets->addData( 'media-id-to-attic-media-contents', $id, $targetFileName, true, true );
+		$this->dataBuckets->addData( 'media-id-to-attic-media-contents', $id, $targetFileName, true, true );
 		$this->output->writeln( "\t - $title (" . $this->getHumanReadableTimestamp( $timestamp ) . ")" );
 	}
 

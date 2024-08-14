@@ -1,0 +1,4 @@
+
+lorem ipsum {{tools:toolbox:hammer.01.svg?20x50}} dolor {{:start.png }}
+
+sit amet {{ tools:toolbox:wrench.jpg}}

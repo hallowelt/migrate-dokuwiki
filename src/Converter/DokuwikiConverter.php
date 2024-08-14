@@ -2,72 +2,75 @@
 
 namespace HalloWelt\MigrateDokuwiki\Converter;
 
-use DOMDocument;
-use DOMElement;
-use DOMNode;
-use DOMXPath;
-use HalloWelt\MediaWiki\Lib\Migration\Converter\PandocHTML;
+use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Image as ImagePostProcessor;
+use HalloWelt\MigrateDokuwiki\Converter\Processors\Image as ImageProcessor;
+use HalloWelt\MigrateDokuwiki\Converter\Processors\Link;
+use HalloWelt\MigrateDokuwiki\IProcessor;
 use HalloWelt\MediaWiki\Lib\Migration\DataBuckets;
 use HalloWelt\MediaWiki\Lib\Migration\IOutputAwareInterface;
 use HalloWelt\MediaWiki\Lib\Migration\Workspace;
 use SplFileInfo;
 use Symfony\Component\Console\Output\Output;
 
-class DokuwikiConverter extends PandocHTML implements IOutputAwareInterface {
+class DokuwikiConverter extends PandocDokuwiki implements IOutputAwareInterface {
 
-	/** @var bool */
-	protected $bodyContentFile = null;
+	/** @var DataBuckets */
+	private $dataBuckets;
 
-	/**
-	 * @var DataBuckets
-	 */
-	private $dataBuckets = null;
+	/** @var Output */
+	private $output;
 
 	/**
-	 *
-	 * @var ConversionDataLookup
+	 * @return array
 	 */
-	private $dataLookup = null;
+	private function getPreProcessors(): array {
+		return [];
+	}
 
 	/**
-	 * @var ConversionDataWriter
+	 * @return array
 	 */
-	private $conversionDataWriter = null;
+	private function getProcessors(): array {
+		return [
+			new Link( $this->dataBuckets->getBucketData( 'page-key-to-title-map' ) ),
+			new ImageProcessor( $this->dataBuckets->getBucketData( 'media-key-to-title-map' ) )
+		];
+	}
 
 	/**
-	 *
-	 * @var SplFileInfo
+	 * @return array
 	 */
-	private $rawFile = null;
+	private function getPostProcessors(): array {
+		return [
+			new ImagePostProcessor()
+		];
+	}
 
 	/**
-	 * @var string
+	 * @return array
 	 */
-	private $wikiText = '';
-
-	/**
-	 * @var string
-	 */
-	private $currentPageTitle = '';
-
-	/** @var int */
-	private $currentSpace = 0;
-
-	/**
-	 *
-	 * @var SplFileInfo
-	 */
-	private $preprocessedFile = null;
-
-	/**
-	 * @var Output
-	 */
-	private $output = null;
-
-	/**
-	 * @var bool
-	 */
-	private $nsFileRepoCompat = false;
+	private function getBucketKeys(): array {
+		return [
+			// From this step
+			'namespaces-map',
+			'pages-map',
+			'page-titles',
+			'page-changes-map',
+			'page-meta-map',
+			'media-map',
+			'media-titles',
+			'page-meta-map',
+			'page-changes-map',
+			'attic-namespaces-map',
+			'attic-pages-map',
+			'attic-media-map',
+			'attic-meta-map',
+			'page-id-to-title-map',
+			'page-id-to-attic-page-id',
+			'media-key-to-title-map',
+			'page-key-to-title-map',
+		];
+	}
 
 	/**
 	 *
@@ -77,10 +80,9 @@ class DokuwikiConverter extends PandocHTML implements IOutputAwareInterface {
 	public function __construct( $config, Workspace $workspace ) {
 		parent::__construct( $config, $workspace );
 
-		$this->dataBuckets = new DataBuckets( [
-		
-		] );
-
+		$this->dataBuckets = new DataBuckets(
+			$this->getBucketKeys()
+		);
 		$this->dataBuckets->loadFromWorkspace( $this->workspace );
 	}
 
@@ -95,66 +97,92 @@ class DokuwikiConverter extends PandocHTML implements IOutputAwareInterface {
 	 * @inheritDoc
 	 */
 	protected function doConvert( SplFileInfo $file ): string {
-		$this->output->writeln( $file->getPathname() );
-		$this->dataLookup = ConversionDataLookup::newFromBuckets( $this->dataBuckets );
-		$this->conversionDataWriter = ConversionDataWriter::newFromBuckets( $this->dataBuckets );
-		
-		$this->runProcessors( $dom );
+		$rawPathname = $file->getPathname();
+		if ( !file_exists( $rawPathname ) ) {
+			return '';
+		}
 
-		$this->wikiText = parent::doConvert( $this->preprocessedFile );
+		$this->output->writeln( $rawPathname );
 
-		$this->runPostProcessors();
+		$content = file_get_contents( $rawPathname );
+		if ( !$content ) {
+			return '';
+		}
 
-		$this->postprocessWikiText();
+		$content = $this->runPreProcessors( $content );
+		$content = $this->runProcessors( $content );
+		$prepPathname = str_replace( '.mraw', '.mprep', $rawPathname );
+		file_put_contents( $prepPathname, $content );
 
-		return $this->wikiText;
+		$prepFile = new SplFileInfo( $prepPathname );
+		$wikiText = parent::doConvert( $prepFile );
+
+		$wikiText = $this->runPostProcessors( $wikiText );
+
+		$wikiText = $this->decorateWikiText( $wikiText );
+
+		return $wikiText;
 	}
 
 	/**
-	 *
-	 * @param DOMDocument $dom
-	 * @return void
+	 * @param string $text
+	 * @return string
 	 */
-	private function runProcessors( $dom ) {
-		$currentPageTitle = $this->getCurrentPageTitle();
+	private function runPreProcessors( string $text ): string {
+		$preProcessors = $this->getPreProcessors();
 
-		$processors = [
-			
-		];
+		/** @var IProcessor $processor */
+		foreach ( $preProcessors as $preProcessor ) {
+			$text = $preProcessor->process( $text );
+		}
+
+		return $text;
+	}
+
+	/**
+	 * @param string $text
+	 * @return string
+	 */
+	private function runProcessors( string $text ): string {
+		$processors = $this->getProcessors();
 
 		/** @var IProcessor $processor */
 		foreach ( $processors as $processor ) {
-			$processor->process( $dom );
+			$text = $processor->process( $text );
 		}
+
+		return $text;
 	}
 
 	/**
-	 *
-	 * @return void
+	 * @param string $text
+	 * @return string
 	 */
-	private function runPostProcessors() {
-		$postProcessors = [
-			
-		];
+	private function runPostProcessors( string $text ): string {
+		$postProcessors = $this->getPostProcessors();
 
-		/** @var IPostprocessor $postProcessor */
+		/** @var IProcessor $postProcessor */
 		foreach ( $postProcessors as $postProcessor ) {
-			$this->wikiText = $postProcessor->postprocess( $this->wikiText );
+			$text = $postProcessor->process( $text );
 		}
+
+		return $text;
+	}
+
+	/**
+	 * @param string $text
+	 * @return string
+	 */
+	private function decorateWikiText( string $text ): string {	
+		return $text;
 	}
 
 	/**
 	 * @return string
 	 */
 	private function getCurrentPageTitle(): string {
-		$spaceIdPrefixMap = $this->dataBuckets->getBucketData( 'pages-map' );
-		$prefix = $spaceIdPrefixMap[$this->currentSpace];
-		$currentPageTitle = $this->currentPageTitle;
-
-		if ( substr( $currentPageTitle, 0, strlen( "$prefix:" ) ) === "$prefix:" ) {
-			$currentPageTitle = str_replace( "$prefix:", '', $currentPageTitle );
-		}
-
+		//$spaceIdPrefixMap = $this->dataBuckets->getBucketData( 'pages-map' );
+		$currentPageTitle = '';
 		return $currentPageTitle;
 	}
 }

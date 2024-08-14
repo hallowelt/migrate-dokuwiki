@@ -3,7 +3,6 @@
 namespace HalloWelt\MigrateDokuwiki\Command;
 
 use Exception;
-use HalloWelt\MediaWiki\Lib\Migration\DataBuckets;
 use HalloWelt\MediaWiki\Lib\Migration\IFileProcessorEventHandler;
 use HalloWelt\MediaWiki\Lib\Migration\IOutputAwareInterface;
 use HalloWelt\MediaWiki\Lib\Migration\Workspace;
@@ -22,9 +21,6 @@ class Extract extends Command {
 
 	/** @var IFileProcessorEventHandler */
 	protected $eventhandlers = [];
-
-	/** @var DataBuckets */
-	protected $buckets = null;
 
 	/**
 	 *
@@ -67,31 +63,6 @@ class Extract extends Command {
 	}
 
 	/**
-	 * @inheritDoc
-	 */
-	protected function getBucketKeys() {
-		return [
-			// From this step
-			'namespaces-map',
-			'pages-map',
-			'page-titles',
-			'page-changes-map',
-			'page-meta-map',
-			'media-map',
-			'media-titles',
-			'page-meta-map',
-			'page-changes-map',
-			'attic-namespaces-map',
-			'attic-pages-map',
-			'attic-media-map',
-			'attic-meta-map',
-			'page-id-to-title-map',
-			'page-id-to-attic-page-id',
-			'media-name-title-map',
-		];
-	}
-
-	/**
 	 * @param InputInterface $input
 	 * @param OutputInterface $output
 	 * @return void
@@ -113,7 +84,6 @@ class Extract extends Command {
 			// TODO: Evaluate result
 		}
 		$this->runAfterProcessFilesEventHandlers();
-		$this->afterProcessFiles();
 
 		$this->output->writeln( '<info>Done.</info>' );
 	}
@@ -124,14 +94,12 @@ class Extract extends Command {
 	protected function beforeProcessFiles() {
 		$workspaceDir = new SplFileInfo( $this->dest );
 		$this->workspace = new Workspace( $workspaceDir );
-		$this->buckets = new DataBuckets( $this->getBucketKeys() );
-		$this->buckets->loadFromWorkspace( $this->workspace );
 
 		$extractorFactoryCallbacks = $this->config['extractors'];
 		foreach ( $extractorFactoryCallbacks as $key => $callback ) {
 			$extractor = call_user_func_array(
 				$callback,
-				[ $this->config, $this->workspace, $this->buckets ]
+				[ $this->config, $this->workspace ]
 			);
 			if ( $extractor instanceof IExtractor === false ) {
 				throw new Exception(
@@ -147,13 +115,6 @@ class Extract extends Command {
 				$this->eventhandlers[$key] = $extractor;
 			}
 		}
-	}
-
-	/**
-	 * 
-	 */
-	protected function afterProcessFiles() {
-		$this->buckets->saveToWorkspace( $this->workspace );
 	}
 
 	/**

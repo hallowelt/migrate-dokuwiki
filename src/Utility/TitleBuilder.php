@@ -24,7 +24,10 @@ class TitleBuilder {
 	 * @return string
 	 */
 	private function makeTitleFromPaths( array $paths, $history = false ): string {
-		$namespace = array_shift( $paths );
+		$namespace = '';
+		if ( count( $paths ) > 1 ) {
+			$namespace = array_shift( $paths );
+		}
 		$subpageName = array_pop( $paths );
 		$subpageParts = explode( '.', $subpageName );
 		$fileExtension = array_pop( $subpageParts );
@@ -45,7 +48,7 @@ class TitleBuilder {
 
 		$title = implode( '/', $this->titleSegments );
 
-		if ( $namespace !== 'GENERAL' ) {
+		if ( $namespace !== '' ) {
 			$prefix = ucfirst( $namespace ) . ':';
 			$title = $prefix . $title;
 		}
