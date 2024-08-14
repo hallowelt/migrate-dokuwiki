@@ -10,11 +10,8 @@ use Symfony\Component\Yaml\Yaml;
 class Convert extends CommandConvert {
 
 	/**
-	 *
-	 * @var string
+	 * @return void
 	 */
-	private $targetBasePath = '';
-
 	protected function configure() {
 		$config = parent::configure();
 

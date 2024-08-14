@@ -4,7 +4,6 @@
 require __DIR__.'/../vendor/autoload.php';
 
 use HalloWelt\MediaWiki\Lib\Migration\CliApp;
-use HalloWelt\MigrateDokuwiki\Command\CheckResult;
 
 $config = [
 	'analyzers' => [
@@ -33,5 +32,4 @@ $config = [
 ];
 
 $application = new CliApp( $config );
-$application->add( new CheckResult() );
 $application->run();

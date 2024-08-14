@@ -2,6 +2,7 @@
 
 namespace HalloWelt\MigrateDokuwiki\Composer;
 
+use HalloWelt\MediaWiki\Lib\MediaWikiXML\Builder;
 use HalloWelt\MediaWiki\Lib\Migration\ComposerBase;
 use HalloWelt\MediaWiki\Lib\Migration\DataBuckets;
 use HalloWelt\MediaWiki\Lib\Migration\IOutputAwareInterface;
@@ -31,11 +32,12 @@ class DokuwikiComposer extends ComposerBase implements IOutputAwareInterface {
 		parent::__construct( $config, $workspace, $buckets );
 
 		$this->dataBuckets = new DataBuckets( [
-
-		] );
-
-		$this->customBuckets = new DataBuckets( [
-
+			'page-titles',
+			'page-id-to-title-map',
+			'page-id-to-page-contents',
+			'page-id-to-attic-page-contents',
+			'page-meta-map',
+			'page-changes-map'
 		] );
 
 		$this->dataBuckets->loadFromWorkspace( $this->workspace );
@@ -53,10 +55,46 @@ class DokuwikiComposer extends ComposerBase implements IOutputAwareInterface {
 	 * @return void
 	 */
 	public function buildXML( Builder $builder ) {
+		$this->output->writeln( 'Appending default pages' );
 		$this->appendDefaultPages( $builder );
+		$this->output->writeln( 'Adding pages' );
+		$this->addPages( $builder );
+		$this->output->writeln( 'Adding default files' );
 		$this->addDefaultFiles();
+	}
 
-		$this->customBuckets->saveToWorkspace( $this->workspace );
+	/**
+	 * @param Builder $builder
+	 * @return void
+	 */
+	private function addPages( Builder $builder ) {
+		$pageTitles = $this->dataBuckets->getBucketData( 'page-titles' );
+		$pageIdToTitleMap = $this->dataBuckets->getBucketData( 'page-id-to-title-map' );
+		$pageIdToContentsMap = $this->dataBuckets->getBucketData( 'page-id-to-page-contents' );
+		$pageIdToHistoryContentsMap = $this->dataBuckets->getBucketData( 'page-id-to-attic-page-contents' );
+
+		$titleToPageIdMap = [];
+		foreach ( $pageIdToTitleMap as $id => $titles ) {
+			$title = $titles[0];
+			$titleToPageIdMap[$title] = $id;
+		}
+
+		foreach ( $pageTitles['pages_titles'] as $pageTitle ) {
+			if ( !isset( $titleToPageIdMap[$pageTitle] ) ) {
+				continue;
+			}
+			$pageId = $titleToPageIdMap[$pageTitle];
+
+			if ( !isset( $pageIdToContentsMap[$pageId] ) ) {
+				continue;
+			}
+
+			$wikiText = $this->workspace->getConvertedContent( $pageId );
+
+			$this->output->writeln( "Add latest revison of $pageTitle" );
+			$builder->addRevision( $pageTitle, $wikiText );
+
+		}
 	}
 
 	/**
