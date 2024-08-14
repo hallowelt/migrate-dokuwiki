@@ -8,7 +8,8 @@ use HalloWelt\MediaWiki\Lib\Migration\IAnalyzer;
 use HalloWelt\MediaWiki\Lib\Migration\IOutputAwareInterface;
 use HalloWelt\MediaWiki\Lib\Migration\Workspace;
 use HalloWelt\MigrateDokuwiki\ISourcePathAwareInterface;
-use HalloWelt\MigrateDokuwiki\Utility\FilenameBuilder;
+use HalloWelt\MigrateDokuwiki\Utility\FileKeyBuilder;
+use HalloWelt\MigrateDokuwiki\Utility\FileTitleBuilder;
 use HalloWelt\MigrateDokuwiki\Utility\TitleBuilder;
 use HalloWelt\MigrateDokuwiki\Utility\TitleKeyBuilder;
 use Psr\Log\LoggerAwareInterface;
@@ -53,8 +54,11 @@ class DokuwikiAnalyzer
 	/** @var TitleKeyBuilder */
 	private $titleKeyBuilder = null;
 
-	/** @var FilenameBuilder */
-	private $filenameBuilder = null;
+	/** @var FileTitleBuilder */
+	private $fileTitleBuilder = null;
+
+	/** @var FileKeyBuilder */
+	private $fileKeyBuilder = null;
 
 	/**
 	 *
@@ -81,7 +85,8 @@ class DokuwikiAnalyzer
 		$this->logger = new NullLogger();
 		$this->titleBuilder = new TitleBuilder();
 		$this->titleKeyBuilder = new TitleKeyBuilder();
-		$this->filenameBuilder = new FilenameBuilder();
+		$this->fileTitleBuilder = new FileTitleBuilder();
+		$this->fileKeyBuilder = new FileKeyBuilder();
 
 		if ( isset( $this->config['config'] ) ) {
 			$this->advancedConfig = $this->config['config'];
@@ -176,9 +181,9 @@ class DokuwikiAnalyzer
 		) {
 			$this->makeLatestRevisionMediaMap( $file, $paths );
 		} elseif ( $paths[1] === 'media_attic' ) {
-			$this->makeHistoryRevisionMediaMap( $file, $paths );
+			// $this->makeHistoryRevisionMediaMap( $file, $paths );
 		} elseif ( $paths[1] === 'meta' ) {
-			$this->makeLatestRevisionMetaMap( $file, $paths );
+			// $this->makeLatestRevisionMetaMap( $file, $paths );
 		}
 
 		return true;
@@ -208,7 +213,7 @@ class DokuwikiAnalyzer
 		$key = $this->makeTitleKey( $paths );
 		$title = $this->makeTitle( $paths );
 		$this->output->writeln( "Add title:  $title" );
-		$this->dataBuckets->addData( 'page-key-to-title-map', $key, $title, true, false );
+		$this->dataBuckets->addData( 'page-key-to-title-map', $key, $title, false, true );
 		$this->dataBuckets->addData( 'page-titles', 'pages_titles', $title, true, false );
 		$this->dataBuckets->addData( 'pages-map', $title, $file->getPathname(), true, false );
 	}
@@ -253,10 +258,10 @@ class DokuwikiAnalyzer
 			$paths = array_values( $paths );
 		}
 
-		$key = $this->makeTitleKey( $paths );
-		$filename = $this->makeFilename( $paths );
+		$key = $this->makeFileKey( $paths );
+		$filename = $this->makeFileTitle( $paths );
 		$this->output->writeln( "Add media: $filename" );
-		$this->dataBuckets->addData( 'media-key-to-title-map', $key, $filename, true, false );
+		$this->dataBuckets->addData( 'media-key-to-title-map', $key, $filename, false, true );
 		$this->dataBuckets->addData( 'media-titles', 'media_titles', $filename, true, false );
 		$this->dataBuckets->addData( 'media-map', $filename, $file->getPathname(), true, true );
 	}
@@ -275,7 +280,7 @@ class DokuwikiAnalyzer
 			$paths = array_values( $paths );
 		}
 
-		$filename = $this->makeFilename( $paths, true );
+		$filename = $this->makeFileTitle( $paths, true );
 		$this->output->writeln( "Add history version of media: $filename" );
 		$this->dataBuckets->addData( 'attic-media-map', $filename, $file->getPathname(), true, true );
 	}
@@ -331,7 +336,15 @@ class DokuwikiAnalyzer
 	 * @param bool $nsFileRepoCompat
 	 * @return string
 	 */
-	private function makeFilename( array $paths, $history = false, $nsFileRepoCompat = false ): string {
-		return $this->filenameBuilder->build( $paths, $history, $nsFileRepoCompat );
+	private function makeFileTitle( array $paths, $history = false, $nsFileRepoCompat = false ): string {
+		return $this->fileTitleBuilder->build( $paths, $history, $nsFileRepoCompat );
+	}
+
+	/**
+	 * @param array $paths
+	 * @return string
+	 */
+	private function makeFileKey( array $paths ): string {
+		return $this->fileKeyBuilder->build( $paths );
 	}
 }

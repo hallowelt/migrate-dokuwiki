@@ -6,7 +6,7 @@ use HalloWelt\MediaWiki\Lib\Migration\DataBuckets;
 use HalloWelt\MediaWiki\Lib\Migration\IOutputAwareInterface;
 use HalloWelt\MediaWiki\Lib\Migration\Workspace;
 use HalloWelt\MigrateDokuwiki\IExtractor;
-use HalloWelt\MigrateDokuwiki\Utility\FilenameBuilder;
+use HalloWelt\MigrateDokuwiki\Utility\FileTitleBuilder;
 use SplFileInfo;
 
 class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
@@ -114,7 +114,7 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 		$this->extractCurrentPageRevisions( $titles );
 		$this->extractHistoryPageRevisions( $titles );
 		$this->extractCurrentMediaRevisions( $media );
-		$this->extractHistoryMediaRevisions( $media );
+		// $this->extractHistoryMediaRevisions( $media );
 		$this->extractPageChanges( $titles );
 		$this->extractPageMeta( $titles );
 
@@ -248,17 +248,17 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 		}
 
 		$timestamp = $this->getTimestampOfHistoryVersion( $filenameParts );
-		$filename = $this->makeFilenameForHistoryVersion( $filenameParts );
+		$filename = $this->makeFilenameForHistoryVersion( $filenameParts, $id );
 		$content = file_get_contents( $filepath );
 		$targetFileName = $this->workspace
-			->saveRawContent( $filename, $content, 'content/history/raw/' . md5( $title ) );
+			->saveRawContent( $filename, $content, 'content/raw/' );
 		$this->dataBuckets->addData( 'page-id-to-attic-page-contents', $id, $targetFileName, true, true );
 		$this->output->writeln( "\t - $title (" . $this->getHumanReadableTimestamp( $timestamp ) . ")" );
 	}
 
 	/**
 	 * See: https://www.dokuwiki.org/tips:recreate_wiki_change_log
-	 * @param string $titles
+	 * @param array $titles
 	 */
 	private function extractPageChanges( array $titles ) {
 		$changesMap = $this->dataBuckets->getBucketData( 'page-changes-map' );
@@ -307,12 +307,12 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 
 	/**
 	 * See: https://www.dokuwiki.org/devel:metadata
-	 * @param string $titles
+	 * @param array $titles
 	 */
 	private function extractPageMeta( array $titles ) {
 		$metaMap = $this->dataBuckets->getBucketData( 'page-meta-map' );
 
-		$titleBuilder = new FilenameBuilder();
+		$titleBuilder = new FileTitleBuilder();
 
 		foreach ( $titles as $title ) {
 			if ( !isset( $metaMap[$title] ) || empty( $metaMap[$title] ) ) {
@@ -345,7 +345,7 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 			// TODO: Run extract meta bevore extract media
 			// and extract only media linked in $meta['current']['relation']['media']
 
-			$this->workspace->saveData( $id, $meta, $path = 'content/meta' );
+			$this->workspace->saveData( $id, $meta, 'content/meta' );
 		}
 	}
 
@@ -373,7 +373,7 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 			return;
 		}
 		$timestamp = $this->getTimestampOfHistoryVersion( $filenameParts );
-		$filename = $this->makeFilenameForHistoryVersion( $filenameParts );
+		$filename = $this->makeFilenameForHistoryVersion( $filenameParts, $id );
 		$content = file_get_contents( $filepath );
 		$targetFileName = $this->workspace->saveUploadFile( $filename, $content, 'content/history/images/' . $id );
 		$this->dataBuckets->addData( 'media-id-to-attic-media-contents', $id, $targetFileName, true, true );
@@ -421,12 +421,13 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 
 	/**
 	 * @param array $paths
+	 * @param string $id
 	 * @return string
 	 */
-	private function makeFilenameForHistoryVersion( array $paths ): string {
+	private function makeFilenameForHistoryVersion( array $paths, string $id ): string {
 		$timestamp = $this->getTimestampOfHistoryVersion( $paths );
 		$fileExtension = array_pop( $paths );
-		return "$timestamp.$fileExtension";
+		return "$id.$timestamp.$fileExtension";
 	}
 
 	/**

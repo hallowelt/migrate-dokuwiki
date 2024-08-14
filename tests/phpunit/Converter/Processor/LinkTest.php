@@ -25,10 +25,10 @@ class LinkTest extends TestCase {
 	 */
 	private function getMap(): array {
 		return [
-			'start' => [ 'Start' ],
-			'projects:types:ab.type_01' => [ 'Projects:Types/Ab.type_01' ],
-			'tools:toolbox:wrench' => [ 'Tools:Toolbox/Wrench' ],
-			'tools:toolbox:hammer.01' => [ 'Tools:Toolbox/Hammer.01' ],
+			'start' => 'Start',
+			'projects:types:ab.type_01' => 'Projects:Types/Ab.type_01',
+			'tools:toolbox:wrench' => 'Tools:Toolbox/Wrench',
+			'tools:toolbox:hammer.01' => 'Tools:Toolbox/Hammer.01',
 		];
 	}
 

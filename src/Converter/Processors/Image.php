@@ -88,7 +88,7 @@ class Image implements IProcessor {
 		$fileTitle = $name;
 		$name = trim( $name );
 		if ( isset( $this->mediaNameToTitleMap[$name] ) ) {
-			$fileTitle = $this->mediaNameToTitleMap[$name][0];
+			$fileTitle = $this->mediaNameToTitleMap[$name];
 		}
 		return $fileTitle;
 	}

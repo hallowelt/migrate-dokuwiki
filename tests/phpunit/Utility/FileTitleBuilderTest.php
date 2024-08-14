@@ -2,15 +2,15 @@
 
 namespace HalloWelt\MigrateDokuwiki\Tests\Utility;
 
-use HalloWelt\MigrateDokuwiki\Utility\FilenameBuilder;
+use HalloWelt\MigrateDokuwiki\Utility\FileTitleBuilder;
 use PHPUnit\Framework\TestCase;
 
-class FilenameBuilderTest extends TestCase {
+class FileTitleBuilderTest extends TestCase {
 	/**
-	 * @covers \HalloWelt\MigrateDokuwiki\Utility\FilenameBuilder::build()
+	 * @covers \HalloWelt\MigrateDokuwiki\Utility\FileTitleBuilder::build()
 	 */
 	public function testBuild() {
-		$titleBuilder = new FilenameBuilder();
+		$titleBuilder = new FileTitleBuilder();
 
 		// latest revision title
 		$pages = $this->getPageFilePaths();

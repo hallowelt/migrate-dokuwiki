@@ -176,13 +176,4 @@ class DokuwikiConverter extends PandocDokuwiki implements IOutputAwareInterface 
 	private function decorateWikiText( string $text ): string {
 		return $text;
 	}
-
-	/**
-	 * @return string
-	 */
-	private function getCurrentPageTitle(): string {
-		// $spaceIdPrefixMap = $this->dataBuckets->getBucketData( 'pages-map' );
-		$currentPageTitle = '';
-		return $currentPageTitle;
-	}
 }

@@ -25,10 +25,10 @@ class ImageTest extends TestCase {
 	 */
 	private function getMap(): array {
 		return [
-			'start.png' => [ 'Start.png' ],
-			'projects:types:ab.type_01.png' => [ 'Projects_types_ab.type_01.png' ],
-			'tools:toolbox:wrench.jpg' => [ 'Tools_toolbox_wrench.jpg' ],
-			'tools:toolbox:hammer.01.svg' => [ 'Tools_toolbox_hammer.01.svg' ],
+			'start.png' => 'Start.png',
+			'projects:types:ab.type_01.png' => 'Projects_types_ab.type_01.png',
+			'tools:toolbox:wrench.jpg' => 'Tools_toolbox_wrench.jpg',
+			'tools:toolbox:hammer.01.svg' => 'Tools_toolbox_hammer.01.svg',
 		];
 	}
 

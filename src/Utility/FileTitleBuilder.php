@@ -2,7 +2,7 @@
 
 namespace HalloWelt\MigrateDokuwiki\Utility;
 
-class FilenameBuilder {
+class FileTitleBuilder {
 
 	/** @var array */
 	private $titleSegments = [];
