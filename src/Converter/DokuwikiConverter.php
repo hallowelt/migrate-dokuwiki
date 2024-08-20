@@ -66,7 +66,6 @@ class DokuwikiConverter extends PandocDokuwiki implements IOutputAwareInterface 
 			'attic-media-map',
 			'attic-meta-map',
 			'page-id-to-title-map',
-			'page-id-to-attic-page-id',
 			'media-key-to-title-map',
 			'page-key-to-title-map',
 		];

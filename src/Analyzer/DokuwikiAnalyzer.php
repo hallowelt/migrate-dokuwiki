@@ -183,7 +183,7 @@ class DokuwikiAnalyzer
 		} elseif ( $paths[1] === 'media_attic' ) {
 			// $this->makeHistoryRevisionMediaMap( $file, $paths );
 		} elseif ( $paths[1] === 'meta' ) {
-			// $this->makeLatestRevisionMetaMap( $file, $paths );
+			$this->makeLatestRevisionMetaMap( $file, $paths );
 		}
 
 		return true;
@@ -305,10 +305,11 @@ class DokuwikiAnalyzer
 		}
 
 		$title = $this->makeTitle( $paths );
-		$this->output->writeln( "Add meta for: $title" );
 		if ( $file->getExtension() === 'meta' ) {
+			$this->output->writeln( "Add meta for: $title" );
 			$this->dataBuckets->addData( 'page-meta-map', $title, $file->getPathname(), true, true );
 		} else {
+			$this->output->writeln( "Add changes for: $title" );
 			$this->dataBuckets->addData( 'page-changes-map', $title, $file->getPathname(), true, true );
 		}
 	}

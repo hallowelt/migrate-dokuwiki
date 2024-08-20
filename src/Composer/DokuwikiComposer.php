@@ -35,6 +35,7 @@ class DokuwikiComposer extends ComposerBase implements IOutputAwareInterface {
 			'page-titles',
 			'page-id-to-title-map',
 			'page-id-to-page-contents',
+			'page-id-to-attic-page-id',
 			'page-id-to-attic-page-contents',
 			'page-meta-map',
 			'page-changes-map'
@@ -71,7 +72,7 @@ class DokuwikiComposer extends ComposerBase implements IOutputAwareInterface {
 		$pageTitles = $this->dataBuckets->getBucketData( 'page-titles' );
 		$pageIdToTitleMap = $this->dataBuckets->getBucketData( 'page-id-to-title-map' );
 		$pageIdToContentsMap = $this->dataBuckets->getBucketData( 'page-id-to-page-contents' );
-		$pageIdToHistoryContentsMap = $this->dataBuckets->getBucketData( 'page-id-to-attic-page-contents' );
+		$pageIdToHistoryPageIdMap = $this->dataBuckets->getBucketData( 'page-id-to-attic-page-id' );
 
 		$titleToPageIdMap = [];
 		foreach ( $pageIdToTitleMap as $id => $titles ) {
@@ -93,6 +94,47 @@ class DokuwikiComposer extends ComposerBase implements IOutputAwareInterface {
 
 			$this->output->writeln( "Add latest revison of $pageTitle" );
 			$builder->addRevision( $pageTitle, $wikiText );
+
+			if ( !isset( $pageIdToHistoryPageIdMap[$pageId] ) ) {
+				continue;
+			}
+
+			$this->output->writeln( "Add latest history revison of $pageTitle" );
+
+			// not for each attic page does a change file exist for some reason
+			#$pageChanges = $this->workspace->loadData( $pageId, 'content/history/changes' );
+
+			$historyVersions = $pageIdToHistoryPageIdMap[$pageId];
+			foreach( $historyVersions as $historyVersion ) {
+				$wikiText = $this->workspace->getConvertedContent( $historyVersion );
+				// unitx timestamp
+				$timestamp = str_replace( "$pageId.", '', $historyVersion );
+				$timestamp = str_replace( ".wiki", '', $timestamp );
+
+				$dateTime = date( 'Y-m-d H:i:s', $timestamp );
+				$this->output->writeln( "\t- $dateTime" );
+				$mwTimestamp = date( 'YmdHis', $timestamp );
+
+				$user = '';
+				$comment = '';
+
+				/*
+				if ( !isset( $pageChanges[$timestamp] ) ) {
+					continue;
+				}
+				$object = $pageChanges[$timestamp];
+
+				#$ip = $object['ip'];
+				#$flag = $object['flag'];
+				#$pageTitle = $object['title'];
+				$user = $object['user'];
+				$comment = $object['comment'];
+				*/
+
+				// do not handle attic versions with .change information
+
+				$builder->addRevision( $pageTitle, $wikiText, $mwTimestamp, $user, '', '', $comment );
+			}
 
 		}
 	}

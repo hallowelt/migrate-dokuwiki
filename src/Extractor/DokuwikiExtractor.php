@@ -252,6 +252,7 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 		$content = file_get_contents( $filepath );
 		$targetFileName = $this->workspace
 			->saveRawContent( $filename, $content, 'content/raw/' );
+		$this->dataBuckets->addData( 'page-id-to-attic-page-id', $id, $filename, true, true );
 		$this->dataBuckets->addData( 'page-id-to-attic-page-contents', $id, $targetFileName, true, true );
 		$this->output->writeln( "\t - $title (" . $this->getHumanReadableTimestamp( $timestamp ) . ")" );
 	}
@@ -290,15 +291,17 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 					continue;
 				}
 
+				$timestamp = $matches[1];
+
 				$object = [];
-				$object['timestamp'] = $matches[1];
+				$object['timestamp'] = $timestamp;
 				$object['ip'] = $matches[2];
 				$object['flag'] = $matches[3];
 				$object['title'] = $title;
 				$object['user'] = $matches[5];
 				$object['comment'] = $matches[6];
 
-				$changes[] = $object;
+				$changes[$timestamp] = $object;
 			}
 
 			$this->workspace->saveData( $id, $changes, $path = 'content/history/changes' );
@@ -427,7 +430,7 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 	private function makeFilenameForHistoryVersion( array $paths, string $id ): string {
 		$timestamp = $this->getTimestampOfHistoryVersion( $paths );
 		$fileExtension = array_pop( $paths );
-		return "$id.$timestamp.$fileExtension";
+		return "$id.$timestamp";
 	}
 
 	/**
