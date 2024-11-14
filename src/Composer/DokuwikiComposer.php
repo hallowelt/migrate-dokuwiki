@@ -105,7 +105,7 @@ class DokuwikiComposer extends ComposerBase implements IOutputAwareInterface {
 			#$pageChanges = $this->workspace->loadData( $pageId, 'content/history/changes' );
 
 			$historyVersions = $pageIdToHistoryPageIdMap[$pageId];
-			foreach( $historyVersions as $historyVersion ) {
+			foreach ( $historyVersions as $historyVersion ) {
 				$wikiText = $this->workspace->getConvertedContent( $historyVersion );
 				// unitx timestamp
 				$timestamp = str_replace( "$pageId.", '', $historyVersion );
