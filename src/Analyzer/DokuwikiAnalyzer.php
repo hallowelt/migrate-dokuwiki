@@ -160,12 +160,7 @@ class DokuwikiAnalyzer
 		$paths = explode( '/', trim( $filepath, '/' ) );
 
 		// Sub directory in input folder
-		while (
-			( $paths[0] !== 'pages' && $paths[0] !== 'media'  )
-			&& ( ( $paths[0] === 'git' && $paths[1] === 'pages' )
-				|| ( $paths[0] === 'git' && $paths[1] === 'media' )
-			)
-		) {
+		while ( !$this->isProperSource( $paths ) ) {
 			if ( count( $paths ) === 2 ) {
 				break;
 			}
@@ -197,6 +192,38 @@ class DokuwikiAnalyzer
 		}
 
 		return true;
+	}
+
+	/**
+		* 	 * @param array $paths
+		* 	 	 * @return boolean
+		* 	 	 	 */
+		private function isProperSource( array $paths ): bool {
+		if ( $paths[0] === 'pages' ) {
+			return true;
+		}
+		if ( $paths[0] === 'media' ) {
+			return true;
+		}
+		if ( $paths[0] === 'attic' ) {
+			return true;
+		}
+		if ( $paths[0] === 'media_attic' ) {
+			return true;
+		}
+		if ( $paths[0] === 'media_meta' ) {
+			return true;
+		}
+		if ( $paths[0] === 'meta' ) {
+			return true;
+		}
+		if ( $paths[0] === 'git' && $paths[1] === 'pages' ) {
+			return true;
+		}
+		if ( $paths[0] === 'git' && $paths[1] === 'media' ) {
+			return true;
+		}
+		return false;
 	}
 
 	/**

@@ -14,7 +14,7 @@ class TitleKeyBuilder {
 	public function build( array $paths ) {
 		$this->titleSegments = [];
 		$key = $this->makeTitleKeyFromPaths( $paths );
-		return $key;
+		return strtolower( $key );
 	}
 
 	/**
@@ -28,7 +28,7 @@ class TitleKeyBuilder {
 		$this->titleSegments[] = $doubleKey;
 		$key = implode( ':', $this->titleSegments );
 
-		return $key;
+		return strtolower( $key );
 	}
 
 	/**

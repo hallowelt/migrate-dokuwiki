@@ -39,8 +39,9 @@ class Link implements IProcessor {
 			}
 
 			$target = trim( $target, ':' );
-			if ( isset( $this->pageKeyToTitleMap[$target] ) ) {
-				$matches[2] = $this->pageKeyToTitleMap[$target] . $hash;
+			$targetKey = strtolower( $target );
+			if ( isset( $this->pageKeyToTitleMap[$targetKey] ) ) {
+				$matches[2] = $this->pageKeyToTitleMap[$targetKey] . $hash;
 				unset( $matches[0] );
 				$replacement = implode( '', $matches );
 			}
@@ -65,8 +66,9 @@ class Link implements IProcessor {
 			}
 
 			$target = trim( $target, ':' );
-			if ( isset( $this->pageKeyToTitleMap[$target] ) ) {
-				$matches[2] = $this->pageKeyToTitleMap[$target] . $hash;
+			$targetKey = strtolower( $target );
+			if ( isset( $this->pageKeyToTitleMap[$targetKey] ) ) {
+				$matches[2] = $this->pageKeyToTitleMap[$targetKey] . $hash;
 				unset( $matches[0] );
 				$replacement = implode( '', $matches );
 			}
