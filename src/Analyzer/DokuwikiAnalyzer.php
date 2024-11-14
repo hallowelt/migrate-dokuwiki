@@ -196,7 +196,7 @@ class DokuwikiAnalyzer
 
 	/**
 	 * @param array $paths
-	 * @return boolean
+	 * @return bool
 	 */
 	private function isProperSource( array $paths ): bool {
 		if ( $paths[0] === 'pages' ) {
