@@ -41,10 +41,10 @@ class TitleBuilder {
 				&& $paths[$index] === $subpageName ) {
 				break;
 			}
-			$this->appendTitleSegment( ucfirst( $paths[$index] ) );
+			$this->appendTitleSegment( $paths[$index] );
 		}
 
-		$this->appendTitleSegment( ucfirst( $subpageName ) );
+		$this->appendTitleSegment( $subpageName );
 
 		$title = implode( '/', $this->titleSegments );
 
@@ -63,7 +63,7 @@ class TitleBuilder {
 	private function appendTitleSegment( $segment ) {
 		$cleanedSegment = $this->cleanTitleSegment( $segment );
 		if ( !empty( $cleanedSegment ) ) {
-			$this->titleSegments[] = $cleanedSegment;
+			$this->titleSegments[] = ucfirst( $cleanedSegment );
 		}
 	}
 

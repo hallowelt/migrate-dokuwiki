@@ -39,6 +39,7 @@ class TitleBuilderTest extends TestCase {
 	private function getPageFilePaths(): array {
 		return [
 			'start.txt',
+			'__test.txt',
 			'projects/types/ab.type_01.txt',
 			'tools/toolbox/wrench.txt',
 			'tools/toolbox/hammer.01.txt',
@@ -51,6 +52,7 @@ class TitleBuilderTest extends TestCase {
 	private function getExpectedTitles(): array {
 		return [
 			'Start',
+			'Test',
 			'Projects:Types/Ab.type_01',
 			'Tools:Toolbox/Wrench',
 			'Tools:Toolbox/Hammer.01',
@@ -63,6 +65,7 @@ class TitleBuilderTest extends TestCase {
 	private function getAtticPageFilePaths(): array {
 		return [
 			'start.20240730.txt',
+			'___test.20240830.txt',
 			'projects/types/ab.type_01.20240730.txt',
 			'tools/toolbox/wrench.20240730.txt',
 			'tools/toolbox/hammer.01.20240730.txt',

@@ -244,7 +244,12 @@ class DokuwikiAnalyzer
 			$paths = array_values( $paths );
 		}
 
-		$namespace = $paths[0];
+		if ( count( $paths ) < 2 ) {
+			// .txt is a direct child of pages directory. It has to result in a page in NS_MAIN
+			$namespace = 'NS_MAIN';
+		} else {
+			$namespace = $paths[0];
+		}
 		$this->dataBuckets->addData( 'namespaces-map', 'namespaces', $namespace, true, true );
 
 		$key = $this->makeTitleKey( $paths );
