@@ -13,8 +13,22 @@ class TitleKeyBuilder {
 	 */
 	public function build( array $paths ) {
 		$this->titleSegments = [];
-		$title = $this->makeTitleKeyFromPaths( $paths );
-		return $title;
+		$key = $this->makeTitleKeyFromPaths( $paths );
+		return $key;
+	}
+
+	/**
+	 * @param array $paths
+	 * @return string
+	 */
+	public function buildDoubleKey( array $paths ) {
+		$this->titleSegments = [];
+		$defaultKey = $this->makeTitleKeyFromPaths( $paths );
+		$doubleKey = end( $this->titleSegments );
+		$this->titleSegments[] = $doubleKey;
+		$key = implode( ':', $this->titleSegments );
+
+		return $key;
 	}
 
 	/**

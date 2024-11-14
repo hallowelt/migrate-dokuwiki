@@ -14,13 +14,22 @@ class TitleKeyBuilderTest extends TestCase {
 
 		// latest revision title
 		$pages = $this->getPageFilePaths();
-		$actualTitles = [];
+		$actualKeys = [];
 		foreach ( $pages as $filepath ) {
 			$paths = explode( '/', trim( $filepath, '/' ) );
-			$actualTitles[] = $titleBuilder->build( $paths );
+			$actualKeys[] = $titleBuilder->build( $paths );
 		}
-		$expectedTitles = $this->getExpectedTitles();
-		$this->assertEquals( $expectedTitles, $actualTitles );
+		$expectedKeys = $this->getExpectedKeys();
+		$this->assertEquals( $expectedKeys, $actualKeys );
+
+		$actualKeys = [];
+		foreach ( $pages as $filepath ) {
+			$paths = explode( '/', trim( $filepath, '/' ) );
+			$actualKeys[] = $titleBuilder->buildDoubleKey( $paths );
+		}
+
+		$expectedKeys = $this->getExpectedDoubleKeys();
+		$this->assertEquals( $expectedKeys, $actualKeys );
 	}
 
 	/**
@@ -38,12 +47,24 @@ class TitleKeyBuilderTest extends TestCase {
 	/**
 	 * @return array
 	 */
-	private function getExpectedTitles(): array {
+	private function getExpectedKeys(): array {
 		return [
 			'start',
 			'projects:types:ab.type_01',
 			'tools:toolbox:wrench',
 			'tools:toolbox:hammer.01',
+		];
+	}
+
+	/**
+	 * @return array
+	 */
+	private function getExpectedDoubleKeys(): array {
+		return [
+			'start:start',
+			'projects:types:ab.type_01:ab.type_01',
+			'tools:toolbox:wrench:wrench',
+			'tools:toolbox:hammer.01:hammer.01',
 		];
 	}
 

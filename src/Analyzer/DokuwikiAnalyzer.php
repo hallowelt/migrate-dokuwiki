@@ -158,31 +158,41 @@ class DokuwikiAnalyzer
 
 		$filepath = str_replace( $this->src, '', $file->getPathname() );
 		$paths = explode( '/', trim( $filepath, '/' ) );
-		if ( $paths[0] !== 'data' ) {
-			// Sub directory in input folder
+
+		// Sub directory in input folder
+		while (
+			( $paths[0] !== 'pages' && $paths[0] !== 'media'  )
+			&& ( ( $paths[0] === 'git' && $paths[1] === 'pages' )
+				|| ( $paths[0] === 'git' && $paths[1] === 'media' )
+			)
+		) {
+			if ( count( $paths ) === 2 ) {
+				break;
+			}
+
 			unset( $paths[0] );
 			$paths = array_values( $paths );
 		}
 
-		if ( $paths[1] === 'pages'
-			|| ( $paths[1] === 'git' && $paths[2] === 'pages' )
+		if ( $paths[0] === 'pages'
+			|| ( $paths[0] === 'git' && $paths[1] === 'pages' )
 		) {
 			if ( $file->getExtension() !== 'txt' ) {
 				return true;
 			}
 			$this->makeLatestRevisionPageMap( $file, $paths );
-		} elseif ( $paths[1] === 'attic' ) {
+		} elseif ( $paths[0] === 'attic' ) {
 			if ( $file->getExtension() !== 'txt' ) {
 				return true;
 			}
 			$this->makeHistoryRevisionPageMap( $file, $paths );
-		} elseif ( $paths[1] === 'media'
-			|| ( $paths[1] === 'git' && $paths[2] === 'media' )
+		} elseif ( $paths[0] === 'media'
+			|| ( $paths[0] === 'git' && $paths[1] === 'media' )
 		) {
 			$this->makeLatestRevisionMediaMap( $file, $paths );
-		} elseif ( $paths[1] === 'media_attic' ) {
+		} elseif ( $paths[0] === 'media_attic' ) {
 			// $this->makeHistoryRevisionMediaMap( $file, $paths );
-		} elseif ( $paths[1] === 'meta' ) {
+		} elseif ( $paths[0] === 'meta' ) {
 			$this->makeLatestRevisionMetaMap( $file, $paths );
 		}
 
@@ -211,9 +221,11 @@ class DokuwikiAnalyzer
 		$this->dataBuckets->addData( 'namespaces-map', 'namespaces', $namespace, true, true );
 
 		$key = $this->makeTitleKey( $paths );
+		$doubleKey = $this->makeTitleDoubleKey( $paths );
 		$title = $this->makeTitle( $paths );
 		$this->output->writeln( "Add title:  $title" );
 		$this->dataBuckets->addData( 'page-key-to-title-map', $key, $title, false, true );
+		$this->dataBuckets->addData( 'page-key-to-title-map', $doubleKey, $title, false, true );
 		$this->dataBuckets->addData( 'page-titles', 'pages_titles', $title, true, false );
 		$this->dataBuckets->addData( 'pages-map', $title, $file->getPathname(), true, false );
 	}
@@ -329,6 +341,14 @@ class DokuwikiAnalyzer
 	 */
 	private function makeTitleKey( array $paths ): string {
 		return $this->titleKeyBuilder->build( $paths );
+	}
+
+	/**
+	 * @param array $paths
+	 * @return string
+	 */
+	private function makeTitleDoubleKey( array $paths ): string {
+		return $this->titleKeyBuilder->buildDoubleKey( $paths );
 	}
 
 	/**
