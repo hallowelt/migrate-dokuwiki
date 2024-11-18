@@ -49,6 +49,7 @@ class TitleBuilder {
 		$title = implode( '/', $this->titleSegments );
 
 		if ( $namespace !== '' ) {
+			$namespace = str_replace( ['-', ' ' ], '_', $namespace );
 			$prefix = ucfirst( $namespace ) . ':';
 			$title = $prefix . $title;
 		}

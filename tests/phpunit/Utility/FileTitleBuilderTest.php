@@ -61,6 +61,7 @@ class FileTitleBuilderTest extends TestCase {
 			'projects/types/ab.type_01.png',
 			'tools/toolbox/wrench.pdf',
 			'tools/toolbox/hammer.01.csv',
+			'box-a/item-01.jpg',
 		];
 	}
 
@@ -72,6 +73,7 @@ class FileTitleBuilderTest extends TestCase {
 			'projects/types/ab.type_01.20240730.png',
 			'tools/toolbox/wrench.20240730.pdf',
 			'tools/toolbox/hammer.01.20240730.csv',
+			'box-a/item-01.20240730.jpg',
 		];
 	}
 
@@ -83,6 +85,7 @@ class FileTitleBuilderTest extends TestCase {
 			'Projects_types_ab_type_01.png',
 			'Tools_toolbox_wrench.pdf',
 			'Tools_toolbox_hammer_01.csv',
+			'Box_a_item-01.jpg',
 		];
 	}
 
@@ -94,6 +97,7 @@ class FileTitleBuilderTest extends TestCase {
 			'Projects:Types_ab_type_01.png',
 			'Tools:Toolbox_wrench.pdf',
 			'Tools:Toolbox_hammer_01.csv',
+			'Box_a:Item-01.jpg',
 		];
 	}
 }

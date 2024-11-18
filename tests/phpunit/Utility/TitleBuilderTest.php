@@ -43,6 +43,7 @@ class TitleBuilderTest extends TestCase {
 			'projects/types/ab.type_01.txt',
 			'tools/toolbox/wrench.txt',
 			'tools/toolbox/hammer.01.txt',
+			'box-a/item-01.txt',
 		];
 	}
 
@@ -56,6 +57,7 @@ class TitleBuilderTest extends TestCase {
 			'Projects:Types/Ab.type_01',
 			'Tools:Toolbox/Wrench',
 			'Tools:Toolbox/Hammer.01',
+			'Box_a:Item-01',
 		];
 	}
 
@@ -69,6 +71,7 @@ class TitleBuilderTest extends TestCase {
 			'projects/types/ab.type_01.20240730.txt',
 			'tools/toolbox/wrench.20240730.txt',
 			'tools/toolbox/hammer.01.20240730.txt',
+			'box-a/item-01.20240730.txt',
 		];
 	}
 
