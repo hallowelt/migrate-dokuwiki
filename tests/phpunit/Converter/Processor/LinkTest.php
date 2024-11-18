@@ -28,7 +28,10 @@ class LinkTest extends TestCase {
 			'start' => 'Start',
 			'projects:types:ab.type_01' => 'Projects:Types/Ab.type_01',
 			'tools:toolbox:wrench' => 'Tools:Toolbox/Wrench',
+			'tools:toolbox:wrench:wrench' => 'Tools:Toolbox/Wrench',
 			'tools:toolbox:hammer.01' => 'Tools:Toolbox/Hammer.01',
+			'tools:toolbox:screwdriver' => 'Tools:Toolbox/Screwdriver',
+			'tools:toolbox:screwdriver:screwdriver' => 'Tools:Toolbox/Screwdriver',
 		];
 	}
 

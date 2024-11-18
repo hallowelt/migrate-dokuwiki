@@ -87,9 +87,22 @@ class Image implements IProcessor {
 	private function findFileTitle( string $name ): string {
 		$fileTitle = $name;
 		$name = trim( $name );
+		$key = isset( $this->mediaNameToTitleMap[$name] );
+		$key = $this->generalizeItem( $key );
 		if ( isset( $this->mediaNameToTitleMap[$name] ) ) {
 			$fileTitle = $this->mediaNameToTitleMap[$name];
 		}
 		return $fileTitle;
+	}
+
+	/**
+	 * @param string $text
+	 * @return string
+	 */
+	private function generalizeItem( string $text ): string {
+		$text = str_replace( ' ', '_', $text );
+		$text = strtolower( $text );
+
+		return $text;
 	}
 }

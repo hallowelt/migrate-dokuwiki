@@ -21,34 +21,6 @@ class Link implements IProcessor {
 	 * @return string
 	 */
 	public function process( string $text ): string {
-		// replace link target for link with label
-		$regEx = '#(\[\[)(.*?)(\|.*?\]\])#';
-		$text = preg_replace_callback( $regEx, function ( $matches ) {
-			$replacement = $matches[0];
-			$target = $matches[2];
-
-			if ( $this->isExternalUrl( $target ) ) {
-				return $replacement;
-			}
-
-			$hash = '';
-			$hashPos = strpos( $target, '#' );
-			if ( $hashPos ) {
-				$hash = substr( $target, strpos( $target, '#' ) );
-				$target = str_replace( $hash, '', $target );
-			}
-
-			$target = trim( $target, ':' );
-			$targetKey = strtolower( $target );
-			if ( isset( $this->pageKeyToTitleMap[$targetKey] ) ) {
-				$matches[2] = $this->pageKeyToTitleMap[$targetKey] . $hash;
-				unset( $matches[0] );
-				$replacement = implode( '', $matches );
-			}
-			return $replacement;
-		}, $text );
-
-		 // replace link target for link without label
 		 $regEx = '#(\[\[)(.*?)(\]\])#';
 		 $text = preg_replace_callback( $regEx, function ( $matches ) {
 			$replacement = $matches[0];
@@ -58,6 +30,29 @@ class Link implements IProcessor {
 				return $replacement;
 			}
 
+			if ( strpos( $matches[2], '|' ) ) {
+				// replace link target for link with label
+				$linkParts = explode( '|', $matches[2] );
+				$target = $linkParts[0];
+				$target = trim( $target, ':' );
+
+				$hash = '';
+				$hashPos = strpos( $target, '#' );
+				if ( $hashPos ) {
+					$hash = substr( $target, strpos( $target, '#' ) );
+					$target = str_replace( $hash, '', $target );
+				}
+
+				$targetKey = $this->generalizeItem( $target );
+				if ( isset( $this->pageKeyToTitleMap[$targetKey] ) ) {
+					$linkParts[0] = $this->pageKeyToTitleMap[$targetKey] . $hash;
+					$replacement = implode( '|', $linkParts );
+					$replacement = $this->wrapPreserveMarker( $replacement );
+				}
+				return $replacement;
+			}
+
+			// replace link target for link without label
 			$hash = '';
 			$hashPos = strpos( $target, '#' );
 			if ( $hashPos ) {
@@ -66,11 +61,10 @@ class Link implements IProcessor {
 			}
 
 			$target = trim( $target, ':' );
-			$targetKey = strtolower( $target );
+			$targetKey = $this->generalizeItem( $target );
 			if ( isset( $this->pageKeyToTitleMap[$targetKey] ) ) {
-				$matches[2] = $this->pageKeyToTitleMap[$targetKey] . $hash;
-				unset( $matches[0] );
-				$replacement = implode( '', $matches );
+				$replacement = $this->pageKeyToTitleMap[$targetKey] . $hash;
+				$replacement = $this->wrapPreserveMarker( $replacement );
 			}
 			return $replacement;
 		 }, $text );
@@ -91,5 +85,24 @@ class Link implements IProcessor {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * @param string $text
+	 * @return string
+	 */
+	private function wrapPreserveMarker( string $text ): string {
+		return "###PRESERVEINTERNALLINKOPEN###$text###PRESERVEINTERNALLINKCLOSE###";
+	}
+
+	/**
+	 * @param string $text
+	 * @return string
+	 */
+	private function generalizeItem( string $text ): string {
+		$text = str_replace( ' ', '_', $text );
+		$text = strtolower( $text );
+
+		return $text;
 	}
 }

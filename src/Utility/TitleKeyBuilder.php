@@ -14,7 +14,7 @@ class TitleKeyBuilder {
 	public function build( array $paths ) {
 		$this->titleSegments = [];
 		$key = $this->makeTitleKeyFromPaths( $paths );
-		return strtolower( $key );
+		return $key;
 	}
 
 	/**
@@ -28,7 +28,7 @@ class TitleKeyBuilder {
 		$this->titleSegments[] = $doubleKey;
 		$key = implode( ':', $this->titleSegments );
 
-		return strtolower( $key );
+		return $key;
 	}
 
 	/**
@@ -46,9 +46,13 @@ class TitleKeyBuilder {
 				&& $paths[$index] === $subpageName ) {
 				break;
 			}
-			$this->appendTitleSegment( $paths[$index] );
+			$path = $paths[$index];
+			$path = $this->generalizeItem( $path );
+
+			$this->appendTitleSegment( $path );
 		}
 
+		$subpageName = $this->generalizeItem( $subpageName );
 		$this->appendTitleSegment( $subpageName );
 
 		$key = implode( ':', $this->titleSegments );
@@ -64,4 +68,14 @@ class TitleKeyBuilder {
 		$this->titleSegments[] = $segment;
 	}
 
+	/**
+	 * @param string $text
+	 * @return string
+	 */
+	private function generalizeItem( string $text ): string {
+		$text = str_replace( ' ', '_', $text );
+		$text = strtolower( $text );
+
+		return $text;
+	}
 }

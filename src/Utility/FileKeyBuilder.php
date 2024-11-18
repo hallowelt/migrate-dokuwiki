@@ -32,9 +32,13 @@ class FileKeyBuilder {
 				&& $paths[$index] === $subpageName ) {
 				break;
 			}
-			$this->appendTitleSegment( $paths[$index] );
+			$path = $paths[$index];
+			$path = $this->generalizeItem( $path );
+
+			$this->appendTitleSegment( $path );
 		}
 
+		$subpageName = $this->generalizeItem( $subpageName );
 		$this->appendTitleSegment( $subpageName );
 
 		$key = implode( ':', $this->titleSegments );
@@ -50,4 +54,14 @@ class FileKeyBuilder {
 		$this->titleSegments[] = $segment;
 	}
 
+	/**
+	 * @param string $text
+	 * @return string
+	 */
+	private function generalizeItem( string $text ): string {
+		$text = str_replace( ' ', '_', $text );
+		$text = strtolower( $text );
+
+		return $text;
+	}
 }

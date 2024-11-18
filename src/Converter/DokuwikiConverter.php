@@ -6,6 +6,7 @@ use HalloWelt\MediaWiki\Lib\Migration\DataBuckets;
 use HalloWelt\MediaWiki\Lib\Migration\IOutputAwareInterface;
 use HalloWelt\MediaWiki\Lib\Migration\Workspace;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Image as ImagePostProcessor;
+use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Link as PostProcessorsLink;
 use HalloWelt\MigrateDokuwiki\Converter\Processors\Image as ImageProcessor;
 use HalloWelt\MigrateDokuwiki\Converter\Processors\Link;
 use HalloWelt\MigrateDokuwiki\IProcessor;
@@ -42,7 +43,8 @@ class DokuwikiConverter extends PandocDokuwiki implements IOutputAwareInterface 
 	 */
 	private function getPostProcessors(): array {
 		return [
-			new ImagePostProcessor()
+			new ImagePostProcessor(),
+			new PostProcessorsLink()
 		];
 	}
 

@@ -40,6 +40,7 @@ class TitleKeyBuilderTest extends TestCase {
 			'start.txt',
 			'projects/types/ab.type_01.txt',
 			'tools/toolbox/wrench.txt',
+			'tools/toolbox 01/wrench 01.txt',
 			'tools/toolbox/hammer.01.txt',
 		];
 	}
@@ -52,6 +53,7 @@ class TitleKeyBuilderTest extends TestCase {
 			'start',
 			'projects:types:ab.type_01',
 			'tools:toolbox:wrench',
+			'tools:toolbox_01:wrench_01',
 			'tools:toolbox:hammer.01',
 		];
 	}
@@ -64,6 +66,7 @@ class TitleKeyBuilderTest extends TestCase {
 			'start:start',
 			'projects:types:ab.type_01:ab.type_01',
 			'tools:toolbox:wrench:wrench',
+			'tools:toolbox_01:wrench_01:wrench_01',
 			'tools:toolbox:hammer.01:hammer.01',
 		];
 	}
