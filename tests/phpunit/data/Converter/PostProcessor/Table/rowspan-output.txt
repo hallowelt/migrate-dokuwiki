@@ -1,0 +1,16 @@
+{| class="wikitable"
+|-
+! style="text-align: left;"| Heading 1
+! style="text-align: left;"| Heading 2
+! style="text-align: left;"| Heading 3
+|-
+| style="text-align: left;"| Row 1 Col 1
+| style="text-align: left;" rowspan="3"| this cell spans vertically
+| style="text-align: left;"| Row 1 Col 3
+|-
+| style="text-align: left;"| Row 2 Col 1
+| style="text-align: left;"| Row 2 Col 3
+|-
+| style="text-align: left;"| Row 3 Col 1
+| style="text-align: left;"| Row 2 Col 3
+|}

@@ -1,0 +1,18 @@
+{| class="wikitable"
+|-
+! style="text-align: left;"| Heading 1
+! style="text-align: left;"| Heading 2
+! style="text-align: left;"| Heading 3
+|-
+| style="text-align: left;"| Row 1 Col 1
+| style="text-align: left;"| Row 1 Col 2
+| style="text-align: left;"| Row 1 Col 3
+|-
+| style="text-align: left;"| Row 2 Col 1
+| style="text-align: left;"| some colspan (note the double pipe)###COLSPAN_2###
+| style="text-align: left;"|
+|-
+| style="text-align: left;"| Row 3 Col 1
+| style="text-align: left;"| Row 3 Col 2
+| style="text-align: left;"| Row 3 Col 3
+|}

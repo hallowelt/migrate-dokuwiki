@@ -7,6 +7,9 @@ use HalloWelt\MediaWiki\Lib\Migration\IOutputAwareInterface;
 use HalloWelt\MediaWiki\Lib\Migration\Workspace;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Image as ImagePostProcessor;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Link as PostProcessorsLink;
+use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Table\Colspan as ColspanPostProcessor;
+use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Table\Rowspan as RowspanPostProcessor;
+use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\Table\Colspan as ColspanPreProcessor;
 use HalloWelt\MigrateDokuwiki\Converter\Processors\Image as ImageProcessor;
 use HalloWelt\MigrateDokuwiki\Converter\Processors\Link;
 use HalloWelt\MigrateDokuwiki\IProcessor;
@@ -25,7 +28,9 @@ class DokuwikiConverter extends PandocDokuwiki implements IOutputAwareInterface 
 	 * @return array
 	 */
 	private function getPreProcessors(): array {
-		return [];
+		return [
+			new ColspanPreProcessor()
+		];
 	}
 
 	/**
@@ -44,7 +49,9 @@ class DokuwikiConverter extends PandocDokuwiki implements IOutputAwareInterface 
 	private function getPostProcessors(): array {
 		return [
 			new ImagePostProcessor(),
-			new PostProcessorsLink()
+			new PostProcessorsLink(),
+			new ColspanPostProcessor(),
+			new RowspanPostProcessor()
 		];
 	}
 
