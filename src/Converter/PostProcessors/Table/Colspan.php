@@ -36,7 +36,8 @@ class Colspan implements IProcessor {
 						// If cell already contains block with HTML attributes (like "style" or "colspan")
 						// Then just append "colspan" there
 						if ( count( $cellBlocks ) > 2 ) {
-							$cellBlocks[$cellBlockIndex - 1] = $cellBlocks[$cellBlockIndex - 1] . " colspan=\"$colspanCount\"";
+							$cellBlocks[$cellBlockIndex - 1] = $cellBlocks[$cellBlockIndex - 1]
+								. " colspan=\"$colspanCount\"";
 						} else {
 							// Otherwise add such block
 							$cellBlocks = array_merge(

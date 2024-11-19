@@ -57,7 +57,7 @@ class FileTitleBuilder {
 		$title .= ".$fileExtension";
 
 		if ( $namespace !== '' ) {
-			$namespace = str_replace( ['-', ' ' ], '_', $namespace );
+			$namespace = str_replace( [ '-', ' ' ], '_', $namespace );
 			$prefix = $namespace . '_';
 			if ( $this->nsFileRepoCompat ) {
 				$prefix = $namespace . ':';

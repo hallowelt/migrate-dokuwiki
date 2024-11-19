@@ -23,7 +23,7 @@ class Link implements IProcessor {
 			],
 			$text
 		);
-	
+
 		return $text;
 	}
 }

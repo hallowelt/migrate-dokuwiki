@@ -31,7 +31,7 @@ class Colspan implements IProcessor {
 			}
 
 			$regex = '/(.*?)(\|\|+)/';
-			$line = preg_replace_callback( $regex, static function( $matches ) {
+			$line = preg_replace_callback( $regex, static function ( $matches ) {
 				$colspanCount = strlen( $matches[2] );
 
 				return $matches[1] . '###COLSPAN_' . $colspanCount . '###|';
