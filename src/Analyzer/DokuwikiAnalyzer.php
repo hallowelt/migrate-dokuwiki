@@ -248,7 +248,10 @@ class DokuwikiAnalyzer
 			// .txt is a direct child of pages directory. It has to result in a page in NS_MAIN
 			$namespace = 'NS_MAIN';
 		} else {
-			$namespace = $paths[0];
+			$namespace = trim( $paths[0] );
+			$namespace = trim( $namespace, " _\t" );
+			$namespace = ucfirst( $namespace );
+			$namespace = str_replace( [ '-', ' ' ], '_', $namespace );
 		}
 		$this->dataBuckets->addData( 'namespaces-map', 'namespaces', $namespace, true, true );
 
@@ -276,7 +279,10 @@ class DokuwikiAnalyzer
 			$paths = array_values( $paths );
 		}
 
-		$namespace = $paths[0];
+		$namespace = trim( $paths[0] );
+		$namespace = trim( $namespace, " _\t" );
+		$namespace = ucfirst( $namespace );
+		$namespace = str_replace( [ '-', ' ' ], '_', $namespace );
 		$this->dataBuckets->addData( 'attic-namespaces-map', 'namespaces', $namespace, true, true );
 
 		$title = $this->makeTitle( $paths, true );
