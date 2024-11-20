@@ -16,6 +16,8 @@ This is a command line tool to convert the contents of a Dokuwiki into a MediaWi
 1. Create a directory for the migration (e.g. `/tmp/migration/workspace/` ).
 2. Create a directory for the migration (e.g. `/tmp/migration/workspace/input` ).
 3. Copy the `data` directory from dokuwiki to `/tmp/migration/workspace/input`.
+4. Remove unused directories before copying. Only `attic`,`media`, `media-attic`, `media-meta`, `meta`, `pages`, can be used for migration. `attic` and `media-attic` contain older versions and are not required for migration.
+5. If attic versions should be migrated all archived versions have to be extracted (e.g. `find . -name "*.gz" -exec gunzip {} \;`  on linux systems).
 
 ### Migrate the contents
 1. Create the "workspace" directory (e.g. `/tmp/migration/workspace/` )
@@ -28,7 +30,7 @@ This is a command line tool to convert the contents of a Dokuwiki into a MediaWi
 If you re-run the scripts you will need to clean up the "workspace" directory!
 
 ### Import into MediaWiki
-1. Copy the diretory "workspace/result" directory (e.g. `/tmp/migration/workspace/result/` to your target wiki server (e.g. `/tmp/result`)
+1. Copy the diretory "workspace/result" directory (e.g. `/tmp/migration/workspace/result/`) to your target wiki server (e.g. `/tmp/result`)
 2. Go to your MediaWiki installation directory
 3. Make sure you have the target namespaces set up properly. See `workspace/namespaces-map.php` for reference.
 4. Make sure [$wgFileExtensions](https://www.mediawiki.org/wiki/Manual:$wgFileExtensions) is setup properly. See `workspace/result/images` for reference.

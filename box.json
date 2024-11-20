@@ -1,5 +1,4 @@
 {
-	"chmod": "0755",
 	"directories": [
 		"src"
 	],
@@ -12,6 +11,5 @@
 	],
 	"git-version": "package_version",
 	"main": "bin/migrate-dokuwiki",
-	"output": "dist/migrate-dokuwiki.phar",
-	"stub": true
+	"output": "dist/migrate-dokuwiki.phar"
 }
