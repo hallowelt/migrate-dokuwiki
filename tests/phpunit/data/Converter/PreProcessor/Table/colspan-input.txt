@@ -1,10 +1,10 @@
 ====== Connectors ======
 ===== Top side =====
-{{:technical_information:environment_solutions:qreader:qreader_connectors_2.jpg?600|Q.reader 08 Anschlüsse Oberseite}}
+lorem ispum dolor
 
 ===== Bottom side =====
 
-{{:technical_information:environment_solutions:qreader:qreader_connectors_1.jpg?600|Q.reader 08 Anschlüsse Unterseite}}
+lorem ispum dolor
 
 ===== Analog channels =====
 
