@@ -1,18 +1,80 @@
+== Lorom ipsum ==
+
 {| class="wikitable"
 |-
-! style="text-align: left;"| Heading 1
-! style="text-align: left;"| Heading 2
-! style="text-align: left;"| Heading 3
+! head 1
+! head 2
+!
 |-
-| style="text-align: left;"| Row 1 Col 1
-| style="text-align: left;"| Row 1 Col 2
-| style="text-align: left;"| Row 1 Col 3
+| '''col 1 row 1'''###COLSPAN_3###
+|
+|
 |-
-| style="text-align: left;"| Row 2 Col 1
-| style="text-align: left;"| some colspan (note the double pipe)###COLSPAN_2###
-| style="text-align: left;"|
+| col 1 row 1
+| col 2 row 1
+| col 3 row 1
 |-
-| style="text-align: left;"| Row 3 Col 1
-| style="text-align: left;"| Row 3 Col 2
-| style="text-align: left;"| Row 3 Col 3
+| col 1 row 2
+| :::
+| :::
+|-
+| col 1 row 3
+| :::
+| :::
+|-
+| col 1 row 4
+| col 2 row 4
+| col 3 row 4
+|-
+| col 1 row 5
+| :::
+| :::
+|-
+| col 1 row 6
+| :::
+| :::
+|-
+| '''col 1 row 7'''###COLSPAN_3###
+|
+|
+|-
+| col 1 row 8
+|
+| col 3 row 8
+|-
+| col 1 row 9
+| :::
+| :::
+|-
+| '''col 1 row 10'''###COLSPAN_3###
+|
+|
+|-
+| col 1 row 11
+| col 2 row 11
+| col 3 row 11
+|-
+| col 1<br />
+row 12
+| :::
+| :::
+|-
+| col 1<br />
+row 13
+| :::
+| :::
+|-
+| col 1 row 14
+| col 2 row 14
+| col 3 row 14
+|-
+| col 1<br />
+row 15
+| :::
+| :::
+|-
+| col 1<br />
+row 16
+| :::
+| :::
 |}

@@ -29,9 +29,11 @@ class Image implements IProcessor {
 			$target = $matches[2];
 
 			$src = '';
+			$alt = '';
 			if ( str_contains( $target, '|' ) ) {
 				$markupParts = explode( '|', $target );
 				$src = array_shift( $markupParts );
+				$alt = array_shift( $markupParts );
 			} else {
 				$src = $target;
 			}
@@ -58,6 +60,9 @@ class Image implements IProcessor {
 
 				$fileTitle = $this->findFileTitle( $src );
 				$matches[2] = $fileTitle . $hash;
+				if ( $alt !== '' ) {
+					$matches[2] .= "|$alt";
+				}
 				$replacement = implode( '', $matches );
 			}
 			return $replacement;

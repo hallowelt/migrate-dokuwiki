@@ -12,7 +12,7 @@ class LinkTest extends TestCase {
 	public function testProcess() {
 		$processor = new Link();
 
-		$dataDir = dirname( __DIR__, 2 ) . '/data/Converter/Postprocessor';
+		$dataDir = dirname( __DIR__, 2 ) . '/data/Converter/PostProcessor';
 		$input = file_get_contents( "$dataDir/link-input.txt" );
 		$expected = file_get_contents( "$dataDir/link-output.txt" );
 		$actual = $processor->process( $input );

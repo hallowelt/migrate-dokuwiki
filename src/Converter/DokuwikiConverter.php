@@ -5,8 +5,11 @@ namespace HalloWelt\MigrateDokuwiki\Converter;
 use HalloWelt\MediaWiki\Lib\Migration\DataBuckets;
 use HalloWelt\MediaWiki\Lib\Migration\IOutputAwareInterface;
 use HalloWelt\MediaWiki\Lib\Migration\Workspace;
+use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Color;
+use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Hidden;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Image as ImagePostProcessor;
-use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Link as PostProcessorsLink;
+use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Link as LinkPostProcessor;
+use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\ListItems as ListItemsPostProcessor;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Table\Colspan as ColspanPostProcessor;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Table\Rowspan as RowspanPostProcessor;
 use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\Table\Colspan as ColspanPreProcessor;
@@ -49,9 +52,12 @@ class DokuwikiConverter extends PandocDokuwiki implements IOutputAwareInterface 
 	private function getPostProcessors(): array {
 		return [
 			new ImagePostProcessor(),
-			new PostProcessorsLink(),
+			new LinkPostProcessor(),
+			new Color(),
+			new Hidden(),
+			new ListItemsPostProcessor(),
 			new ColspanPostProcessor(),
-			new RowspanPostProcessor()
+			new RowspanPostProcessor(),
 		];
 	}
 

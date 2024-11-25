@@ -1,7 +1,28 @@
-^ Heading 1      ^ Heading 2       ^ Heading 3          ^
-| Row 1 Col 1    | Row 1 Col 2     | Row 1 Col 3        |
-| Row 2 Col 1    | some colspan (note the double pipe) ||
-| Row 3 Col 1    | Row 3 Col 2     | Row 3 Col 3        |
-| Row 4 Col 1    |              double colspan         ||
-| Row 5             triple colspan                    |||
-| Row 6   double colspan.         || Row 3 Col 3        |
+====== Connectors ======
+===== Top side =====
+{{:technical_information:environment_solutions:qreader:qreader_connectors_2.jpg?600|Q.reader 08 Anschlüsse Oberseite}}
+
+===== Bottom side =====
+
+{{:technical_information:environment_solutions:qreader:qreader_connectors_1.jpg?600|Q.reader 08 Anschlüsse Unterseite}}
+
+===== Analog channels =====
+
+^ head 1 ^ head 2 ^^
+|**col 1 row 1**|||
+|col 1 row 1|col 2 row 1| col 3 row 1 |
+|col 1 row 2|:::| ::: |
+|col 1 row 3|:::| ::: |
+|col 1 row 4|col 2 row 4| col 3 row 4 |
+|col 1 row 5|:::| ::: |
+|col 1 row 6|:::| ::: |
+|**col 1 row 7**|||
+|col 1 row 8|  | col 3 row 8 |
+|col 1 row 9|:::| ::: |
+|**col 1 row 10**|||
+|col 1 row 11|col 2 row 11| col 3 row 11 |
+|col 1\\ row 12|:::| ::: |
+|col 1\\ row 13|:::| ::: |
+|col 1 row 14|col 2 row 14| col 3 row 14 |
+|col 1\\ row 15|:::| ::: |
+|col 1\\ row 16|:::| ::: |
