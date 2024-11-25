@@ -19,7 +19,7 @@ class ListItems implements IProcessor {
 
 			if ( $posStar !== false && $posStar === 0 ) {
 				$this->splitList( '*', $line, $output );
-			} else if ( $posHash !== false && $posHash === 0 ) {
+			} elseif ( $posHash !== false && $posHash === 0 ) {
 				$this->splitList( '#', $line, $output );
 			} else {
 				$output[] = $line;
@@ -32,7 +32,8 @@ class ListItems implements IProcessor {
 
 	private function splitList( string $separator, string $line, array &$output ): void {
 		$listLines = explode( $separator, $line );
-		array_shift( $listLines ); // get rid of first empty element
+		// get rid of first empty element
+		array_shift( $listLines );
 
 		$newLine = '';
 		foreach ( $listLines as $listLine ) {

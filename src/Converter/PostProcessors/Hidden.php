@@ -18,9 +18,10 @@ class Hidden implements IProcessor {
 			$hide = $matches[2];
 			$flags = $matches[3];
 			$text = $matches[4];
-			
-			
-			$replacement = '<div class="mw-collapsible" data-expandtext="' . $show . '" data-collapsetext="' . $hide . '">';
+
+			$replacement = '<div class="mw-collapsible" data-expandtext="';
+			$replacement .= $show;
+			$replacement .= '" data-collapsetext="' . $hide . '">';
 			$replacement .= $text;
 			$replacement .= '</div>';
 
