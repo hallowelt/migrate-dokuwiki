@@ -14,3 +14,122 @@
 | style="text-align: left;"| Row 3 Col 1
 | style="text-align: left;"| Row 2 Col 3
 |}
+
+
+
+== Lorom ipsum ==
+
+{| class="wikitable"
+|-
+! head 1
+! head 2
+!
+|-
+|colspan="3"| '''col 1 row 1'''
+|-
+| col 1 row 1
+|rowspan="3"| col 2 row 1
+|rowspan="3"| col 3 row 1
+|-
+| col 1 row 2
+|-
+| col 1 row 3
+|-
+| col 1 row 4
+|rowspan="3"| col 2 row 4
+|rowspan="3"| col 3 row 4
+|-
+| col 1 row 5
+|-
+| col 1 row 6
+|-
+|colspan="3"| '''col 1 row 7'''
+|-
+| col 1 row 8
+|rowspan="2"|
+|rowspan="2"| col 3 row 8
+|-
+| col 1 row 9 [[File:ABC.jpg|ABC.jpg]]
+|-
+|colspan="3"| '''col 1 row 10'''
+|-
+| col 1 row 11
+|rowspan="3"| col 2 row 11
+|rowspan="3"| col 3 row 11
+|-
+| [[File:ABC.jpg|ABC.jpg]] col 1<br />
+row 12
+|-
+| col 1<br />
+row 13
+|-
+| col 1 row 14
+|rowspan="3"| col 2 row 14
+|rowspan="3"| col 3 row 14
+|-
+| col 1<br />
+row 15
+|-
+| col 1<br />
+row 16
+|}
+
+
+
+Test that "rowspan" is correctly appended to "colspan":
+
+{| class="wikitable"
+!colspan="6"|Shopping List
+|-
+|colspan="2" rowspan="2"|Bread & Butter
+|Buns
+|Danish
+|colspan="2"|Croissant
+|-
+|colspan="2"|Ice cream
+|Butter
+|Yogurt
+|}
+
+
+
+Test that "rowspan" is not added when there is already "colspan=$maxColIndex":
+
+{| class="wikitable"
+|-
+|colspan="2"|Bread & Butter
+|-
+|-
+|colspan="2"|Ice cream
+|-
+|Butter
+|Yogurt
+|}
+
+
+
+Test that headings (with "colspan" as well) are handled correctly:
+
+{| class="wikitable"
+|+
+! style="vertical-align:middle;text-align:left;" |dasdasdasd
+! colspan="2" rowspan="2"|dasdasdasd
+|-
+|asdasda
+|-
+|asdasd
+|adsdas
+|mbnm
+|-
+|dfgdfgdf
+|
+|,m,
+|-
+|
+|
+|dasdas
+|-
+|
+|
+|.m,
+|}
