@@ -11,14 +11,21 @@ class Color implements IProcessor {
 	 * @return string
 	 */
 	public function process( string $text ): string {
-		// remove leading / which is placed by pandoc between File: and the file title
-		$regEx = '#<color(.*?)>(.*?)</color>#';
+		$originalText = $text;
+
+		// replace <color ...>
+		$regEx = '#(<|&lt;)color(.*?)(>|&gt;)(.*?)(<|&lt;)/color(>|&gt;)#s';
 		$text = preg_replace_callback( $regEx, static function ( $matches ) {
-			$color = $matches[1];
-			$text = $matches[2];
+			$color = $matches[2];
+			$text = $matches[4];
 			$replacement = '<span style="color: ' . trim( $color ) . '">' . $text . '</span>';
 			return $replacement;
 		}, $text );
+
+		if ( $text === null ) {
+			$text = $originalText;
+		}
+
 		return $text;
 	}
 }

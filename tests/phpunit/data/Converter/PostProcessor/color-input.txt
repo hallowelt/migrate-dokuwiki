@@ -23,13 +23,13 @@ Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdie
 
 
 Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.
-In enim justo, rhoncus ut, imperdiet a, <color #ed1c24>venenatis vitae</color>, justo. Nullam dictum felis eu pede mollis pretium.
+In enim justo, rhoncus ut, imperdiet a, &lt;color #ed1c24&gt;venenatis vitae&lt;/color&gt;, justo. Nullam dictum felis eu pede mollis pretium.
 
 
 ===== Numbered list 2  =====
 # Integer tincidunt. # Cras dapibus. ## Vivamus elementum semper nisi. ### Aenean vulputate eleifend tellus. # Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim.
 
-Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
-Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet.
+&lt;color #ed1c24&gt;Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
+Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet.&lt;/color&gt;
 
 
