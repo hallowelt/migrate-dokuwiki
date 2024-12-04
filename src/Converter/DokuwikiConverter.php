@@ -10,10 +10,12 @@ use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Hidden;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Image as ImagePostProcessor;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Link as LinkPostProcessor;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\RestoreIndexMenu;
+use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\RestoreWrap;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Table\Colspan as ColspanPostProcessor;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Table\RestoreTableWidth;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Table\Rowspan as RowspanPostProcessor;
 use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\PreserveIndexMenu;
+use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\PreserveWrap;
 use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\Table\Colspan as ColspanPreProcessor;
 use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\Table\PreserveTableWidth;
 use HalloWelt\MigrateDokuwiki\Converter\Processors\Image as ImageProcessor;
@@ -37,7 +39,8 @@ class DokuwikiConverter extends PandocDokuwiki implements IOutputAwareInterface 
 		return [
 			new PreserveTableWidth(),
 			new ColspanPreProcessor(),
-			new PreserveIndexMenu()
+			new PreserveIndexMenu(),
+			new PreserveWrap()
 		];
 	}
 
@@ -60,6 +63,7 @@ class DokuwikiConverter extends PandocDokuwiki implements IOutputAwareInterface 
 			new LinkPostProcessor(),
 			new Color(),
 			new Hidden(),
+			new RestoreWrap(),
 			new ColspanPostProcessor(),
 			new RowspanPostProcessor(),
 			new RestoreTableWidth(),
