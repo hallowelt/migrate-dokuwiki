@@ -11,5 +11,5 @@ Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdie
 </div>
 
 <div class="mw-collapsible" data-expandtext="Hier drücken für mehr Details" data-collapsetext="Hier drücken für weniger Details">Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
-Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet.
+Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet</br>.
 </div>

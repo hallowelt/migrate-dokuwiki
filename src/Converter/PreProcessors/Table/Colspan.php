@@ -14,8 +14,6 @@ class Colspan implements IProcessor {
 		$lines = explode( "\n", $text );
 
 		foreach ( $lines as $index => &$line ) {
-			$line = trim( $line );
-
 			// Each table has either "|" or "^" at the line start
 			if (
 				strpos( $line, "|" ) === 0 ||

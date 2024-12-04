@@ -1,0 +1,15 @@
+<noinclude>
+Replacement for Dokuwiki plugin indexmenu
+</noinclude>
+<onlyinclude>
+{{#titleparts: {{FULLPAGENAME}} | 1 }}
+
+{{#titleparts: {{FULLPAGENAME}} | -1 }}
+
+{{#ifeq:{{{src}}}|.
+|{{#subpages: {{#titleparts: {{FULLPAGENAME}} | 1 }}}}
+|{{#ifeq:{{{src}}}|..
+|{{#subpages: {{#titleparts: {{FULLPAGENAME}} | -1 }}}}
+|{{#subpages: {{{src}}} }}}}
+}}
+</onlyinclude>

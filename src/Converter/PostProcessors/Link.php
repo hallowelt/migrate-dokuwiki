@@ -11,14 +11,15 @@ class Link implements IProcessor {
 	 * @return string
 	 */
 	public function process( string $text ): string {
-		// remove leading / which is placed by pandoc between File: and the file title
 		$text = preg_replace(
 			[
 				'/###PRESERVEINTERNALLINKOPEN###/',
+				'/###PRESERVEINTERNALLINKPIPE###/',
 				'/###PRESERVEINTERNALLINKCLOSE###/'
 			],
 			[
 				'[[',
+				'|',
 				']]'
 			],
 			$text

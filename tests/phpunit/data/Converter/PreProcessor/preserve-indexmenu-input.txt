@@ -1,0 +1,8 @@
+{{indexmenu_n>1}}
+
+{{indexmenu>:test:page#1}}
+
+{{indexmenu>.#4|js nsort tsort msort navbar notoc noscroll}}
+
+{{indexmenu>.#1|js custom_sort:page|param 1|param 2 nsort noscroll navbar notoc}}
+Lorem ipsum dolor

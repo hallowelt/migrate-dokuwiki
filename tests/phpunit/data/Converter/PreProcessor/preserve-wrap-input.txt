@@ -1,0 +1,29 @@
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
+<WRAP>
+Phasellus viverra nulla ut metus varius laoreet. <wrap>Quisque rutrum. Aenean imperdiet</wrap>Aliquam lorem ante, feugiat a, tellus.</WRAP>
+Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
+
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
+<WRAP 100%>
+Phasellus viverra nulla ut metus varius laoreet. <wrap #id-4>Quisque rutrum. Aenean imperdiet</wrap>Aliquam lorem ante, feugiat a, tellus.</WRAP>
+Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
+
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
+<WRAP class-1 class-2 50px class-3 #id-3>
+Phasellus viverra nulla ut metus varius laoreet. <wrap class-1>Quisque rutrum. Aenean imperdiet</wrap>Aliquam lorem ante, feugiat a, tellus.</WRAP>
+Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
+
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
+<WRAP class-1 class-2 50em class-3 :en>
+Phasellus viverra nulla ut metus varius laoreet. <wrap class-1 #id-1>Quisque rutrum. Aenean imperdiet</wrap>Aliquam lorem ante, feugiat a, tellus.</WRAP>
+Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
+
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
+<WRAP 50px class-3 :en>
+Phasellus viverra nulla ut metus varius laoreet. <wrap>Quisque rutrum. Aenean imperdiet</wrap>Aliquam lorem ante, feugiat a, tellus.</WRAP>
+Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
+
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
+<WRAP #id-2 :en>
+Phasellus viverra nulla ut metus varius laoreet. <wrap>Quisque rutrum. Aenean imperdiet</wrap>Aliquam lorem ante, feugiat a, tellus.</WRAP>
+Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.

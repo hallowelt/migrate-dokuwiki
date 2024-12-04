@@ -46,7 +46,7 @@ class Link implements IProcessor {
 				$targetKey = $this->generalizeItem( $target );
 				if ( isset( $this->pageKeyToTitleMap[$targetKey] ) ) {
 					$linkParts[0] = $this->pageKeyToTitleMap[$targetKey] . $hash;
-					$replacement = implode( '|', $linkParts );
+					$replacement = implode( '###PRESERVEINTERNALLINKPIPE###', $linkParts );
 					$replacement = $this->wrapPreserveMarker( $replacement );
 				}
 				return $replacement;

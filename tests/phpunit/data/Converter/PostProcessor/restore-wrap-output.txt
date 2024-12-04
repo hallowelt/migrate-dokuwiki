@@ -1,0 +1,29 @@
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
+<div class="wrap" >
+Phasellus viverra nulla ut metus varius laoreet. <span class="wrap" >Quisque rutrum. Aenean imperdiet</span>Aliquam lorem ante, feugiat a, tellus.</div>
+Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
+
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
+<div class="wrap" style="width: 100%" >
+Phasellus viverra nulla ut metus varius laoreet. <span id="id-4" class="wrap" >Quisque rutrum. Aenean imperdiet</span>Aliquam lorem ante, feugiat a, tellus.</div>
+Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
+
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
+<div id="id-3" class="wrap class-1 class-2 class-3" style="width: 50px" >
+Phasellus viverra nulla ut metus varius laoreet. <span class="wrap class-1" >Quisque rutrum. Aenean imperdiet</span>Aliquam lorem ante, feugiat a, tellus.</div>
+Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
+
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
+<div class="wrap class-1 class-2 class-3" style="width: 50em" data-lang="en" >
+Phasellus viverra nulla ut metus varius laoreet. <span id="id-1" class="wrap class-1" >Quisque rutrum. Aenean imperdiet</span>Aliquam lorem ante, feugiat a, tellus.</div>
+Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
+
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
+<div class="wrap class-3" style="width: 50px" data-lang="en" >
+Phasellus viverra nulla ut metus varius laoreet. <span class="wrap" >Quisque rutrum. Aenean imperdiet</span>Aliquam lorem ante, feugiat a, tellus.</div>
+Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
+
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
+<div id="id-2" class="wrap" data-lang="en" >
+Phasellus viverra nulla ut metus varius laoreet. <span class="wrap" >Quisque rutrum. Aenean imperdiet</span>Aliquam lorem ante, feugiat a, tellus.</div>
+Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.

@@ -9,10 +9,13 @@ use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Color;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Hidden;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Image as ImagePostProcessor;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Link as LinkPostProcessor;
-use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\ListItems as ListItemsPostProcessor;
+use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\RestoreIndexMenu;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Table\Colspan as ColspanPostProcessor;
+use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Table\RestoreTableWidth;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Table\Rowspan as RowspanPostProcessor;
+use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\PreserveIndexMenu;
 use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\Table\Colspan as ColspanPreProcessor;
+use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\Table\PreserveTableWidth;
 use HalloWelt\MigrateDokuwiki\Converter\Processors\Image as ImageProcessor;
 use HalloWelt\MigrateDokuwiki\Converter\Processors\Link;
 use HalloWelt\MigrateDokuwiki\IProcessor;
@@ -32,7 +35,9 @@ class DokuwikiConverter extends PandocDokuwiki implements IOutputAwareInterface 
 	 */
 	private function getPreProcessors(): array {
 		return [
-			new ColspanPreProcessor()
+			new PreserveTableWidth(),
+			new ColspanPreProcessor(),
+			new PreserveIndexMenu()
 		];
 	}
 
@@ -55,9 +60,10 @@ class DokuwikiConverter extends PandocDokuwiki implements IOutputAwareInterface 
 			new LinkPostProcessor(),
 			new Color(),
 			new Hidden(),
-			new ListItemsPostProcessor(),
 			new ColspanPostProcessor(),
 			new RowspanPostProcessor(),
+			new RestoreTableWidth(),
+			new RestoreIndexMenu( $this->dataBuckets->getBucketData( 'media-key-to-title-map' ) )
 		];
 	}
 
