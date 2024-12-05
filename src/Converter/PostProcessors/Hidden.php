@@ -24,7 +24,7 @@ class Hidden implements IProcessor {
 				$stop = strpos( $params, '&quot;', $start + 16 );
 				$showText = substr( $params, $start + 15, $stop - $start - 15 );
 				$show = ' data-expandtext="' . $showText . '"';
-			} else if ( strpos( $params, 'onHidden="' ) ) {
+			} elseif ( strpos( $params, 'onHidden="' ) ) {
 				$start = strpos( $params, 'onHidden="' );
 				$stop = strpos( $params, '"', $start + 11 );
 				$showText = substr( $params, $start + 10, $stop - $start - 10 );
@@ -37,7 +37,7 @@ class Hidden implements IProcessor {
 				$stop = strpos( $params, '&quot;', $start + 17 );
 				$hideText = substr( $params, $start + 16, $stop - $start - 16 );
 				$hide = ' data-collapsetext="' . $hideText . '"';
-			} else if ( strpos( $params, 'onVisible="' ) ) {
+			} elseif ( strpos( $params, 'onVisible="' ) ) {
 				$start = strpos( $params, 'onVisible="' );
 				$stop = strpos( $params, '"', $start + 12 );
 				$hideText = substr( $params, $start + 11, $stop - $start - 11 );

@@ -15,6 +15,7 @@ class RestoreIndexMenu implements IProcessor {
 	public function __construct( array $pageKeyToTitleMap = [] ) {
 		$this->pageKeyToTitleMap = $pageKeyToTitleMap;
 	}
+
 	/**
 	 * @param string $text
 	 * @return string
@@ -46,13 +47,13 @@ class RestoreIndexMenu implements IProcessor {
 	}
 
 		/**
-	 * @param string $text
-	 * @return string
-	 */
+		 * @param string $text
+		 * @return string
+		 */
 	private function restoreView( string $text ): string {
 		$text = preg_replace_callback(
 			'/######PRESERVEINDEXMENUSTART######(.*?)######PRESERVEINDEXMENEND######/',
-			function( $matches ) {
+			function ( $matches ) {
 				$replacement = $matches[0];
 
 				$range = '';
@@ -78,7 +79,7 @@ class RestoreIndexMenu implements IProcessor {
 
 				$key = strtolower( trim( $src, ':' ) );
 				if ( isset( $this->pageKeyToTitleMap[$key] ) ) {
-					$src= $this->pageKeyToTitleMap[$key];
+					$src = $this->pageKeyToTitleMap[$key];
 				}
 
 				$replacement = '{{IndexMenu|src=' . $src . '|number=' . $number . '|options=' . $options . '}}';

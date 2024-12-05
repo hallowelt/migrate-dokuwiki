@@ -15,7 +15,6 @@ class PreserveIndexMenu implements IProcessor {
 	public function process( string $text ): string {
 		$text = $this->preserveMetaSort( $text );
 		$text = $this->preserveView( $text );
-		
 
 		return $text;
 	}
@@ -26,13 +25,13 @@ class PreserveIndexMenu implements IProcessor {
 	 */
 	private function preserveMetaSort( string $text ): string {
 		$regEx = '#\{\{indexmenu_n>(.*?)\}\}#';
-		$text = preg_replace_callback( $regEx, function ( $matches ) {
-		$replacement = $matches[0];
+		$text = preg_replace_callback( $regEx, static function ( $matches ) {
+			$replacement = $matches[0];
 
-		$replacement = '######PRESERVEINDEXMENUMETASORTSTART######';
-		$replacement .= $matches[1];
-		$replacement .= '######PRESERVEINDEXMENUMETASORTEND######';
-		return $replacement;
+			$replacement = '######PRESERVEINDEXMENUMETASORTSTART######';
+			$replacement .= $matches[1];
+			$replacement .= '######PRESERVEINDEXMENUMETASORTEND######';
+			return $replacement;
 		}, $text );
 
 		return $text;
@@ -43,13 +42,13 @@ class PreserveIndexMenu implements IProcessor {
 	 * {{indexmenu>.#4|js nsort tsort msort navbar notoc noscroll}}
 	 * {{indexmenu>#1|js nsort tsort msort navbar notoc noscroll}}
 	 * {{indexmenu>.#1|js custom_sort:page|param 1|param 2 nsort noscroll navbar notoc}}
-	 * 
+	 *
 	 * @param string $text
 	 * @return string
 	 */
 	private function preserveView( string $text ): string {
 		$regEx = '#\{\{indexmenu>(.*?)\}\}#';
-		$text = preg_replace_callback( $regEx, function ( $matches ) {
+		$text = preg_replace_callback( $regEx, static function ( $matches ) {
 			$replacement = '######PRESERVEINDEXMENUSTART######';
 			$replacement .= $matches[1];
 			$replacement .= '######PRESERVEINDEXMENEND######';

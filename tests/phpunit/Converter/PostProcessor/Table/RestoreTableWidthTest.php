@@ -18,5 +18,5 @@ class RestoreTableWidthTest extends TestCase {
 		$expected = file_get_contents( "$dataDir/restore-table-width-output.txt" );
 		$actual = $processor->process( $input );
 		$this->assertEquals( $expected, $actual );
-    }
+	}
 }

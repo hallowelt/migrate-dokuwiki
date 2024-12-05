@@ -19,7 +19,7 @@ class Image implements IProcessor {
 
 	/**
 	 * remove leading / which is placed by pandoc between File: and the file title
-	 * 
+	 *
 	 * @param string $text
 	 * @return string
 	 */
@@ -34,10 +34,10 @@ class Image implements IProcessor {
 		return $text;
 	}
 
-	/** 
-	 * [[File:https://upload.wikimedia.org/wikipedia/mediawiki/thumb/a/a9/Example.jpg/330px-Example.jpg|Image from external source]]
+	/**
+	 * [[File:https://<wiki url>/thumb/a/a9/Example.jpg/330px-Example.jpg|Image from external source]]
 	 * https://www.mediawiki.org/wiki/Manual:$wgAllowExternalImagesFrom
-	 * 
+	 *
 	 * @param string $text
 	 * @return string
 	 */
@@ -51,10 +51,10 @@ class Image implements IProcessor {
 			}
 
 			$parsedUrl = parse_url( $target );
-			if ( !isset( $parsedUrl['scheme'] ) || !in_array( $parsedUrl['scheme'], [ 'http', 'https'] ) ) {
+			if ( !isset( $parsedUrl['scheme'] ) || !in_array( $parsedUrl['scheme'], [ 'http', 'https' ] ) ) {
 				return $matches[0];
 			}
-			
+
 			$replacement = $target;
 			return $replacement;
 		}, $text );

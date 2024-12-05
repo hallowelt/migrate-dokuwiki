@@ -6,7 +6,7 @@ use HalloWelt\MigrateDokuwiki\IProcessor;
 
 class RestoreTableWidth implements IProcessor {
 
-    /**
+	/**
 	 * @param string $text
 	 * @return string
 	 */
@@ -23,7 +23,7 @@ class RestoreTableWidth implements IProcessor {
 
 				$stopPos = strpos( $line, '###PRESERVETABLEWIDTHEND###' );
 
-				$data = substr($line, $start, $stopPos - $start );
+				$data = substr( $line, $start, $stopPos - $start );
 
 				$replacement = '<span class="plugin-table-width" style="display: none;">';
 				$replacement .= $data;
@@ -42,6 +42,6 @@ class RestoreTableWidth implements IProcessor {
 		}
 
 		return implode( "\n", $newLines );
-    }
+	}
 
 }

@@ -26,7 +26,7 @@ class PreserveWrap implements IProcessor {
 	private function replaceWrapWithDiv( string $text ): string {
 		// Opening tag with params
 		$regEx = '#<WRAP(.*?)>#';
-		$text = preg_replace_callback( $regEx, function ( $matches ) {
+		$text = preg_replace_callback( $regEx, static function ( $matches ) {
 			$replacement = $matches[0];
 
 			$id = '';
@@ -51,9 +51,9 @@ class PreserveWrap implements IProcessor {
 				if ( !empty( $widthMatches ) ) {
 					// is a width
 					$width = $param;
-				} else if ( is_numeric( strpos( $param, ':' ) ) && strpos( $param, ':' ) === 0) {
+				} elseif ( is_numeric( strpos( $param, ':' ) ) && strpos( $param, ':' ) === 0 ) {
 					$lang[] = substr( $param, 1 );
-				} else if ( is_numeric( strpos( $param, '#' ) ) && strpos( $param, '#' ) === 0) {
+				} elseif ( is_numeric( strpos( $param, '#' ) ) && strpos( $param, '#' ) === 0 ) {
 					$id = substr( $param, 1 );
 				} else {
 					$classes[] = $param;
@@ -102,7 +102,7 @@ class PreserveWrap implements IProcessor {
 	private function replaceWrapWithSpan( string $text ): string {
 		// Opening tag with params
 		$regEx = '#<wrap(.*?)>#';
-		$text = preg_replace_callback( $regEx, function ( $matches ) {
+		$text = preg_replace_callback( $regEx, static function ( $matches ) {
 			$replacement = $matches[0];
 
 			$id = '';
@@ -116,7 +116,7 @@ class PreserveWrap implements IProcessor {
 					continue;
 				}
 
-				if ( is_numeric( strpos( $param, '#' ) ) && strpos( $param, '#' ) === 0) {
+				if ( is_numeric( strpos( $param, '#' ) ) && strpos( $param, '#' ) === 0 ) {
 					$id = substr( $param, 1 );
 				} else {
 					$classes[] = $param;
