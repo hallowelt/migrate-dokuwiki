@@ -20,7 +20,7 @@ This is a command line tool to convert the contents of a Dokuwiki into a MediaWi
 5. If attic versions should be migrated all archived versions have to be extracted (e.g. `find . -name "*.gz" -exec gunzip {} \;`  on linux systems).
 
 ### Migrate the contents
-From the parent directory (e.g. `/tmp/migration/` ), run the migration commands
+From the parent directory (e.g. `/tmp/migration/` ) run the migration commands
 1. Run `migrate-dokuwiki analyze --src input/ --dest workspace/` to create "working files". After the script has run you can check those files and maybe apply changes if required (e.g. when applying structural changes).
 2. Run `migrate-dokuwiki extract --src input/ --dest workspace/` to extract all contents, like wikipage contents, attachments and images into the workspace
 3. Run `migrate-dokuwiki convert --src workspace/ --dest workspace/` (yes, `--src workspace/` ) to convert the wikipage contents from Confluence Storage XML to MediaWiki WikiText
