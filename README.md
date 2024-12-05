@@ -14,7 +14,7 @@ This is a command line tool to convert the contents of a Dokuwiki into a MediaWi
 ## Workflow
 ### Prepare migration
 1. Create a directory for the migration source (e.g. `/tmp/migration/input/` ).
-2. Create a workspace directory for the migration (e.g. `/tmp/migration/workspace/` ).
+2. Create a working directory for the migration (e.g. `/tmp/migration/workspace/` ).
 3. Copy the dokuwiki `data` directory from dokuwiki to `/tmp/migration/workspace/input`.
 4. Remove unused directories before copying. Only `attic`,`media`, `media-attic`, `media-meta`, `meta`, `pages`, can be used for migration. `attic` and `media-attic` contain older versions and are not required for migration.
 5. If attic versions should be migrated all archived versions have to be extracted (e.g. `find . -name "*.gz" -exec gunzip {} \;`  on linux systems).
