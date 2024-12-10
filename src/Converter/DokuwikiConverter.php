@@ -14,6 +14,7 @@ use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\RestoreWrap;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Table\Colspan as ColspanPostProcessor;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Table\RestoreTableWidth;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Table\Rowspan as RowspanPostProcessor;
+use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\EnsureListIndention;
 use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\PreserveIndexMenu;
 use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\PreserveWrap;
 use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\Table\Colspan as ColspanPreProcessor;
@@ -40,7 +41,8 @@ class DokuwikiConverter extends PandocDokuwiki implements IOutputAwareInterface 
 			new PreserveTableWidth(),
 			new ColspanPreProcessor(),
 			new PreserveIndexMenu(),
-			new PreserveWrap()
+			new PreserveWrap(),
+			new EnsureListIndention(),
 		];
 	}
 
