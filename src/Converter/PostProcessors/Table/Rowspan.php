@@ -45,8 +45,6 @@ class Rowspan implements IProcessor {
 		$cellCoordsToLineMap = [];
 
 		foreach ( $this->lines as $lineIndex => &$line ) {
-			$line = trim( $line );
-
 			if ( strpos( $line, '{|' ) === 0 ) {
 				// If we found "{|" - then we start processing the table
 				$isTable = true;

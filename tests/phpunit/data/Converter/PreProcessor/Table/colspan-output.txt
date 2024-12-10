@@ -9,20 +9,24 @@ lorem ispum dolor
 ===== Analog channels =====
 
 ^ head 1 ^ head 2 ^^
-|**col 1 row 1**###COLSPAN_3###|
+|**col 1 row 1**###COLSPAN_3###|||
 |col 1 row 1|col 2 row 1| col 3 row 1 |
 |col 1 row 2|:::| ::: |
 |col 1 row 3|:::| ::: |
 |col 1 row 4|col 2 row 4| col 3 row 4 |
 |col 1 row 5|:::| ::: |
 |col 1 row 6|:::| ::: |
-|**col 1 row 7**###COLSPAN_3###|
+|**col 1 row 7**###COLSPAN_3###|||
 |col 1 row 8|  | col 3 row 8 |
 |col 1 row 9|:::| ::: |
-|**col 1 row 10**###COLSPAN_3###|
+|**col 1 row 10**###COLSPAN_3###|||
 |col 1 row 11|col 2 row 11| col 3 row 11 |
 |col 1\\ row 12|:::| ::: |
 |col 1\\ row 13|:::| ::: |
 |col 1 row 14|col 2 row 14| col 3 row 14 |
 |col 1\\ row 15|:::| ::: |
 |col 1\\ row 16|:::| ::: |
+
+
+^ Something                       ###COLSPAN_2###||
+| Some data 1    |     Some data 2 |

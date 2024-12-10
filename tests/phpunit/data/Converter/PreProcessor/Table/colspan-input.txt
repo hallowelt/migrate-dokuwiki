@@ -26,3 +26,7 @@ lorem ispum dolor
 |col 1 row 14|col 2 row 14| col 3 row 14 |
 |col 1\\ row 15|:::| ::: |
 |col 1\\ row 16|:::| ::: |
+
+
+^ Something                       ||
+| Some data 1    |     Some data 2 |

@@ -99,3 +99,13 @@ row 16
 | :::
 | :::
 |}
+
+
+{| class="wikitable"
+|-
+! Something ###COLSPAN_2###
+!
+|-
+| Some data 1
+| Some data 2
+|}

@@ -23,57 +23,62 @@ class Colspan implements IProcessor {
 		$this->lines = $this->maskInternalLinks( $this->lines );
 
 		foreach ( $this->lines as $lineIndex => &$line ) {
-			$line = trim( $line );
-
 			$colspanPos = strpos( $line, "###COLSPAN_" );
 			if ( $colspanPos !== false ) {
-				// In wikitext one line = one cell
-				// One cell may have few blocks separated by "|"
-				$cellBlocks = explode( '|', $line );
-
+				// Get amount of horizontally merged cells
 				$colspanCount = 0;
 
-				foreach ( $cellBlocks as $cellBlockIndex => $cellBlock ) {
-					$matches = [];
+				preg_match( "/###COLSPAN_(.*?)###/", $line, $matches );
+				if ( isset( $matches[1] ) ) {
+					$colspanCount = (int)$matches[1];
+				}
 
-					preg_match( "/###COLSPAN_(.*?)###/", $cellBlock, $matches );
+				// Remove "###COLSPAN_<N>###" string from current line
+				// We already got necessary information from this mask, do not need it anymore
+				$line = str_replace( "###COLSPAN_$colspanCount###", "", $line );
 
-					// Current cell block contains "colspan"
-					if ( isset( $matches[1] ) ) {
-						$colspanCount = (int)$matches[1];
+				// In wikitext one line = one cell
+				// One cell may have few blocks separated by "|"
+				// If there is a block with HTML properties - it should be the first one
+				$cellBlocks = explode( '|', $line );
 
-						// Remove "###COLSPAN_<N>###" string from current cell block
-						// We already got necessary information from this mask, do not need it anymore
-						$cellBlocks[$cellBlockIndex] = str_replace(
-							"###COLSPAN_$colspanCount###", "", $cellBlocks[$cellBlockIndex]
+
+				$isHeading = strpos( $line, '!' ) === 0;
+				$isHeadingWithAttributes = $isHeading && count( $cellBlocks ) > 1;
+
+				// If cell already contains block with HTML attributes (like "style" or "colspan")
+				// Then just append "colspan" there
+				if ( count( $cellBlocks ) > 2 || $isHeadingWithAttributes ) {
+					$attributesBlockIndex = 1;
+					if ( $isHeadingWithAttributes ) {
+						$attributesBlockIndex = 0;
+					}
+
+					$cellBlocks[$attributesBlockIndex] = $cellBlocks[$attributesBlockIndex]
+						. " colspan=\"$colspanCount\"";
+				} else {
+					if ( !$isHeading ) {
+						// Otherwise add such block
+						$cellBlocks = array_merge(
+							[
+								$cellBlocks[0]
+							],
+							[
+								"colspan=\"$colspanCount\""
+							],
+							array_slice( $cellBlocks, 1 )
 						);
-
-						// If cell already contains block with HTML attributes (like "style" or "colspan")
-						// Then just append "colspan" there
-						if ( count( $cellBlocks ) > 2 ) {
-							$cellBlocks[$cellBlockIndex - 1] = $cellBlocks[$cellBlockIndex - 1]
-								. " colspan=\"$colspanCount\"";
-						} else {
-							// Otherwise add such block
-							$cellBlocks = array_merge(
-								[
-									$cellBlocks[0]
-								],
-								[
-									"colspan=\"$colspanCount\""
-								],
-								array_slice( $cellBlocks, 1 )
-							);
-						}
+					} else {
+						$cellBlocks[0] = '!' . "colspan=\"$colspanCount\"|" . substr( $cellBlocks[0], 1 ); ;
 					}
 				}
 
 				$line = implode( "|", $cellBlocks );
 
 				// If we found "colspan" on current line -
-				// then remove corresponding amount of next redundant empty lines (produced by Pandoc)
+				// then remove corresponding amount (<colspan> - 1) of next redundant empty lines (produced by Pandoc)
 				if ( $colspanCount > 0 ) {
-					for ( $i = $lineIndex + 1; $i < $lineIndex + $colspanCount; $i++ ) {
+					for ( $i = $lineIndex + 1; $i <= $lineIndex + ( $colspanCount - 1 ); $i++ ) {
 						unset( $this->lines[$i] );
 					}
 				}
