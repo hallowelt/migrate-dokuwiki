@@ -96,7 +96,7 @@ row 16
 
 {| class="wikitable"
 |-
-!colspan="2"| Something
+!colspan="2"| Something 
 |-
 | Some data 1
 | Some data 2
