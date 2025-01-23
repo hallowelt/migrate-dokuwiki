@@ -42,7 +42,6 @@ class Colspan implements IProcessor {
 				// If there is a block with HTML properties - it should be the first one
 				$cellBlocks = explode( '|', $line );
 
-
 				$isHeading = strpos( $line, '!' ) === 0;
 				$isHeadingWithAttributes = $isHeading && count( $cellBlocks ) > 1;
 
@@ -69,7 +68,7 @@ class Colspan implements IProcessor {
 							array_slice( $cellBlocks, 1 )
 						);
 					} else {
-						$cellBlocks[0] = '!' . "colspan=\"$colspanCount\"|" . substr( $cellBlocks[0], 1 ); ;
+						$cellBlocks[0] = '!' . "colspan=\"$colspanCount\"|" . substr( $cellBlocks[0], 1 );
 					}
 				}
 
