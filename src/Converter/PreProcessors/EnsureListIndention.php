@@ -35,7 +35,7 @@ class EnsureListIndention implements IProcessor {
 		$newLines = [];
 		foreach ( $lines as $line ) {
 			$newLine = preg_replace_callback(
-				'#(\s+)([\*,\-])(\s*)(.*)#',
+				'#^(\s+)([\*,\-])(\s*)(.*)#',
 				static function ( $matches ) {
 					if ( $matches[3] === '' ) {
 						// If there is no whitespace after the list indicator pandoc will create <pre> instead of <li>
