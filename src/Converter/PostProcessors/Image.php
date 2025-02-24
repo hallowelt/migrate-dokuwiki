@@ -92,10 +92,7 @@ class Image implements IProcessor {
 				// size
 				$sizeMatches = [];
 				$hasSizeMatch = preg_match( '#(\d+|x\d+|\d+x\d+)px#', $part, $sizeMatches );
-				var_dump( $hasSizeMatch );
-				var_dump( $sizeMatches );
 				if ( $hasSizeMatch === 1 ) {
-					var_dump( __LINE__ );
 					$size = '|' . $sizeMatches[0];
 					continue;
 				}
