@@ -48,7 +48,7 @@ class EnsureListIndention implements IProcessor {
 						$indention = $indention % 2;
 						$matches[1] = substr( $matches[1], 1 );
 					}
-					
+
 					unset( $matches[0] );
 					$matches = array_values( $matches );
 					return implode( '', $matches );

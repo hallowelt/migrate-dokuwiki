@@ -13,7 +13,7 @@ class PreserveIndexMenu implements IProcessor {
 	 * @param string $path
 	 * @return string
 	 */
-	public function process( string $text, string $path = '' ): string{
+	public function process( string $text, string $path = '' ): string {
 		$text = $this->preserveMetaSort( $text );
 		$text = $this->preserveView( $text );
 

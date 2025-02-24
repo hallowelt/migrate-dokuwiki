@@ -12,7 +12,7 @@ class PreserveImageCaption implements IProcessor {
 	 * @return string
 	 */
 	public function process( string $text, string $path = '' ): string {
-		$text = preg_replace_callback( '#(\{\{\s*)(.*?)(\s*\}\})#', function( $matches ) {
+		$text = preg_replace_callback( '#(\{\{\s*)(.*?)(\s*\}\})#', static function ( $matches ) {
 			$paramStart = strpos( $matches[2], '|' );
 			if ( $paramStart === false ) {
 				// no caption

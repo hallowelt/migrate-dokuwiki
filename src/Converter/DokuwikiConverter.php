@@ -17,10 +17,10 @@ use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Table\Colspan as ColspanP
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Table\RestoreTableWidth;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Table\Rowspan as RowspanPostProcessor;
 use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\EnsureListIndention;
-use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\PreserveIndexMenu;
-use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\PreserveWrap;
 use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\PreserveCode;
 use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\PreserveImageCaption;
+use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\PreserveIndexMenu;
+use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\PreserveWrap;
 use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\Table\Colspan as ColspanPreProcessor;
 use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\Table\PreserveTableWidth;
 use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\Table\RemoveLinebreakAtEndOfRow;
@@ -178,10 +178,10 @@ class DokuwikiConverter extends PandocDokuwiki implements IOutputAwareInterface 
 	}
 
 		/**
-	 * @param string $text
-	 * @param string $path
-	 * @return string
-	 */
+		 * @param string $text
+		 * @param string $path
+		 * @return string
+		 */
 	private function runProcessors( string $text, string $path ): string {
 		$processors = $this->getProcessors();
 

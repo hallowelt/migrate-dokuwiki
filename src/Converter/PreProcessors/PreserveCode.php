@@ -12,7 +12,7 @@ class PreserveCode implements IProcessor {
 	 * @return string
 	 */
 	public function process( string $text, string $path = '' ): string {
-		$text = preg_replace_callback( '#(<code)(.*?)(>)(.*?)(</code>)#s', function( $matches ) {
+		$text = preg_replace_callback( '#(<code)(.*?)(>)(.*?)(</code>)#s', static function ( $matches ) {
 			$matches[1] = '#####PRESERVECODESTART';
 			$matches[3] = '#####';
 

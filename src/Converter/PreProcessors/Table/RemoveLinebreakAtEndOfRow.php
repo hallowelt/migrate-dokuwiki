@@ -33,7 +33,7 @@ class RemoveLinebreakAtEndOfRow implements IProcessor {
 			$trimLine = trim( $line, ' \\\\ ' );
 			if ( $trimLine !== $line ) {
 				$lineNum = $index + 1;
-				#$logText = "Trimmed linebreak after table at $path line $lineNum\n";
+				# $logText = "Trimmed linebreak after table at $path line $lineNum\n";
 				#echo $logText;
 
 				$line = $trimLine;
