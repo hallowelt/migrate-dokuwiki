@@ -10,9 +10,10 @@ class PreserveWrap implements IProcessor {
 	 * https://www.dokuwiki.org/plugin:wrap
 	 *
 	 * @param string $text
+	 * @param string $path
 	 * @return string
 	 */
-	public function process( string $text ): string {
+	public function process( string $text, string $path = '' ): string {
 		$text = $this->replaceWrapWithDiv( $text );
 		$text = $this->replaceWrapWithSpan( $text );
 

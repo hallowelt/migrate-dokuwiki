@@ -15,15 +15,16 @@ class EnsureListIndention implements IProcessor {
 	 * https://www.dokuwiki.org/de:wiki:syntax#listen
 	 *
 	 * @param string $text
+	 * @param string $path
 	 * @return string
 	 */
-	public function process( string $text ): string {
+	public function process( string $text, string $path = '' ): string {
 		$text = $this->fixAdditionalWhitespace( $text );
 		return $text;
 	}
 
 	/**
-	 * Remove whitespace it indention was made with 3 insead of 2 whitespaces
+	 * Remove whitespace if indention was made with 3 insead of 2 whitespaces
 	 *
 	 * @param string $text
 	 * @return string
@@ -34,19 +35,23 @@ class EnsureListIndention implements IProcessor {
 		$newLines = [];
 		foreach ( $lines as $line ) {
 			$newLine = preg_replace_callback(
-				'#(\s+)([\*,\#].*?)#',
+				'#(\s+)([\*,\-])(\s*)(.*)#',
 				static function ( $matches ) {
+					if ( $matches[3] === '' ) {
+						// If there is no whitespace after the list indicator pandoc will create <pre> instead of <li>
+						$matches[3] = ' ';
+					}
+
 					$indention = strlen( $matches[1] );
 					if ( $indention % 2 === 1 ) {
 						// Remove additional whitespace
 						$indention = $indention % 2;
 						$matches[1] = substr( $matches[1], 1 );
-						unset( $matches[0] );
-						$matches = array_values( $matches );
-						return implode( '', $matches );
-					} else {
-						return $matches[0];
 					}
+					
+					unset( $matches[0] );
+					$matches = array_values( $matches );
+					return implode( '', $matches );
 				}, $line
 			);
 			if ( is_string( $newLine ) ) {

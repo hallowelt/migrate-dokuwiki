@@ -18,9 +18,10 @@ class Image implements IProcessor {
 
 	/**
 	 * @param string $text
+	 * @param string $path
 	 * @return string
 	 */
-	public function process( string $text ): string {
+	public function process( string $text, string $path = '' ): string {
 		// replace src url
 		$regEx = '#({{\s*:{0,1})(.*?)(\s*}})#';
 		$text = preg_replace_callback( $regEx, function ( $matches ) {
@@ -62,6 +63,11 @@ class Image implements IProcessor {
 				$matches[2] = $fileTitle . $hash;
 				if ( $alt !== '' ) {
 					$matches[2] .= "|$alt";
+				}
+				$replacement = implode( '', $matches );
+			} else {
+				if ( str_contains( $target, '|' ) ) {
+					$matches[2] = str_replace( '|', ' ', $target );
 				}
 				$replacement = implode( '', $matches );
 			}

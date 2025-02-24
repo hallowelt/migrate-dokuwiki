@@ -21,9 +21,10 @@ class Rowspan implements IProcessor {
 
 	/**
 	 * @param string $text
+	 * @param string $path
 	 * @return string
 	 */
-	public function process( string $text ): string {
+	public function process( string $text, string $path = '' ): string {
 		$this->lines = explode( "\n", $text );
 
 		// As soon as we heavily rely on "|" as part of tables syntax

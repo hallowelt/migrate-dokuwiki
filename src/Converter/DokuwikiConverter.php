@@ -9,6 +9,8 @@ use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Color;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Hidden;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Image as ImagePostProcessor;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Link as LinkPostProcessor;
+use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\RestoreCode;
+use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\RestoreImageCaption;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\RestoreIndexMenu;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\RestoreWrap;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Table\Colspan as ColspanPostProcessor;
@@ -17,8 +19,11 @@ use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Table\Rowspan as RowspanP
 use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\EnsureListIndention;
 use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\PreserveIndexMenu;
 use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\PreserveWrap;
+use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\PreserveCode;
+use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\PreserveImageCaption;
 use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\Table\Colspan as ColspanPreProcessor;
 use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\Table\PreserveTableWidth;
+use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\Table\RemoveLinebreakAtEndOfRow;
 use HalloWelt\MigrateDokuwiki\Converter\Processors\Image as ImageProcessor;
 use HalloWelt\MigrateDokuwiki\Converter\Processors\Link;
 use HalloWelt\MigrateDokuwiki\IProcessor;
@@ -38,10 +43,13 @@ class DokuwikiConverter extends PandocDokuwiki implements IOutputAwareInterface 
 	 */
 	private function getPreProcessors(): array {
 		return [
+			new RemoveLinebreakAtEndOfRow(),
+			new PreserveCode(),
 			new PreserveTableWidth(),
 			new ColspanPreProcessor(),
 			new PreserveIndexMenu(),
 			new PreserveWrap(),
+			new PreserveImageCaption(),
 			new EnsureListIndention(),
 		];
 	}
@@ -66,10 +74,12 @@ class DokuwikiConverter extends PandocDokuwiki implements IOutputAwareInterface 
 			new Color(),
 			new Hidden(),
 			new RestoreWrap(),
+			new RestoreImageCaption(),
 			new ColspanPostProcessor(),
 			new RowspanPostProcessor(),
 			new RestoreTableWidth(),
-			new RestoreIndexMenu( $this->dataBuckets->getBucketData( 'media-key-to-title-map' ) )
+			new RestoreIndexMenu( $this->dataBuckets->getBucketData( 'media-key-to-title-map' ) ),
+			new RestoreCode()
 		];
 	}
 
@@ -125,6 +135,7 @@ class DokuwikiConverter extends PandocDokuwiki implements IOutputAwareInterface 
 	protected function doConvert( SplFileInfo $file ): string {
 		$rawPathname = $file->getPathname();
 		if ( !file_exists( $rawPathname ) ) {
+			echo "File does not exist: $rawPathname";
 			return '';
 		}
 
@@ -135,15 +146,15 @@ class DokuwikiConverter extends PandocDokuwiki implements IOutputAwareInterface 
 			return '';
 		}
 
-		$content = $this->runPreProcessors( $content );
-		$content = $this->runProcessors( $content );
+		$content = $this->runPreProcessors( $content, $rawPathname );
+		$content = $this->runProcessors( $content, $rawPathname );
 		$prepPathname = str_replace( '.mraw', '.mprep', $rawPathname );
 		file_put_contents( $prepPathname, $content );
 
 		$prepFile = new SplFileInfo( $prepPathname );
 		$wikiText = parent::doConvert( $prepFile );
 
-		$wikiText = $this->runPostProcessors( $wikiText );
+		$wikiText = $this->runPostProcessors( $wikiText, $rawPathname );
 
 		$wikiText = $this->decorateWikiText( $wikiText );
 
@@ -152,29 +163,31 @@ class DokuwikiConverter extends PandocDokuwiki implements IOutputAwareInterface 
 
 	/**
 	 * @param string $text
+	 * @param string $path
 	 * @return string
 	 */
-	private function runPreProcessors( string $text ): string {
+	private function runPreProcessors( string $text, string $path ): string {
 		$preProcessors = $this->getPreProcessors();
 
 		/** @var IProcessor $processor */
 		foreach ( $preProcessors as $preProcessor ) {
-			$text = $preProcessor->process( $text );
+			$text = $preProcessor->process( $text, $path );
 		}
 
 		return $text;
 	}
 
-	/**
+		/**
 	 * @param string $text
+	 * @param string $path
 	 * @return string
 	 */
-	private function runProcessors( string $text ): string {
+	private function runProcessors( string $text, string $path ): string {
 		$processors = $this->getProcessors();
 
 		/** @var IProcessor $processor */
 		foreach ( $processors as $processor ) {
-			$text = $processor->process( $text );
+			$text = $processor->process( $text, $path );
 		}
 
 		return $text;
@@ -182,14 +195,15 @@ class DokuwikiConverter extends PandocDokuwiki implements IOutputAwareInterface 
 
 	/**
 	 * @param string $text
+	 * @param string $path
 	 * @return string
 	 */
-	private function runPostProcessors( string $text ): string {
+	private function runPostProcessors( string $text, $path ): string {
 		$postProcessors = $this->getPostProcessors();
 
 		/** @var IProcessor $postProcessor */
 		foreach ( $postProcessors as $postProcessor ) {
-			$text = $postProcessor->process( $text );
+			$text = $postProcessor->process( $text, $path );
 		}
 
 		return $text;
