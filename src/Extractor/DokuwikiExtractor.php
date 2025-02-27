@@ -231,7 +231,6 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 	 */
 	private function extractCurrentPageRevision( string $title, string $filepath, string $id ) {
 		$content = file_get_contents( $filepath );
-		$content .= "\n\n\n<span style=\"display:none;\" class=\"dokuwiki-key\">$id</span\n";
 		$id = str_replace( ':', '_', $id );
 		$targetFileName = $this->workspace->saveRawContent( $id, $content );
 		$this->dataBuckets->addData( 'page-id-to-title-map', $id, $title, true, true );
@@ -253,7 +252,6 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 		$timestamp = $this->getTimestampOfHistoryVersion( $filenameParts );
 		$filename = $this->makeFilenameForHistoryVersion( $filenameParts, $id );
 		$content = file_get_contents( $filepath );
-		$content .= "\n\n\n<span style=\"display:none;\" class=\"dokuwiki-key\">$id</span\n";
 		$targetFileName = $this->workspace
 			->saveRawContent( $filename, $content, 'content/raw/' );
 		$this->dataBuckets->addData( 'page-id-to-attic-page-id', $id, $filename, true, true );
