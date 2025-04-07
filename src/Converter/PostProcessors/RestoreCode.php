@@ -19,12 +19,12 @@ class RestoreCode implements IProcessor {
 					$lang = ' lang=' . trim( $matches[2] );
 				}
 
-				if ( strpos( $matches[4], '<br />' ) !== false ) {
+				if ( strpos( $matches[4], '#####PRESERVECODELINEBREAKE#####' ) !== false ) {
 					$matches[1] = '<syntaxhighlight' . $lang;
 					$matches[3] = '>';
 
 					$text = $matches[4];
-					$text = str_replace( "<br />", "\n", $text );
+					$text = str_replace( '#####PRESERVECODELINEBREAKE#####', "\n", $text );
 					$matches[4] = $text;
 
 					$matches[5] = '</syntaxhighlight>';
@@ -34,6 +34,8 @@ class RestoreCode implements IProcessor {
 					$matches[3] = '>';
 					$matches[5] = '</code>';
 				}
+
+				$matches[4] = str_replace( '#####PRESERVECODEDOUBLEQOUTE#####', '"', $matches[4] );
 
 				unset( $matches[0] );
 				return implode( '', $matches );
