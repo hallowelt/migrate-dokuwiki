@@ -4,9 +4,10 @@ namespace HalloWelt\MigrateDokuwiki\Converter\PreProcessors\Table;
 
 use HalloWelt\MigrateDokuwiki\IProcessor;
 
-class Colspan implements IProcessor {
+class RemoveLinebreakAtEndOfRow implements IProcessor {
 
 	/**
+	 * Remove linebreak (\\) after table row
 	 * @param string $text
 	 * @param string $path
 	 * @return string
@@ -29,12 +30,14 @@ class Colspan implements IProcessor {
 				continue;
 			}
 
-			$regex = '/(.*?)(\|\|+)/';
-			$line = preg_replace_callback( $regex, static function ( $matches ) {
-				$colspanCount = strlen( $matches[2] );
+			$trimLine = trim( $line, ' \\\\ ' );
+			if ( $trimLine !== $line ) {
+				$lineNum = $index + 1;
+				# $logText = "Trimmed linebreak after table at $path line $lineNum\n";
+				#echo $logText;
 
-				return $matches[1] . '###COLSPAN_' . $colspanCount . '###|' . str_repeat( '|', $colspanCount - 1 );
-			}, $line );
+				$line = $trimLine;
+			}
 		}
 		unset( $line );
 

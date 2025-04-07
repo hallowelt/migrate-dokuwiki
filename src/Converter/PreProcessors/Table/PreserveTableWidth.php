@@ -10,9 +10,10 @@ class PreserveTableWidth implements IProcessor {
 	 * https://www.dokuwiki.org/plugin:tablewidth
 	 *
 	 * @param string $text
+	 * @param string $path
 	 * @return string
 	 */
-	public function process( string $text ): string {
+	public function process( string $text, string $path = '' ): string {
 		$lines = explode( "\n", $text );
 
 		$newLines = [];
@@ -20,7 +21,8 @@ class PreserveTableWidth implements IProcessor {
 			$line = $lines[$index];
 
 			$start = strpos( $line, '|<' );
-			if ( is_int( $start ) ) {
+			$nowiki = strpos( $line, '|</nowiki>' );
+			if ( is_int( $start ) && !$nowiki ) {
 				if ( !isset( $lines[$index + 1] ) ) {
 					$newLines[] = $line;
 					// last line, not table follows

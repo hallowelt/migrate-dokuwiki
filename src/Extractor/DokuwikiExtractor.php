@@ -61,6 +61,7 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 			'namespaces-map',
 			'pages-map',
 			'page-titles',
+			'page-key-to-title-map',
 			'page-changes-map',
 			'page-meta-map',
 			'media-map',
@@ -73,8 +74,8 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 			'attic-meta-map',
 			'page-id-to-title-map',
 			'page-id-to-attic-page-id',
-			'media-key-title-map',
-			'used-media-key-title-map'
+			'media-key-to-title-map',
+			'media-title-to-media-path'
 		];
 	}
 
@@ -131,7 +132,7 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 		$this->output->writeln( "Extract current revisons of page:" );
 
 		foreach ( $titles as $title ) {
-			$id = $this->makeIdFromTitle( $title );
+			$id = $this->getIdFromPageTitle( $title );
 
 			if ( isset( $pagesMap[$title] ) && !empty( $pagesMap[$title] ) ) {
 				$filepath = $pagesMap[$title][0];
@@ -156,7 +157,7 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 		$this->output->writeln( "Extract history revisons of page:" );
 
 		foreach ( $titles as $title ) {
-			$id = $this->makeIdFromTitle( $title );
+			$id = $this->getIdFromPageTitle( $title );
 
 			if ( !isset( $pagesMap[$title] ) || empty( $pagesMap[$title] ) ) {
 				continue;
@@ -182,7 +183,7 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 		$this->output->writeln( "Extract current revision of media:" );
 
 		foreach ( $media as $title ) {
-			$id = $this->makeIdFromTitle( $title );
+			$id = $this->getIdFromMediaTitle( $title );
 
 			if ( isset( $mediaMap[$title] ) && !empty( $mediaMap[$title] ) ) {
 				$filepath = $mediaMap[$title][0];
@@ -206,7 +207,7 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 		$this->output->writeln( "Extract history revision of media:" );
 
 		foreach ( $media as $title ) {
-			$id = $this->makeIdFromTitle( $title );
+			$id = $this->getIdFromMediaTitle( $title );
 
 			if ( !isset( $mediaMap[$title] ) || empty( $mediaMap[$title] ) ) {
 				continue;
@@ -230,6 +231,7 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 	 */
 	private function extractCurrentPageRevision( string $title, string $filepath, string $id ) {
 		$content = file_get_contents( $filepath );
+		$id = str_replace( ':', '_', $id );
 		$targetFileName = $this->workspace->saveRawContent( $id, $content );
 		$this->dataBuckets->addData( 'page-id-to-title-map', $id, $title, true, true );
 		$this->dataBuckets->addData( 'page-id-to-page-contents', $id, $targetFileName, true, true );
@@ -276,7 +278,8 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 				continue;
 			}
 
-			$id = $this->makeIdFromTitle( $title );
+			$id = $this->getIdFromPageTitle( $title );
+			$id = str_replace( ':', '_', $id );
 
 			$content = file_get_contents( $filepath );
 			$lines = explode( "\n", $content );
@@ -329,7 +332,8 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 				continue;
 			}
 
-			$id = $this->makeIdFromTitle( $title );
+			$id = $this->getIdFromPageTitle( $title );
+			$id = str_replace( ':', '_', $id );
 
 			$content = file_get_contents( $filepath );
 			$meta = unserialize( $content, [ 'allowed_classes' => false ] );
@@ -360,8 +364,7 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 	private function extractCurrentMediaRevision( string $title, string $filepath, string $id ) {
 		$content = file_get_contents( $filepath );
 		$targetFileName = $this->workspace->saveUploadFile( $title, $content );
-		$this->dataBuckets->addData( 'media-id-to-title-map', $id, $title, true, true );
-		$this->dataBuckets->addData( 'media-id-to-media-contents', $id, $targetFileName, true, true );
+		$this->dataBuckets->addData( 'media-title-to-media-path', $title, $targetFileName, true, true );
 		$this->output->writeln( "\t - $title" );
 	}
 
@@ -386,8 +389,32 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 	/**
 	 * @return string
 	 */
-	private function makeIdFromTitle( string $title ) {
-		return md5( $title );
+	private function getIdFromPageTitle( string $title ) {
+		$key = $this->getId( $title, 'page-key-to-title-map' );
+		return $key;
+	}
+
+	/**
+	 * @return string
+	 */
+	private function getIdFromMediaTitle( string $title ) {
+		$key = $this->getId( $title, 'media-key-to-title-map' );
+		return $key;
+	}
+
+	/**
+	 * @return string
+	 */
+	private function getId( string $title, string $bucket ) {
+		$key = md5( $title );
+		$keyMap = $this->dataBuckets->getBucketData( $bucket );
+		if ( in_array( $title, $keyMap ) ) {
+			$mapKey = array_search( $title, $keyMap );
+			if ( is_string( $mapKey ) ) {
+				$key = $mapKey;
+			}
+		}
+		return $key;
 	}
 
 	/**
@@ -430,6 +457,7 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 	private function makeFilenameForHistoryVersion( array $paths, string $id ): string {
 		$timestamp = $this->getTimestampOfHistoryVersion( $paths );
 		$fileExtension = array_pop( $paths );
+		$id = str_replace( ':', '_', $id );
 		return "$id.$timestamp";
 	}
 

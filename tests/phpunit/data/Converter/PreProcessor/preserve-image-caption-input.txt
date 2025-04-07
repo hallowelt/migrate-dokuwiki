@@ -1,0 +1,35 @@
+Center 
+{{ test.png }}
+
+Left
+{{ test.png?100x200}}
+
+Right
+{{test.png?100x200 }}
+
+Center with width
+{{ test.png }}
+
+Left with width
+{{test.png?100x200 }}
+
+Right with width
+{{test.png?100x200 }}
+
+Center with label
+{{test.png|caption}}
+
+Left with label
+{{ test.png|caption}}
+
+Right with label
+{{test.png|caption }}
+
+Center with width and label
+{{test.png?100x200|caption}}
+
+Left with width and label
+{{ test.png?100x200|caption}}
+
+Right with width and label
+{{test.png?100x200|caption }}

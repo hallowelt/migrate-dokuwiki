@@ -1,0 +1,35 @@
+Center 
+{{ test.png }}
+
+Left
+{{ test.png?100x200}}
+
+Right
+{{test.png?100x200 }}
+
+Center with width
+{{ test.png }}
+
+Left with width
+{{test.png?100x200 }}
+
+Right with width
+{{test.png?100x200 }}
+
+Center with label
+#####PRESERVEIMAGECAPTIONSTART caption#####{{test.png}}#####PRESERVEIMAGECAPTIONEND#####
+
+Left with label
+#####PRESERVEIMAGECAPTIONSTART caption#####{{ test.png}}#####PRESERVEIMAGECAPTIONEND#####
+
+Right with label
+#####PRESERVEIMAGECAPTIONSTART caption#####{{test.png }}#####PRESERVEIMAGECAPTIONEND#####
+
+Center with width and label
+#####PRESERVEIMAGECAPTIONSTART caption#####{{test.png?100x200}}#####PRESERVEIMAGECAPTIONEND#####
+
+Left with width and label
+#####PRESERVEIMAGECAPTIONSTART caption#####{{ test.png?100x200}}#####PRESERVEIMAGECAPTIONEND#####
+
+Right with width and label
+#####PRESERVEIMAGECAPTIONSTART caption#####{{test.png?100x200 }}#####PRESERVEIMAGECAPTIONEND#####

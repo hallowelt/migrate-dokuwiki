@@ -1,0 +1,23 @@
+Center [[File:test.png|class=align-center|test.png]]
+
+Left [[File:test.png|100x200px|class=align-right|test.png]]
+
+Right [[File:test.png|100x200px|class=align-left|test.png]]
+
+Center with width [[File:test.png|class=align-center|test.png]]
+
+Left with width [[File:test.png|100x200px|class=align-left|test.png]]
+
+Right with width [[File:test.png|100x200px|class=align-left|test.png]]
+
+Center with label #####PRESERVEIMAGECAPTIONSTART caption#####[[File:test.png|test.png]]#####PRESERVEIMAGECAPTIONEND#####
+
+Left with label #####PRESERVEIMAGECAPTIONSTART caption#####[[File:test.png|class=align-right|test.png]]#####PRESERVEIMAGECAPTIONEND#####
+
+Right with label #####PRESERVEIMAGECAPTIONSTART caption#####[[File:test.png|class=align-left|test.png]]#####PRESERVEIMAGECAPTIONEND#####
+
+Center with width and label #####PRESERVEIMAGECAPTIONSTART caption#####[[File:test.png|100x200px|test.png]]#####PRESERVEIMAGECAPTIONEND#####
+
+Left with width and label #####PRESERVEIMAGECAPTIONSTART caption#####[[File:test.png|100x200px|class=align-right|test.png]]#####PRESERVEIMAGECAPTIONEND#####
+
+Right with width and label #####PRESERVEIMAGECAPTIONSTART caption#####[[File:test.png|100x200px|class=align-left|test.png]]#####PRESERVEIMAGECAPTIONEND#####

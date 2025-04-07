@@ -18,9 +18,10 @@ class RestoreIndexMenu implements IProcessor {
 
 	/**
 	 * @param string $text
+	 * @param string $path
 	 * @return string
 	 */
-	public function process( string $text ): string {
+	public function process( string $text, string $path = '' ): string {
 		$text = $this->restoreMetaSort( $text );
 		$text = $this->restoreView( $text );
 		return $text;

@@ -1,0 +1,23 @@
+Center [[File:test.png|class=align-center|test.png]]
+
+Left [[File:test.png|100x200px|class=align-right|test.png]]
+
+Right [[File:test.png|100x200px|class=align-left|test.png]]
+
+Center with width [[File:test.png|class=align-center|test.png]]
+
+Left with width [[File:test.png|100x200px|class=align-left|test.png]]
+
+Right with width [[File:test.png|100x200px|class=align-left|test.png]]
+
+Center with label [[File:test.png|caption]]
+
+Left with label [[File:test.png|class=align-right|caption]]
+
+Right with label [[File:test.png|class=align-left|caption]]
+
+Center with width and label [[File:test.png|100x200px|caption]]
+
+Left with width and label [[File:test.png|100x200px|class=align-right|caption]]
+
+Right with width and label [[File:test.png|100x200px|class=align-left|caption]]

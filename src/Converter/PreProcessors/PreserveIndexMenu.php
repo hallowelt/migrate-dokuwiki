@@ -10,9 +10,10 @@ class PreserveIndexMenu implements IProcessor {
 	 * https://www.dokuwiki.org/plugin:indexmenu
 	 *
 	 * @param string $text
+	 * @param string $path
 	 * @return string
 	 */
-	public function process( string $text ): string {
+	public function process( string $text, string $path = '' ): string {
 		$text = $this->preserveMetaSort( $text );
 		$text = $this->preserveView( $text );
 

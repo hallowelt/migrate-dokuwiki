@@ -1,5 +1,5 @@
 |< 100% 10%    20%           10%                 35%                            15%   >|
-^ IP           ^ Device      ^ Serialnumber      ^ Comment                      ^ Owner   ^
+^ IP           ^ Device      ^ Serialnumber      ^ Comment   <nowiki>|</nowiki> ^ Owner   ^
 | 127.0.0.10  | mobile-1     |                   |                              | User    |
 | 127.0.0.11  |              |                   |                              | User    |
 | 127.0.0.12  |              |                   |                              | User    |

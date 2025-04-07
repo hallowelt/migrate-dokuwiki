@@ -8,9 +8,10 @@ class RestoreWrap implements IProcessor {
 
 	/**
 	 * @param string $text
+	 * @param string $path
 	 * @return string
 	 */
-	public function process( string $text ): string {
+	public function process( string $text, string $path = '' ): string {
 		$text = $this->restoreWrapWithDiv( $text );
 		$text = $this->restoreWrapWithSpan( $text );
 		return $text;
