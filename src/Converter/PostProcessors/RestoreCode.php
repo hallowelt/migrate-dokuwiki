@@ -16,32 +16,19 @@ class RestoreCode implements IProcessor {
 			'/(#####PRESERVECODESTART)(.*?)(#####)(.*?)(#####PRESERVECODEEND#####)/s', static function ( $matches ) {
 				$lang = '';
 				if ( trim( $matches[2] ) !== '' ) {
-					$lang = ' lang=' . trim( $matches[2] );
+					$lang = ' lang="' . trim( $matches[2] ) . '"';
 				}
 
-				if ( strpos( $matches[4], '#####PRESERVECODELINEBREAKE#####' ) !== false ) {
-					$matches[1] = '<syntaxhighlight' . $lang;
-					$matches[3] = '>';
+				$code = base64_decode( $matches[4] );
 
-					$text = $matches[4];
-					$text = str_replace( '#####PRESERVECODELINEBREAKE#####', "\n", $text );
-					$matches[4] = $text;
-
-					$matches[5] = '</syntaxhighlight>';
-				} else {
-					$matches[1] = '<code';
-					unset( $matches[2] );
-					$matches[3] = '>';
-					$matches[5] = '</code>';
+				if ( strpos( $code, "\n" ) !== false ) {
+					return "<syntaxhighlight{$lang}>{$code}</syntaxhighlight>";
+				} else if ( $lang !== '' ) {
+					return "<syntaxhighlight{$lang}>{$code}</syntaxhighlight>";
 				}
-
-				$matches[4] = str_replace( '#####PRESERVECODEDOUBLEQOUTE#####', '"', $matches[4] );
-
-				unset( $matches[0] );
-				return implode( '', $matches );
+				return "<code>{$code}</code>";
 			}, $text );
 
 		return $text;
 	}
-
 }
