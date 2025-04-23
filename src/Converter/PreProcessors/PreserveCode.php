@@ -13,18 +13,10 @@ class PreserveCode implements IProcessor {
 	 */
 	public function process( string $text, string $path = '' ): string {
 		$processedText = preg_replace_callback( '#(<code)(.*?)(>)(.*?)(</code>)#s', static function ( $matches ) {
-			$matches[1] = '#####PRESERVECODESTART';
-			$matches[3] = '#####';
+			$lang = $matches[2];
+			$code = base64_encode( $matches[4] );
 
-			$code = $matches[4];
-			$code = str_replace( "\n", '#####PRESERVECODELINEBREAKE#####', $code );
-			$code = str_replace( '"', '#####PRESERVECODEDOUBLEQOUTE#####', $code );
-			$matches[4] = $code;
-
-			$matches[5] = '#####PRESERVECODEEND#####';
-
-			unset( $matches[0] );
-			return implode( '', $matches );
+			return "#####PRESERVECODESTART{$lang}#####{$code}#####PRESERVECODEEND#####";
 		}, $text );
 
 		if ( is_string( $processedText ) ) {
