@@ -23,7 +23,7 @@ class RestoreCode implements IProcessor {
 
 				if ( strpos( $code, "\n" ) !== false ) {
 					return "<syntaxhighlight{$lang}>{$code}</syntaxhighlight>";
-				} else if ( $lang !== '' ) {
+				} elseif ( $lang !== '' ) {
 					return "<syntaxhighlight{$lang}>{$code}</syntaxhighlight>";
 				}
 				return "<code>{$code}</code>";
