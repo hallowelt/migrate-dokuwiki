@@ -27,9 +27,10 @@ class TitleBuilder {
 	/**
 	 * @param array $paths
 	 * @param bool $history
+	 * @param string $namespace
 	 * @return string
 	 */
-	private function makeTitleFromPaths( array $paths, $history = false, $namespace ): string {
+	private function makeTitleFromPaths( array $paths, $history = false, string $namespace = '' ): string {
 		$subpageName = array_pop( $paths );
 		$subpageParts = explode( '.', $subpageName );
 		$fileExtension = array_pop( $subpageParts );

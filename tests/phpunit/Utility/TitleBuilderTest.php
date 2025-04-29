@@ -41,7 +41,7 @@ class TitleBuilderTest extends TestCase {
 			$paths = explode( '/', trim( $filepath, '/' ) );
 			$actualTitles[] = $titleBuilder->build( $paths, true, $config );
 		}
-		$expectedTitles = $this->getExpectedTitles_AllinOneNamespace();
+		$expectedTitles = $this->getExpectedTitlesAllInOneNamespace();
 		$this->assertEquals( $expectedTitles, $actualTitles );
 	}
 
@@ -90,7 +90,7 @@ class TitleBuilderTest extends TestCase {
 	/**
 	 * @return array
 	 */
-	private function getExpectedTitles_AllinOneNamespace(): array {
+	private function getExpectedTitlesAllInOneNamespace(): array {
 		return [
 			'My_namespace:Start',
 			'My_namespace:Test',
