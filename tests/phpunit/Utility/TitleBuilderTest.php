@@ -31,6 +31,18 @@ class TitleBuilderTest extends TestCase {
 		}
 		$expectedTitles = $this->getExpectedTitles();
 		$this->assertEquals( $expectedTitles, $actualTitles );
+
+		$config = [
+			'put-all-in-this-namespace' => 'My_namespace'
+		];
+
+		$actualTitles = [];
+		foreach ( $pages as $filepath ) {
+			$paths = explode( '/', trim( $filepath, '/' ) );
+			$actualTitles[] = $titleBuilder->build( $paths, true, $config );
+		}
+		$expectedTitles = $this->getExpectedTitles_AllinOneNamespace();
+		$this->assertEquals( $expectedTitles, $actualTitles );
 	}
 
 	/**
@@ -75,4 +87,17 @@ class TitleBuilderTest extends TestCase {
 		];
 	}
 
+	/**
+	 * @return array
+	 */
+	private function getExpectedTitles_AllinOneNamespace(): array {
+		return [
+			'My_namespace:Start',
+			'My_namespace:Test',
+			'My_namespace:Projects/Types/Ab.type_01',
+			'My_namespace:Tools/Toolbox/Wrench',
+			'My_namespace:Tools/Toolbox/Hammer.01',
+			'My_namespace:Box-a/Item-01',
+		];
+	}
 }

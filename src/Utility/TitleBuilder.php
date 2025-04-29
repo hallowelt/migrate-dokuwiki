@@ -10,11 +10,17 @@ class TitleBuilder {
 	/**
 	 * @param array $paths
 	 * @param bool $history
+	 * @param array $config
 	 * @return string
 	 */
-	public function build( array $paths, $history = false ) {
+	public function build( array $paths, $history = false, array $config = [] ) {
 		$this->titleSegments = [];
-		$title = $this->makeTitleFromPaths( $paths, $history );
+		if ( isset( $config['put-all-in-this-namespace'] ) ) {
+			$title = $this->makeTitleFromPaths( $paths, $history, $config['put-all-in-this-namespace'] );
+		} else {
+			$title = $this->makeTitleFromPathsWithNamespace( $paths, $history );
+		}
+
 		return $title;
 	}
 
@@ -23,11 +29,7 @@ class TitleBuilder {
 	 * @param bool $history
 	 * @return string
 	 */
-	private function makeTitleFromPaths( array $paths, $history = false ): string {
-		$namespace = '';
-		if ( count( $paths ) > 1 ) {
-			$namespace = array_shift( $paths );
-		}
+	private function makeTitleFromPaths( array $paths, $history = false, $namespace ): string {
 		$subpageName = array_pop( $paths );
 		$subpageParts = explode( '.', $subpageName );
 		$fileExtension = array_pop( $subpageParts );
@@ -53,6 +55,22 @@ class TitleBuilder {
 			$prefix = ucfirst( $namespace ) . ':';
 			$title = $prefix . $title;
 		}
+
+		return $title;
+	}
+
+	/**
+	 * @param array $paths
+	 * @param bool $history
+	 * @return string
+	 */
+	private function makeTitleFromPathsWithNamespace( array $paths, $history = false ): string {
+		$namespace = '';
+		if ( count( $paths ) > 1 ) {
+			$namespace = array_shift( $paths );
+		}
+
+		$title = $this->makeTitleFromPaths( $paths, $history, $namespace );
 
 		return $title;
 	}

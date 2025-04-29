@@ -370,7 +370,7 @@ class DokuwikiAnalyzer
 	 * @return string
 	 */
 	private function makeTitle( array $paths, bool $history = false ): string {
-		return $this->titleBuilder->build( $paths, $history );
+		return $this->titleBuilder->build( $paths, $history, $config );
 	}
 
 	/**
