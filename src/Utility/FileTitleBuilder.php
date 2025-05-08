@@ -40,7 +40,7 @@ class FileTitleBuilder {
 			return false;
 		}
 
-		$value = $$this->config['ext-ns-file-repo-compat'];
+		$value = $this->config['ext-ns-file-repo-compat'];
 		if ( is_bool( $value ) ) {
 			return $value;
 		}

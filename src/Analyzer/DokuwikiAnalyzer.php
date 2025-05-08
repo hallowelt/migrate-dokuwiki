@@ -192,6 +192,9 @@ class DokuwikiAnalyzer
 	 * @return bool
 	 */
 	private function isProperSource( array $paths ): bool {
+		if ( empty( $paths ) ) {
+			return false;
+		}
 		if ( $paths[0] === 'pages' ) {
 			return true;
 		}
@@ -363,7 +366,7 @@ class DokuwikiAnalyzer
 	 * @return string
 	 */
 	private function makeTitle( array $paths, bool $history = false ): string {
-		return $this->titleBuilder->build( $paths, $history, $this->config );
+		return $this->titleBuilder->build( $paths, $history, $this->advancedConfig );
 	}
 
 	/**

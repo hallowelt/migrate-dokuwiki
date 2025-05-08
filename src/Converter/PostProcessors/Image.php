@@ -6,6 +6,16 @@ use HalloWelt\MigrateDokuwiki\IProcessor;
 
 class Image implements IProcessor {
 
+	/** @var array */
+	private $advancedConfig = [];
+
+	/**
+	 * @param array $advancedConfig
+	 */
+	public function __construct( array $advancedConfig = [] ) {
+		$this->advancedConfig = $advancedConfig;
+	}
+
 	/**
 	 * @param string $text
 	 * @param string $path
@@ -15,6 +25,11 @@ class Image implements IProcessor {
 		// remove leading / which is placed by pandoc between File: and the file title
 		$text = $this->removeLeadingSlash( $text );
 		$text = $this->fixExternalFileLinks( $text );
+		if ( isset( $this->advancedConfig['ext-ns-file-repo-compat'] )
+			&& $this->advancedConfig['ext-ns-file-repo-compat'] === true
+		) {
+			$text = $this->restoreNamespace( $text );
+		}
 		$text = $this->fixAlignment( $text );
 		return $text;
 	}
@@ -102,6 +117,23 @@ class Image implements IProcessor {
 
 			return $matches[1] . $target . $align . $size . $caption . $matches[3];
 		}, $text );
+
+		return $text;
+	}
+
+	/**
+	 * @param string $text
+	 * @return string
+	 */
+	private function restoreNamespace( string $text ): string {
+		$regEx = '#(\[\[File:)(.*?)(\]\])#';
+		$text = preg_replace_callback( $regEx, static function ( $matches ) {
+			$target = $matches[2];
+			$target = str_replace( '#####preserveimagenamespace#####', ':', $target );
+
+			return $matches[1] . $target . $matches[3];
+		},
+		$text );
 
 		return $text;
 	}

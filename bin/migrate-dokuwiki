@@ -27,6 +27,9 @@ $config = [
 		],
 		'convert' => [
 			'factory' => 'HalloWelt\MigrateDokuwiki\Command\Convert::factory'
+		],
+		'compose' => [
+			'factory' => 'HalloWelt\MigrateDokuwiki\Command\Compose::factory'
 		]
 	]
 ];

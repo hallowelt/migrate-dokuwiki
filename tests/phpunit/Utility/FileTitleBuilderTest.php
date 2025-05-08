@@ -37,7 +37,7 @@ class FileTitleBuilderTest extends TestCase {
 		$actualTitles = [];
 		foreach ( $pages as $filepath ) {
 			$paths = explode( '/', trim( $filepath, '/' ) );
-			$actualTitles[] = $titleBuilder->build( $paths, false, true );
+			$actualTitles[] = $titleBuilder->build( $paths, false, [ 'ext-ns-file-repo-compat' => true ] );
 		}
 		$expectedTitles = $this->getExpectedTitlesWithNSFileRepoCompatibility();
 		$this->assertEquals( $expectedTitles, $actualTitles );
@@ -47,7 +47,7 @@ class FileTitleBuilderTest extends TestCase {
 		$actualTitles = [];
 		foreach ( $pages as $filepath ) {
 			$paths = explode( '/', trim( $filepath, '/' ) );
-			$actualTitles[] = $titleBuilder->build( $paths, true, true );
+			$actualTitles[] = $titleBuilder->build( $paths, true, [ 'ext-ns-file-repo-compat' => true ]  );
 		}
 		$expectedTitles = $this->getExpectedTitlesWithNSFileRepoCompatibility();
 		$this->assertEquals( $expectedTitles, $actualTitles );
