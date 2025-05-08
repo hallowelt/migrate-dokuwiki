@@ -91,7 +91,7 @@ class Compose extends CliCommandBase {
 		return $composers;
 	}
 
-	protected function doProcessFile() : bool {
+	protected function doProcessFile(): bool {
 		// Do nothing
 		return true;
 	}

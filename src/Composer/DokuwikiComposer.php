@@ -19,7 +19,6 @@ class DokuwikiComposer extends ComposerBase implements IOutputAwareInterface {
 	/** @var Output */
 	private $output = null;
 
-
 	/** @var array */
 	private $advancedConfig = [];
 

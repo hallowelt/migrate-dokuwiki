@@ -47,7 +47,7 @@ class FileTitleBuilderTest extends TestCase {
 		$actualTitles = [];
 		foreach ( $pages as $filepath ) {
 			$paths = explode( '/', trim( $filepath, '/' ) );
-			$actualTitles[] = $titleBuilder->build( $paths, true, [ 'ext-ns-file-repo-compat' => true ]  );
+			$actualTitles[] = $titleBuilder->build( $paths, true, [ 'ext-ns-file-repo-compat' => true ] );
 		}
 		$expectedTitles = $this->getExpectedTitlesWithFileRepoCompatibility();
 		$this->assertEquals( $expectedTitles, $actualTitles );
@@ -67,7 +67,7 @@ class FileTitleBuilderTest extends TestCase {
 		$actualTitles = [];
 		foreach ( $pages as $filepath ) {
 			$paths = explode( '/', trim( $filepath, '/' ) );
-			$actualTitles[] = $titleBuilder->build( $paths, true, [ 'put-all-in-this-namespace' => 'MyNamespace' ]  );
+			$actualTitles[] = $titleBuilder->build( $paths, true, [ 'put-all-in-this-namespace' => 'MyNamespace' ] );
 		}
 		$expectedTitles = $this->getExpectedTitlesWithOneNamespace();
 		$this->assertEquals( $expectedTitles, $actualTitles );
@@ -93,7 +93,7 @@ class FileTitleBuilderTest extends TestCase {
 			$actualTitles[] = $titleBuilder->build( $paths, true, [
 				'put-all-in-this-namespace' => 'MyNamespace',
 				'ext-ns-file-repo-compat' => true
-			]  );
+			] );
 		}
 		$expectedTitles = $this->getExpectedTitlesWithOneNamespaceAndFileRepoCombatibility();
 		$this->assertEquals( $expectedTitles, $actualTitles );
