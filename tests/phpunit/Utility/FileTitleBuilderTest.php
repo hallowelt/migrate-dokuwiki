@@ -32,24 +32,70 @@ class FileTitleBuilderTest extends TestCase {
 		$expectedTitles = $this->getExpectedTitles();
 		$this->assertEquals( $expectedTitles, $actualTitles );
 
-		// latest revision title with NSFileRepo compatibility
+		// latest revision title with 'ext-ns-file-repo-compat' compatibility
 		$pages = $this->getPageFilePaths();
 		$actualTitles = [];
 		foreach ( $pages as $filepath ) {
 			$paths = explode( '/', trim( $filepath, '/' ) );
 			$actualTitles[] = $titleBuilder->build( $paths, false, [ 'ext-ns-file-repo-compat' => true ] );
 		}
-		$expectedTitles = $this->getExpectedTitlesWithNSFileRepoCompatibility();
+		$expectedTitles = $this->getExpectedTitlesWithFileRepoCompatibility();
 		$this->assertEquals( $expectedTitles, $actualTitles );
 
-		// attic revision titles with NSFileRepo compatibility
+		// attic revision titles with 'ext-ns-file-repo-compat' compatibility
 		$pages = $this->getAtticPageFilePaths();
 		$actualTitles = [];
 		foreach ( $pages as $filepath ) {
 			$paths = explode( '/', trim( $filepath, '/' ) );
 			$actualTitles[] = $titleBuilder->build( $paths, true, [ 'ext-ns-file-repo-compat' => true ]  );
 		}
-		$expectedTitles = $this->getExpectedTitlesWithNSFileRepoCompatibility();
+		$expectedTitles = $this->getExpectedTitlesWithFileRepoCompatibility();
+		$this->assertEquals( $expectedTitles, $actualTitles );
+
+		// latest revision title with 'put-all-in-this-namespace' compatibility
+		$pages = $this->getPageFilePaths();
+		$actualTitles = [];
+		foreach ( $pages as $filepath ) {
+			$paths = explode( '/', trim( $filepath, '/' ) );
+			$actualTitles[] = $titleBuilder->build( $paths, false, [ 'put-all-in-this-namespace' => 'MyNamespace' ] );
+		}
+		$expectedTitles = $this->getExpectedTitlesWithOneNamespace();
+		$this->assertEquals( $expectedTitles, $actualTitles );
+
+		// attic revision titles with 'put-all-in-this-namespace' compatibility
+		$pages = $this->getAtticPageFilePaths();
+		$actualTitles = [];
+		foreach ( $pages as $filepath ) {
+			$paths = explode( '/', trim( $filepath, '/' ) );
+			$actualTitles[] = $titleBuilder->build( $paths, true, [ 'put-all-in-this-namespace' => 'MyNamespace' ]  );
+		}
+		$expectedTitles = $this->getExpectedTitlesWithOneNamespace();
+		$this->assertEquals( $expectedTitles, $actualTitles );
+
+		// latest revision title with 'put-all-in-this-namespace' and 'ext-ns-file-repo-compat' compatibility
+		$pages = $this->getPageFilePaths();
+		$actualTitles = [];
+		foreach ( $pages as $filepath ) {
+			$paths = explode( '/', trim( $filepath, '/' ) );
+			$actualTitles[] = $titleBuilder->build( $paths, false, [
+				'put-all-in-this-namespace' => 'MyNamespace',
+				'ext-ns-file-repo-compat' => true
+			] );
+		}
+		$expectedTitles = $this->getExpectedTitlesWithOneNamespaceAndFileRepoCombatibility();
+		$this->assertEquals( $expectedTitles, $actualTitles );
+
+		// attic revision titles with 'put-all-in-this-namespace' and 'ext-ns-file-repo-compat' compatibility
+		$pages = $this->getAtticPageFilePaths();
+		$actualTitles = [];
+		foreach ( $pages as $filepath ) {
+			$paths = explode( '/', trim( $filepath, '/' ) );
+			$actualTitles[] = $titleBuilder->build( $paths, true, [
+				'put-all-in-this-namespace' => 'MyNamespace',
+				'ext-ns-file-repo-compat' => true
+			]  );
+		}
+		$expectedTitles = $this->getExpectedTitlesWithOneNamespaceAndFileRepoCombatibility();
 		$this->assertEquals( $expectedTitles, $actualTitles );
 	}
 
@@ -85,19 +131,43 @@ class FileTitleBuilderTest extends TestCase {
 			'Projects_types_ab_type_01.png',
 			'Tools_toolbox_wrench.pdf',
 			'Tools_toolbox_hammer_01.csv',
-			'Box_a_item-01.jpg',
+			'Box-a_item-01.jpg',
 		];
 	}
 
 	/**
 	 * @return array
 	 */
-	private function getExpectedTitlesWithNSFileRepoCompatibility(): array {
+	private function getExpectedTitlesWithFileRepoCompatibility(): array {
 		return [
 			'Projects:Types_ab_type_01.png',
 			'Tools:Toolbox_wrench.pdf',
 			'Tools:Toolbox_hammer_01.csv',
 			'Box_a:Item-01.jpg',
+		];
+	}
+
+	/**
+	 * @return array
+	 */
+	private function getExpectedTitlesWithOneNamespace(): array {
+		return [
+			'MyNamespace_projects_types_ab_type_01.png',
+			'MyNamespace_tools_toolbox_wrench.pdf',
+			'MyNamespace_tools_toolbox_hammer_01.csv',
+			'MyNamespace_box-a_item-01.jpg',
+		];
+	}
+
+	/**
+	 * @return array
+	 */
+	private function getExpectedTitlesWithOneNamespaceAndFileRepoCombatibility(): array {
+		return [
+			'MyNamespace:Projects_types_ab_type_01.png',
+			'MyNamespace:Tools_toolbox_wrench.pdf',
+			'MyNamespace:Tools_toolbox_hammer_01.csv',
+			'MyNamespace:Box-a_item-01.jpg',
 		];
 	}
 }
