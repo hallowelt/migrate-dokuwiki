@@ -9,11 +9,16 @@ class Image implements IProcessor {
 	/** @var array */
 	private $mediaNameToTitleMap;
 
+	/** @var array */
+	private $advacedConfig;
+
 	/**
 	 * @param array $mediaNameToTitleMap
+	 * @param array $advacedConfig
 	 */
-	public function __construct( array $mediaNameToTitleMap ) {
+	public function __construct( array $mediaNameToTitleMap, array $advacedConfig = [] ) {
 		$this->mediaNameToTitleMap = $mediaNameToTitleMap;
+		$this->advacedConfig = $advacedConfig;
 	}
 
 	/**
@@ -99,10 +104,22 @@ class Image implements IProcessor {
 		$fileTitle = $name;
 		$name = trim( $name );
 		$name = strtolower( $name );
-		$key = isset( $this->mediaNameToTitleMap[$name] );
-		$key = $this->generalizeItem( $key );
+		$name = $this->generalizeItem( $name );
 		if ( isset( $this->mediaNameToTitleMap[$name] ) ) {
 			$fileTitle = $this->mediaNameToTitleMap[$name];
+		}
+
+		if ( isset( $this->advacedConfig['ext-ns-file-repo-compat'] )
+			&& $this->advacedConfig['ext-ns-file-repo-compat'] === true
+		) {
+			$namespacePos = strpos( $fileTitle, ':' );
+			if ( $namespacePos !== false ) {
+				$fileTitle = substr_replace(
+					$fileTitle,
+					'#####preserveimagenamespace#####',
+					$namespacePos, strlen( ':' )
+				);
+			}
 		}
 		return $fileTitle;
 	}

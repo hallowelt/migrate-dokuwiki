@@ -13,6 +13,8 @@ use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Yaml\Exception\ParseException;
+use Symfony\Component\Yaml\Yaml;
 
 class Extract extends Command {
 
@@ -21,6 +23,30 @@ class Extract extends Command {
 
 	/** @var IFileProcessorEventHandler */
 	protected $eventhandlers = [];
+
+	/**
+	 * @var InputInterface
+	 */
+	private $input;
+
+	/**
+	 * @var OutputInterface
+	 */
+	private $output;
+
+	/**
+	 * @var array
+	 */
+	private $config;
+
+	/** @var string */
+	private $src;
+
+	/** @var string */
+	private $dest;
+
+	/** @var Workspace */
+	private $workspace;
 
 	/**
 	 *
@@ -41,6 +67,12 @@ class Extract extends Command {
 					InputOption::VALUE_OPTIONAL,
 					'Specifies the path to the output file or directory',
 					'.'
+				),
+				new InputOption(
+					'config',
+					null,
+					InputOption::VALUE_REQUIRED,
+					'Specifies the path to the config yaml file'
 				)
 			] ) );
 		return parent::configure();
@@ -76,6 +108,8 @@ class Extract extends Command {
 
 		$this->output->writeln( "Source: {$this->src}" );
 		$this->output->writeln( "Destination: {$this->dest}\n" );
+
+		$this->readConfigFile( $this->config );
 
 		$this->beforeProcessFiles();
 		$this->runBeforeProcessFilesEventHandlers();
@@ -143,5 +177,23 @@ class Extract extends Command {
 			return $this->config['file-extension-whitelist' ];
 		}
 		return [];
+	}
+
+	/**
+	 * @param array &$config
+	 * @return void
+	 */
+	private function readConfigFile( &$config ): void {
+		$filename = $this->input->getOption( 'config' );
+		if ( is_file( $filename ) ) {
+			$content = file_get_contents( $filename );
+			if ( $content ) {
+				try {
+					$yaml = Yaml::parse( $content );
+					$config = array_merge( $config, $yaml );
+				} catch ( ParseException $e ) {
+				}
+			}
+		}
 	}
 }

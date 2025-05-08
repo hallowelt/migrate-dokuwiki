@@ -27,7 +27,7 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 	protected $dataBuckets = null;
 
 	/** @var array */
-	private $categories = [];
+	private $advancedConfig = [];
 
 	/**
 	 * @param array $config
@@ -38,8 +38,8 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 		$this->workspace = $workspace;
 		$this->dataBuckets = new DataBuckets( $this->getBucketKeys() );
 		$this->dataBuckets->loadFromWorkspace( $this->workspace );
-		if ( isset( $this->config['config']['categories'] ) ) {
-			$this->categories = $this->config['config']['categories'];
+		if ( isset( $this->config['config'] ) ) {
+			$this->advancedConfig = $this->config['config'];
 		}
 	}
 

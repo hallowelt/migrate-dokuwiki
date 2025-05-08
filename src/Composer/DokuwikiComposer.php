@@ -13,15 +13,14 @@ use Symfony\Component\Console\Output\Output;
 
 class DokuwikiComposer extends ComposerBase implements IOutputAwareInterface {
 
-	/**
-	 * @var DataBuckets
-	 */
+	/** @var DataBuckets */
 	private $dataBuckets;
 
-	/**
-	 * @var Output
-	 */
+	/** @var Output */
 	private $output = null;
+
+	/** @var array */
+	private $advancedConfig = [];
 
 	/**
 	 * @param array $config
@@ -42,6 +41,10 @@ class DokuwikiComposer extends ComposerBase implements IOutputAwareInterface {
 		] );
 
 		$this->dataBuckets->loadFromWorkspace( $this->workspace );
+
+		if ( isset( $this->config['config'] ) ) {
+			$this->advancedConfig = $this->config['config'];
+		}
 	}
 
 	/**

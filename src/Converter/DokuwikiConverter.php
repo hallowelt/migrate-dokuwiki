@@ -38,6 +38,9 @@ class DokuwikiConverter extends PandocDokuwiki implements IOutputAwareInterface 
 	/** @var Output */
 	private $output;
 
+	/** @var array */
+	private $advancedConfig = [];
+
 	/**
 	 * @return array
 	 */
@@ -60,7 +63,7 @@ class DokuwikiConverter extends PandocDokuwiki implements IOutputAwareInterface 
 	private function getProcessors(): array {
 		return [
 			new Link( $this->dataBuckets->getBucketData( 'page-key-to-title-map' ) ),
-			new ImageProcessor( $this->dataBuckets->getBucketData( 'media-key-to-title-map' ) )
+			new ImageProcessor( $this->dataBuckets->getBucketData( 'media-key-to-title-map' ), $this->advancedConfig )
 		];
 	}
 
@@ -69,12 +72,12 @@ class DokuwikiConverter extends PandocDokuwiki implements IOutputAwareInterface 
 	 */
 	private function getPostProcessors(): array {
 		return [
-			new ImagePostProcessor(),
+			new ImagePostProcessor( $this->advancedConfig ),
+			new RestoreImageCaption(),
 			new LinkPostProcessor(),
 			new Color(),
 			new Hidden(),
 			new RestoreWrap(),
-			new RestoreImageCaption(),
 			new ColspanPostProcessor(),
 			new RowspanPostProcessor(),
 			new RestoreTableWidth(),
@@ -120,6 +123,11 @@ class DokuwikiConverter extends PandocDokuwiki implements IOutputAwareInterface 
 			$this->getBucketKeys()
 		);
 		$this->dataBuckets->loadFromWorkspace( $this->workspace );
+
+		$this->config = $config;
+		if ( isset( $this->config['config'] ) ) {
+			$this->advancedConfig = $this->config['config'];
+		}
 	}
 
 	/**

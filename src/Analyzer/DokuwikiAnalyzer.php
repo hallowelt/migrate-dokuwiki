@@ -36,14 +36,8 @@ class DokuwikiAnalyzer
 	/** @var Output */
 	private $output = null;
 
-	/** @var bool */
-	private $extNsFileRepoCompat = false;
-
 	/** @var array */
 	private $advancedConfig = [];
-
-	/** @var bool */
-	private $hasAdvancedConfig = false;
 
 	/** @var string */
 	private $src = '';
@@ -90,7 +84,6 @@ class DokuwikiAnalyzer
 
 		if ( isset( $this->config['config'] ) ) {
 			$this->advancedConfig = $this->config['config'];
-			$this->hasAdvancedConfig = true;
 		}
 	}
 
@@ -199,6 +192,9 @@ class DokuwikiAnalyzer
 	 * @return bool
 	 */
 	private function isProperSource( array $paths ): bool {
+		if ( empty( $paths ) ) {
+			return false;
+		}
 		if ( $paths[0] === 'pages' ) {
 			return true;
 		}
@@ -370,7 +366,7 @@ class DokuwikiAnalyzer
 	 * @return string
 	 */
 	private function makeTitle( array $paths, bool $history = false ): string {
-		return $this->titleBuilder->build( $paths, $history );
+		return $this->titleBuilder->build( $paths, $history, $this->advancedConfig );
 	}
 
 	/**
@@ -392,11 +388,10 @@ class DokuwikiAnalyzer
 	/**
 	 * @param array $paths
 	 * @param bool $history
-	 * @param bool $nsFileRepoCompat
 	 * @return string
 	 */
-	private function makeFileTitle( array $paths, $history = false, $nsFileRepoCompat = false ): string {
-		return $this->fileTitleBuilder->build( $paths, $history, $nsFileRepoCompat );
+	private function makeFileTitle( array $paths, $history = false ): string {
+		return $this->fileTitleBuilder->build( $paths, $history, $this->advancedConfig );
 	}
 
 	/**
