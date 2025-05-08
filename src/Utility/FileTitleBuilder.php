@@ -7,32 +7,58 @@ class FileTitleBuilder {
 	/** @var array */
 	private $titleSegments = [];
 
+	/** @var array */
+	private $config = [];
+
 	/** @var bool */
 	private $nsFileRepoCompat = false;
 
 	/**
 	 * @param array $paths
 	 * @param bool $history
-	 * @param bool $nsFileRepoCompat
+	 * @param array $config
 	 * @return string
 	 */
-	public function build( array $paths, bool $history = false, $nsFileRepoCompat = false ) {
-		$this->nsFileRepoCompat = $nsFileRepoCompat;
+	public function build( array $paths, bool $history = false, array $config = [] ) {
+		$this->config = $config;
+		$this->nsFileRepoCompat = $this->getNSFileRepoConfig();
 		$this->titleSegments = [];
-		$title = $this->makeTitleFromPaths( $paths, $history );
+		if ( isset( $config['put-all-in-this-namespace'] ) ) {
+			$title = $this->makeTitleFromPaths( $paths, $history, $config['put-all-in-this-namespace'] );
+		} else {
+			$title = $this->makeTitleFromPathsWithNamespace( $paths, $history );
+		}
+
 		return $title;
+	}
+
+	/**
+	 * @return bool
+	 */
+	private function getNSFileRepoConfig(): bool {
+		if ( !isset( $this->config['ext-ns-file-repo-compat'] ) ) {
+			return false;
+		}
+
+		$value = $$this->config['ext-ns-file-repo-compat'];
+		if ( is_bool( $value ) ) {
+			return $value;
+		}
+
+		if ( strtolower( $value ) === 'true' ) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
 	 * @param array $paths
 	 * @param bool $history
+	 * @param string $namespace
 	 * @return string
 	 */
-	private function makeTitleFromPaths( array $paths, bool $history ): string {
-		$namespace = '';
-		if ( count( $paths ) > 1 ) {
-			$namespace = array_shift( $paths );
-		}
+	private function makeTitleFromPaths( array $paths, bool $history, string $namespace = '' ): string {
 		$filename = array_pop( $paths );
 		$filenameParts = explode( '.', $filename );
 		$fileExtension = array_pop( $filenameParts );
@@ -65,6 +91,22 @@ class FileTitleBuilder {
 			}
 			$title = $prefix . $title;
 		}
+
+		return ucfirst( $title );
+	}
+
+	/**
+	 * @param array $paths
+	 * @param bool $history
+	 * @return string
+	 */
+	private function makeTitleFromPathsWithNamespace( array $paths, bool $history ): string {
+		$namespace = '';
+		if ( count( $paths ) > 1 ) {
+			$namespace = array_shift( $paths );
+		}
+
+		$title = $this->makeTitleFromPaths( $paths, $history, $namespace );
 
 		return ucfirst( $title );
 	}
