@@ -34,6 +34,11 @@ class Link implements IProcessor {
 			if ( strpos( $matches[2], '|' ) ) {
 				// replace link target for link with label
 				$linkParts = explode( '|', $matches[2] );
+				for ( $index = 0; $index < count( $linkParts ); $index++ ) {
+					// trim whitespaces form the link parts to avoid issues with pageKeyToTitleMap
+					$value = $linkParts[$index];
+					$linkParts[$index] = trim( $value );
+				}
 				$target = $linkParts[0];
 				$target = trim( $target, ':' );
 
@@ -45,8 +50,14 @@ class Link implements IProcessor {
 				}
 
 				$targetKey = $this->generalizeItem( $target );
+				var_dump( $targetKey );
 				if ( isset( $this->pageKeyToTitleMap[$targetKey] ) ) {
 					$linkParts[0] = $this->pageKeyToTitleMap[$targetKey] . $hash;
+					$lastLinkPart = array_key_last( $linkParts );
+					if ( $linkParts[$lastLinkPart] === '' ) {
+						// If the last part is empty conversion will last in |]]. Therefore we set the target as label
+						$linkParts[$lastLinkPart] = $this->pageKeyToTitleMap[$targetKey];
+					}
 					$replacement = implode( '###PRESERVEINTERNALLINKPIPE###', $linkParts );
 					$replacement = $this->wrapPreserveMarker( $replacement );
 				}
