@@ -1,0 +1,24 @@
+
+<span class="external-image">[https://upload.wikimedia.org/wikipedia/mediawiki/thumb/a/a9/Example.jpg/330px-Example.jpg Image from external source]</span>
+
+<span class="external-image">[https://upload.wikimedia.org/wikipedia/mediawiki/thumb/a/a9/Example.jpg/330px-Example.jpg Image from external source]</span>
+
+<span class="external-image">[http://upload.wikimedia.org/wikipedia/mediawiki/thumb/a/a9/Example.jpg/330px-Example.jpg Image from external source]</span>
+
+<span class="external-image">[http://upload.wikimedia.org/wikipedia/mediawiki/thumb/a/a9/Example.jpg/330px-Example.jpg]</span>
+
+<span class="external-image">[http://upload.wikimedia.org/wikipedia/mediawiki/thumb/a/a9/Example.jpg/330px-Example.jpg Image from external source]</span>
+
+[[File:upload.wikimedia.org/wikipedia/mediawiki/thumb/a/a9/Example.jpg/330px-Example.jpg|Image from external source]]
+
+[[File:Example.jpg]]
+
+[[File:Example.jpg]]
+
+[[File:|Example.jpg]][[Category:Migration/Broken file target]]
+
+[[File:ABC:Example.jpg|Example.jpg]]
+
+[[Media:Test:Example.pdf]]
+
+[[Media:Example.pdf|pdf test]]

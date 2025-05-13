@@ -26,7 +26,7 @@ class Image implements IProcessor {
 		$text = $this->removeLeadingSlash( $text );
 		$text = $this->fixExternalFileLinks( $text );
 		$text = $this->markBrokenFileTarget( $text );
-		$text = $this->addFileTitle( $text );
+		$text = $this->addFileCaption( $text );
 		if ( isset( $this->advancedConfig['ext-ns-file-repo-compat'] )
 			&& $this->advancedConfig['ext-ns-file-repo-compat'] === true
 		) {
@@ -65,9 +65,10 @@ class Image implements IProcessor {
 	 * @param string $text
 	 * @return string
 	 */
-	private function addFileTitle( string $text ): string {
+	private function addFileCaption( string $text ): string {
+		$advancedConfig = $this->advancedConfig;
 		$regEx = '#(\[\[File:)(.*?)(\]\])#';
-		$text = preg_replace_callback( $regEx, static function ( $matches ) {
+		$text = preg_replace_callback( $regEx, static function ( $matches ) use ( $advancedConfig ) {
 			$pipePos = strpos( $matches[2], '|' );
 			if ( $pipePos === false ) {
 				return $matches[0];
@@ -81,6 +82,20 @@ class Image implements IProcessor {
 			$slashPos = strrpos( $caption, '/' );
 			if ( $slashPos !== false ) {
 				$caption = substr( $caption, $slashPos + 1 );
+			}
+
+			if ( isset( $advancedConfig['ext-ns-file-repo-compat'] )
+				&& $advancedConfig['ext-ns-file-repo-compat'] === true
+			) {
+
+				$namespacePos = strpos( $caption, ':' );
+				$preserveMarker = '#####preserveimagenamespace#####';
+				$preserveNamespacePos = strpos( $caption, $preserveMarker );
+				if ( $namespacePos !== false ) {
+					$caption = substr( $caption, $namespacePos + 1 );
+				} elseif ( $preserveNamespacePos !== false ) {
+					$caption = substr( $caption, $preserveNamespacePos + strlen( $preserveMarker ) );
+				}
 			}
 
 			$matches[2] = $matches[2] . $caption;
@@ -226,7 +241,7 @@ class Image implements IProcessor {
 				$target = substr( $data, 0, $pipePos );
 				$param = substr( $data, $pipePos + 1 );
 				$params = explode( '|', $param );
-				// After addFileTitle each file should have a caption
+				// After addFileCaption each file should have a caption
 				$caption = array_pop( $params );
 			} else {
 				$target = $data;

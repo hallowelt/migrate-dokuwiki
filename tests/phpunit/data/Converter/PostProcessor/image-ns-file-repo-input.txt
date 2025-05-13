@@ -1,0 +1,24 @@
+
+[[File:https://upload.wikimedia.org/wikipedia/mediawiki/thumb/a/a9/Example.jpg/330px-Example.jpg|Image from external source]]
+
+[[File:/https://upload.wikimedia.org/wikipedia/mediawiki/thumb/a/a9/Example.jpg/330px-Example.jpg|Image from external source]]
+
+[[File:http://upload.wikimedia.org/wikipedia/mediawiki/thumb/a/a9/Example.jpg/330px-Example.jpg|Image from external source]]
+
+[[File:http://upload.wikimedia.org/wikipedia/mediawiki/thumb/a/a9/Example.jpg/330px-Example.jpg]]
+
+[[File:http://upload.wikimedia.org/wikipedia/mediawiki/thumb/a/a9/Example.jpg/330px-Example.jpg|Image from external source]]
+
+[[File:upload.wikimedia.org/wikipedia/mediawiki/thumb/a/a9/Example.jpg/330px-Example.jpg|Image from external source]]
+
+[[File:/Example.jpg]]
+
+[[File:Example.jpg]]
+
+[[File:|Example.jpg]]
+
+[[File:ABC#####preserveimagenamespace#####Example.jpg|]]
+
+[[File:Test#####preserveimagenamespace#####Example.pdf]]
+
+[[File:Example.pdf|pdf test]]
