@@ -24,8 +24,9 @@ class Image implements IProcessor {
 	public function process( string $text, string $path = '' ): string {
 		// remove leading / which is placed by pandoc between File: and the file title
 		$text = $this->removeLeadingSlash( $text );
-		$text = $this->addFileTitle( $text );
 		$text = $this->fixExternalFileLinks( $text );
+		$text = $this->markBrokenFileTarget( $text );
+		$text = $this->addFileTitle( $text );
 		if ( isset( $this->advancedConfig['ext-ns-file-repo-compat'] )
 			&& $this->advancedConfig['ext-ns-file-repo-compat'] === true
 		) {
@@ -59,16 +60,20 @@ class Image implements IProcessor {
 	}
 
 	/**
-	 * Add file title to files with tailing "|" which sometimes appears in the wikitext
+	 * Mark file links with broken file target
 	 *
 	 * @param string $text
 	 * @return string
 	 */
 	private function addFileTitle( string $text ): string {
-		$regEx = '#(\[\[File:)(.*?)(|)(\]\])#';
+		$regEx = '#(\[\[File:)(.*?)(\]\])#';
 		$text = preg_replace_callback( $regEx, static function ( $matches ) {
 			$pipePos = strpos( $matches[2], '|' );
 			if ( $pipePos === false ) {
+				return $matches[0];
+			}
+
+			if ( $pipePos !== strlen( $matches[2] ) - 1 ) {
 				return $matches[0];
 			}
 
@@ -89,6 +94,29 @@ class Image implements IProcessor {
 	}
 
 	/**
+	 * Add file title to files with tailing "|" which sometimes appears in the wikitext
+	 *
+	 * @param string $text
+	 * @return string
+	 */
+	private function markBrokenFileTarget( string $text ): string {
+		$regEx = '#(\[\[File:)(.*?)(\]\])#';
+		$text = preg_replace_callback( $regEx, static function ( $matches ) {
+			$pipePos = strpos( $matches[2], '|' );
+			if ( $pipePos === false ) {
+				return $matches[0];
+			}
+
+			if ( $pipePos !== 0 ) {
+				return $matches[0];
+			}
+
+			return "{$matches[0]}[[Category:Migration/Broken file target]]";
+		}, $text );
+		return $text;
+	}
+
+	/**
 	 * [[File:https://<wiki url>/thumb/a/a9/Example.jpg/330px-Example.jpg|Image from external source]]
 	 * https://www.mediawiki.org/wiki/Manual:$wgAllowExternalImagesFrom
 	 *
@@ -99,9 +127,11 @@ class Image implements IProcessor {
 		$regEx = '#(\[\[File:)(.*?)(\]\])#';
 		$text = preg_replace_callback( $regEx, static function ( $matches ) {
 			$target = $matches[2];
+			$label = '';
 			$pipePos = strpos( $target, '|' );
 			if ( $pipePos !== false ) {
-				$target = substr( $target, 0, $pipePos );
+				$target = substr( $matches[2], 0, $pipePos );
+				$label = substr( $matches[2], $pipePos + 1 );
 			}
 
 			$parsedUrl = parse_url( $target );
@@ -109,7 +139,11 @@ class Image implements IProcessor {
 				return $matches[0];
 			}
 
-			$replacement = "[$target]";
+			if ( $label === '' ) {
+				$replacement = "<span class=\"external-image\">[$target]</span>";
+			} else {
+				$replacement = "<span class=\"external-image\">[$target $label]</span>";
+			}
 			return $replacement;
 		}, $text );
 

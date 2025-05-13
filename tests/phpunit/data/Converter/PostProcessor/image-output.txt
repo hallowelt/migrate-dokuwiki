@@ -1,16 +1,20 @@
 
-[https://upload.wikimedia.org/wikipedia/mediawiki/thumb/a/a9/Example.jpg/330px-Example.jpg]
+<span class="external-image">[https://upload.wikimedia.org/wikipedia/mediawiki/thumb/a/a9/Example.jpg/330px-Example.jpg Image from external source]</span>
 
-[https://upload.wikimedia.org/wikipedia/mediawiki/thumb/a/a9/Example.jpg/330px-Example.jpg]
+<span class="external-image">[https://upload.wikimedia.org/wikipedia/mediawiki/thumb/a/a9/Example.jpg/330px-Example.jpg Image from external source]</span>
 
-[http://upload.wikimedia.org/wikipedia/mediawiki/thumb/a/a9/Example.jpg/330px-Example.jpg]
+<span class="external-image">[http://upload.wikimedia.org/wikipedia/mediawiki/thumb/a/a9/Example.jpg/330px-Example.jpg Image from external source]</span>
 
-[http://upload.wikimedia.org/wikipedia/mediawiki/thumb/a/a9/Example.jpg/330px-Example.jpg]
+<span class="external-image">[http://upload.wikimedia.org/wikipedia/mediawiki/thumb/a/a9/Example.jpg/330px-Example.jpg]</span>
 
-[[File:abc://upload.wikimedia.org/wikipedia/mediawiki/thumb/a/a9/Example.jpg/330px-Example.jpg|Image from external source]]
+<span class="external-image">[http://upload.wikimedia.org/wikipedia/mediawiki/thumb/a/a9/Example.jpg/330px-Example.jpg Image from external source]</span>
 
 [[File:upload.wikimedia.org/wikipedia/mediawiki/thumb/a/a9/Example.jpg/330px-Example.jpg|Image from external source]]
 
 [[File:Example.jpg]]
 
 [[File:Example.jpg]]
+
+[[File:|Example.jpg]][[Category:Migration/Broken file target]]
+
+[[File:Example.jpg|Example.jpg]]
