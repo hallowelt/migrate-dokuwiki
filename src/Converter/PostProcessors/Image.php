@@ -24,18 +24,24 @@ class Image implements IProcessor {
 	public function process( string $text, string $path = '' ): string {
 		// remove leading / which is placed by pandoc between File: and the file title
 		$text = $this->removeLeadingSlash( $text );
+		$text = $this->addFileTitle( $text );
 		$text = $this->fixExternalFileLinks( $text );
 		if ( isset( $this->advancedConfig['ext-ns-file-repo-compat'] )
 			&& $this->advancedConfig['ext-ns-file-repo-compat'] === true
 		) {
 			$text = $this->restoreNamespace( $text );
 		}
+		if ( isset( $this->advancedConfig['media-link-extensions'] )
+			&& !empty( $this->advancedConfig['media-link-extensions'] )
+		) {
+			$text = $this->convertToMediaLink( $text, $this->advancedConfig['media-link-extensions'] );
+		}
 		$text = $this->fixAlignment( $text );
 		return $text;
 	}
 
 	/**
-	 * remove leading / which is placed by pandoc between File: and the file title
+	 * remove leading "/" which is placed by pandoc between File: and the file title
 	 *
 	 * @param string $text
 	 * @return string
@@ -45,6 +51,37 @@ class Image implements IProcessor {
 		$text = preg_replace_callback( $regEx, static function ( $matches ) {
 			unset( $matches[0] );
 			unset( $matches[2] );
+			$matches = array_values( $matches );
+			$replacement = implode( '', $matches );
+			return $replacement;
+		}, $text );
+		return $text;
+	}
+
+	/**
+	 * Add file title to files with tailing "|" which sometimes appears in the wikitext
+	 *
+	 * @param string $text
+	 * @return string
+	 */
+	private function addFileTitle( string $text ): string {
+		$regEx = '#(\[\[File:)(.*?)(|)(\]\])#';
+		$text = preg_replace_callback( $regEx, static function ( $matches ) {
+			$pipePos = strpos( $matches[2], '|' );
+			if ( $pipePos === false ) {
+				return $matches[0];
+			}
+
+			$caption = substr( $matches[2], 0, $pipePos );
+			$slashPos = strrpos( $caption, '/' );
+			if ( $slashPos !== false ) {
+				$caption = substr( $caption, $slashPos + 1 );
+			}
+
+			$matches[2] = $matches[2] . $caption;
+
+			unset( $matches[0] );
+			$matches = array_values( $matches );
 			$replacement = implode( '', $matches );
 			return $replacement;
 		}, $text );
@@ -132,6 +169,43 @@ class Image implements IProcessor {
 			$target = str_replace( '#####preserveimagenamespace#####', ':', $target );
 
 			return $matches[1] . $target . $matches[3];
+		},
+		$text );
+
+		return $text;
+	}
+
+	/**
+	 * @param string $text
+	 * @param array $extensions
+	 * @return string
+	 */
+	private function convertToMediaLink( string $text, array $extensions ): string {
+		$regEx = '#(\[\[File:)(.*?)(\]\])#';
+		$text = preg_replace_callback( $regEx, static function ( $matches ) use ( $extensions ) {
+			$data = $matches[2];
+			$pipePos = strpos( $data, '|' );
+			$target = '';
+			$params = [];
+			if ( $pipePos !== false ) {
+				$target = substr( $data, 0, $pipePos );
+				$param = substr( $data, $pipePos );
+				$params = explode( '|', $param );
+			}
+
+			$extensionPos = strrpos( $target, '.' );
+			if ( $extensionPos === false ) {
+				return $matches[0];
+			}
+
+			$extension = substr( $target, $extensionPos );
+			if ( in_array( $extension, $extensions ) ) {
+				// After addFileTitle each file should have a caption
+				$caption = array_pop( $params );
+				return "[[Media:{$matches[2]}|{$caption}]]";
+			}
+
+			return $matches[0];
 		},
 		$text );
 
