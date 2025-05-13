@@ -18,3 +18,7 @@
 [[File:|Example.jpg]][[Category:Migration/Broken file target]]
 
 [[File:Example.jpg|Example.jpg]]
+
+[[Media:Example.pdf]]
+
+[[Media:Example.pdf|pdf test]]

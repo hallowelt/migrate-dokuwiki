@@ -220,23 +220,28 @@ class Image implements IProcessor {
 			$data = $matches[2];
 			$pipePos = strpos( $data, '|' );
 			$target = '';
-			$params = [];
-			if ( $pipePos !== false ) {
+			$caption = '';
+
+			if ( $pipePos !== false && $pipePos !== 0 ) {
 				$target = substr( $data, 0, $pipePos );
-				$param = substr( $data, $pipePos );
+				$param = substr( $data, $pipePos + 1 );
 				$params = explode( '|', $param );
+				// After addFileTitle each file should have a caption
+				$caption = array_pop( $params );
+			} else {
+				$target = $data;
 			}
 
 			$extensionPos = strrpos( $target, '.' );
 			if ( $extensionPos === false ) {
 				return $matches[0];
 			}
-
-			$extension = substr( $target, $extensionPos );
+			$extension = substr( $target, $extensionPos + 1 );
 			if ( in_array( $extension, $extensions ) ) {
-				// After addFileTitle each file should have a caption
-				$caption = array_pop( $params );
-				return "[[Media:{$matches[2]}|{$caption}]]";
+				if ( $caption !== '' ) {
+					return "[[Media:{$target}|{$caption}]]";
+				}
+				return "[[Media:{$target}]]";
 			}
 
 			return $matches[0];

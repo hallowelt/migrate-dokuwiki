@@ -10,7 +10,10 @@ class ImageTest extends TestCase {
 	 * @covers \HalloWelt\MigrateDokuwiki\Converter\PostProcessor\Image::process()
 	 */
 	public function testProcess() {
-		$processor = new Image();
+		$config = [
+			'media-link-extensions' => [ 'pdf' ]
+		];
+		$processor = new Image( $config );
 
 		$dataDir = dirname( __DIR__, 2 ) . '/data/Converter/PostProcessor';
 		$input = file_get_contents( "$dataDir/image-input.txt" );
