@@ -127,7 +127,7 @@ class Image implements IProcessor {
 				return $matches[0];
 			}
 
-			$category = CategoryBuilder::getMigrationCategory( 'Broken file target' );
+			$category = CategoryBuilder::getPreservedMigrationCategory( 'Broken file target' );
 			return "{$matches[0]}{$category}";
 		}, $text );
 		return $text;

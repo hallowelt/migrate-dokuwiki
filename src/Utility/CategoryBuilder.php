@@ -8,7 +8,21 @@ class CategoryBuilder {
 	 * @param string $name
 	 * @return string
 	 */
-	public static function getMigrationCategory( string $name ): string {
-		return "[[Category:Migration/{$name}]]";
+	public static function getPreservedMigrationCategory( string $name ): string {
+		return "#####CATEGORYOPEN#####Migration/{$name}#####CATEGORYCLOSE#####";
+	}
+
+	public static function restoreCategories( string $text ): string {
+		$text = str_replace( [
+			'#####CATEGORYOPEN#####',
+			'#####CATEGORYCLOSE#####'
+		],
+		[
+			'[[Category:',
+			']]'
+		],
+		$text );
+
+		return $text;
 	}
 }

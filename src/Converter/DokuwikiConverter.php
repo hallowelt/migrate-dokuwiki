@@ -10,6 +10,7 @@ use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Displaytitle;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Hidden;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Image as ImagePostProcessor;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Link as LinkPostProcessor;
+use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\RestoreCategories;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\RestoreCode;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\RestoreImageCaption;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\RestoreIndexMenu;
@@ -84,7 +85,8 @@ class DokuwikiConverter extends PandocDokuwiki implements IOutputAwareInterface 
 			new RowspanPostProcessor(),
 			new RestoreTableWidth(),
 			new RestoreIndexMenu( $this->dataBuckets->getBucketData( 'media-key-to-title-map' ) ),
-			new RestoreCode()
+			new RestoreCode(),
+			new RestoreCategories()
 		];
 	}
 
