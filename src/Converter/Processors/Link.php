@@ -104,7 +104,7 @@ class Link implements IProcessor {
 
 	/**
 	 * @param string $data
-	 * @return boolean
+	 * @return bool
 	 */
 	private function hasLabel( string $data ): bool {
 		if ( strpos( $data, '|' ) ) {
@@ -115,7 +115,7 @@ class Link implements IProcessor {
 
 	/**
 	 * @param string $data
-	 * @return boolean
+	 * @return bool
 	 */
 	private function isMailToLink( string $data ): bool {
 		if ( $this->hasLabel( $data ) ) {
@@ -139,10 +139,17 @@ class Link implements IProcessor {
 
 		if ( $this->hasLabel( $data ) ) {
 			$linkParts = $this->getLinkParts( $data );
-			$linkParts[0] = trim( $linkParts[0], ':' );;
-			$replacement = $this->getPreservedLinkReplacement( $linkParts );
+			$linkParts[0] = trim( $linkParts[0], ':' );
+			if ( $linkParts[1] === '' ) {
+				// If label is empty [[e@mail | ]]
+				$linkParts[1] = $linkParts[0];
+			}
+			$replacement = $this->getPreservedMailLinkReplacement( $linkParts );
 		} else {
-			$replacement = $this->getPreservedLinkReplacement( [ $data ] );
+			$data = trim( $data, ':' );
+			// Build linkParts [ target, label ];
+			$linkParts = [ $data, $data ];
+			$replacement = $this->getPreservedMailLinkReplacement( $linkParts );
 		}
 
 		return $replacement;
@@ -246,11 +253,20 @@ class Link implements IProcessor {
 	}
 
 	/**
-	 * @param array $linkparts
+	 * @param array $linkParts
 	 * @return string
 	 */
 	private function getPreservedLinkReplacement( array $linkParts ): string {
-		$data = implode( '###PRESERVEINTERNALLINKPIPE###', $linkParts );
-		return "###PRESERVEINTERNALLINKOPEN###$data###PRESERVEINTERNALLINKCLOSE###";
+		$data = implode( '#####PRESERVEINTERNALLINKPIPE#####', $linkParts );
+		return "#####PRESERVEINTERNALLINKOPEN#####$data#####PRESERVEINTERNALLINKCLOSE#####";
+	}
+
+	/**
+	 * @param array $linkParts
+	 * @return string
+	 */
+	private function getPreservedMailLinkReplacement( array $linkParts ): string {
+		$data = implode( '#####PRESERVEMAILLINKPIPE#####', $linkParts );
+		return "#####PRESERVEMAILLINKOPEN#####$data#####PRESERVEMAILLINKCLOSE#####";
 	}
 }
