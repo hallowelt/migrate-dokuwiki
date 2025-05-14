@@ -3,6 +3,7 @@
 namespace HalloWelt\MigrateDokuwiki\Converter\Processors;
 
 use HalloWelt\MigrateDokuwiki\IProcessor;
+use HalloWelt\MigrateDokuwiki\Utility\CategoryBuilder;
 
 class Link implements IProcessor {
 
@@ -70,6 +71,9 @@ class Link implements IProcessor {
 					}
 					$replacement = implode( '###PRESERVEINTERNALLINKPIPE###', $linkParts );
 					$replacement = $this->wrapPreserveMarker( $replacement );
+
+					$category = CategoryBuilder::getMigrationCategory( 'Guessed link title' );
+					$replacement .= " {$category}";
 				}
 				return $replacement;
 			}
@@ -91,6 +95,9 @@ class Link implements IProcessor {
 				$guessedTitle = $this->getGuessedTitle( $target );
 				$replacement = $guessedTitle . $hash;
 				$replacement = $this->wrapPreserveMarker( $replacement );
+
+				$category = CategoryBuilder::getMigrationCategory( 'Guessed link title' );
+				$replacement .= " {$category}";
 			}
 			return $replacement;
 		 }, $text );

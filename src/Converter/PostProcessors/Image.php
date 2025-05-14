@@ -3,6 +3,7 @@
 namespace HalloWelt\MigrateDokuwiki\Converter\PostProcessors;
 
 use HalloWelt\MigrateDokuwiki\IProcessor;
+use HalloWelt\MigrateDokuwiki\Utility\CategoryBuilder;
 
 class Image implements IProcessor {
 
@@ -126,7 +127,8 @@ class Image implements IProcessor {
 				return $matches[0];
 			}
 
-			return "{$matches[0]}[[Category:Migration/Broken file target]]";
+			$category = CategoryBuilder::getMigrationCategory( 'Broken file target' );
+			return "{$matches[0]}{$category}";
 		}, $text );
 		return $text;
 	}
