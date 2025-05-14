@@ -50,13 +50,23 @@ class Link implements IProcessor {
 				}
 
 				$targetKey = $this->generalizeItem( $target );
-				var_dump( $targetKey );
 				if ( isset( $this->pageKeyToTitleMap[$targetKey] ) ) {
 					$linkParts[0] = $this->pageKeyToTitleMap[$targetKey] . $hash;
 					$lastLinkPart = array_key_last( $linkParts );
 					if ( $linkParts[$lastLinkPart] === '' ) {
 						// If the last part is empty conversion will last in |]]. Therefore we set the target as label
 						$linkParts[$lastLinkPart] = $this->pageKeyToTitleMap[$targetKey];
+					}
+					$replacement = implode( '###PRESERVEINTERNALLINKPIPE###', $linkParts );
+					$replacement = $this->wrapPreserveMarker( $replacement );
+				} else {
+					// try to create a valid wiki link if map does not contain a key for this page
+					$guessedTitle = $this->getGuessedTitle( $target );
+					$linkParts[0] = $guessedTitle . $hash;
+					$lastLinkPart = array_key_last( $linkParts );
+					if ( $linkParts[$lastLinkPart] === '' ) {
+						// If the last part is empty conversion will last in |]]. Therefore we set the target as label
+						$linkParts[$lastLinkPart] = $guessedTitle;
 					}
 					$replacement = implode( '###PRESERVEINTERNALLINKPIPE###', $linkParts );
 					$replacement = $this->wrapPreserveMarker( $replacement );
@@ -76,6 +86,10 @@ class Link implements IProcessor {
 			$targetKey = $this->generalizeItem( $target );
 			if ( isset( $this->pageKeyToTitleMap[$targetKey] ) ) {
 				$replacement = $this->pageKeyToTitleMap[$targetKey] . $hash;
+				$replacement = $this->wrapPreserveMarker( $replacement );
+			} else {
+				$guessedTitle = $this->getGuessedTitle( $target );
+				$replacement = $guessedTitle . $hash;
 				$replacement = $this->wrapPreserveMarker( $replacement );
 			}
 			return $replacement;
@@ -116,5 +130,36 @@ class Link implements IProcessor {
 		$text = strtolower( $text );
 
 		return $text;
+	}
+
+	/**
+	 * Remove last part of the key and try to find a match in map
+	 * to build a wiki page title
+	 *
+	 * @param string $text
+	 * @return string
+	 */
+	private function getGuessedTitle( string $text ): string {
+		$trimmed = trim( $text, ':' );
+		$parts = explode( ':', $trimmed );
+		$title = '';
+		for ( $index = 0; $index < count( $parts ); $index++ ) {
+			$guessed = array_slice( $parts, 0, $index + 1 );
+			$guessedKey = implode( ':', $guessed );
+			$guessedKey = $this->generalizeItem( $guessedKey );
+			if ( isset( $this->pageKeyToTitleMap[$guessedKey] ) ) {
+				$title = $this->pageKeyToTitleMap[$guessedKey];
+			} else {
+				$tail = $parts[$index];
+				if ( $title === $tail ) {
+					// Dokuwiki pages with subpages can have double name in key
+					// abc:abc:def
+					continue;
+				}
+				$title = "{$title}/{$tail}";
+				$title = trim( $title, '/' );
+			}
+		}
+		return $title;
 	}
 }
