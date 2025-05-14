@@ -12,3 +12,6 @@ Link to a page with missing page key
 * sit amet [[tools:Toolbox:screwdriver:IAmNotPartOfPagesTitlesMap#123 | ]]
 * sit amet [[xyz:xyz:test | Missing page key with label]]
 * sit amet [[xyz:xyz:test | ]]
+* sit amet [[abc.def@example.com|Name]]
+* sit amet [[abc.def@example.com| ]]
+* sit amet [[abc.def@example.com]]

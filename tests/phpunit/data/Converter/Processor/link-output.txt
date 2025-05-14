@@ -6,9 +6,12 @@ sit amet ###PRESERVEINTERNALLINKOPEN###Tools:Toolbox/Wrench###PRESERVEINTERNALLI
 * sit amet ###PRESERVEINTERNALLINKOPEN###Tools:Toolbox/Screwdriver###PRESERVEINTERNALLINKPIPE###Tools:Toolbox/Screwdriver###PRESERVEINTERNALLINKCLOSE###
 
 Link to a page with missing page key
-* sit amet ###PRESERVEINTERNALLINKOPEN###Tools:Toolbox/Screwdriver/IAmNotPartOfPagesTitlesMap###PRESERVEINTERNALLINKPIPE###Missing page key with label###PRESERVEINTERNALLINKCLOSE### [[Category:Migration/Guessed link title]]
-* sit amet ###PRESERVEINTERNALLINKOPEN###Tools:Toolbox/Screwdriver/IAmNotPartOfPagesTitlesMap###PRESERVEINTERNALLINKPIPE###Tools:Toolbox/Screwdriver/IAmNotPartOfPagesTitlesMap###PRESERVEINTERNALLINKCLOSE### [[Category:Migration/Guessed link title]]
-* sit amet ###PRESERVEINTERNALLINKOPEN###Tools:Toolbox/Screwdriver/IAmNotPartOfPagesTitlesMap#123###PRESERVEINTERNALLINKPIPE###Missing page key with label###PRESERVEINTERNALLINKCLOSE### [[Category:Migration/Guessed link title]]
-* sit amet ###PRESERVEINTERNALLINKOPEN###Tools:Toolbox/Screwdriver/IAmNotPartOfPagesTitlesMap#123###PRESERVEINTERNALLINKPIPE###Tools:Toolbox/Screwdriver/IAmNotPartOfPagesTitlesMap###PRESERVEINTERNALLINKCLOSE### [[Category:Migration/Guessed link title]]
-* sit amet ###PRESERVEINTERNALLINKOPEN###xyz/test###PRESERVEINTERNALLINKPIPE###Missing page key with label###PRESERVEINTERNALLINKCLOSE### [[Category:Migration/Guessed link title]]
-* sit amet ###PRESERVEINTERNALLINKOPEN###xyz/test###PRESERVEINTERNALLINKPIPE###xyz/test###PRESERVEINTERNALLINKCLOSE### [[Category:Migration/Guessed link title]]
+* sit amet ###PRESERVEINTERNALLINKOPEN###Tools:Toolbox/Screwdriver/IAmNotPartOfPagesTitlesMap###PRESERVEINTERNALLINKPIPE###Missing page key with label###PRESERVEINTERNALLINKCLOSE### #####CATEGORYOPEN#####Migration/Guessed link title#####CATEGORYCLOSE#####
+* sit amet ###PRESERVEINTERNALLINKOPEN###Tools:Toolbox/Screwdriver/IAmNotPartOfPagesTitlesMap###PRESERVEINTERNALLINKPIPE###Tools:Toolbox/Screwdriver/IAmNotPartOfPagesTitlesMap###PRESERVEINTERNALLINKCLOSE### #####CATEGORYOPEN#####Migration/Guessed link title#####CATEGORYCLOSE#####
+* sit amet ###PRESERVEINTERNALLINKOPEN###Tools:Toolbox/Screwdriver/IAmNotPartOfPagesTitlesMap#123###PRESERVEINTERNALLINKPIPE###Missing page key with label###PRESERVEINTERNALLINKCLOSE### #####CATEGORYOPEN#####Migration/Guessed link title#####CATEGORYCLOSE#####
+* sit amet ###PRESERVEINTERNALLINKOPEN###Tools:Toolbox/Screwdriver/IAmNotPartOfPagesTitlesMap#123###PRESERVEINTERNALLINKPIPE###Tools:Toolbox/Screwdriver/IAmNotPartOfPagesTitlesMap###PRESERVEINTERNALLINKCLOSE### #####CATEGORYOPEN#####Migration/Guessed link title#####CATEGORYCLOSE#####
+* sit amet ###PRESERVEINTERNALLINKOPEN###Xyz/Test###PRESERVEINTERNALLINKPIPE###Missing page key with label###PRESERVEINTERNALLINKCLOSE### #####CATEGORYOPEN#####Migration/Guessed link title#####CATEGORYCLOSE#####
+* sit amet ###PRESERVEINTERNALLINKOPEN###Xyz/Test###PRESERVEINTERNALLINKPIPE###Xyz/Test###PRESERVEINTERNALLINKCLOSE### #####CATEGORYOPEN#####Migration/Guessed link title#####CATEGORYCLOSE#####
+* sit amet ###PRESERVEINTERNALLINKOPEN###abc.def@example.com###PRESERVEINTERNALLINKPIPE###Name###PRESERVEINTERNALLINKCLOSE###
+* sit amet ###PRESERVEINTERNALLINKOPEN###abc.def@example.com###PRESERVEINTERNALLINKPIPE######PRESERVEINTERNALLINKCLOSE###
+* sit amet ###PRESERVEINTERNALLINKOPEN###abc.def@example.com###PRESERVEINTERNALLINKCLOSE###

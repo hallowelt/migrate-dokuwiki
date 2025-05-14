@@ -26,80 +26,19 @@ class Link implements IProcessor {
 		 $regEx = '#(\[\[)(.*?)(\]\])#';
 		 $text = preg_replace_callback( $regEx, function ( $matches ) {
 			$replacement = $matches[0];
-			$target = $matches[2];
+			$target = trim( $matches[2] );
 
 			if ( $this->isExternalUrl( $target ) ) {
 				return $replacement;
 			}
 
-			if ( strpos( $matches[2], '|' ) ) {
-				// replace link target for link with label
-				$linkParts = explode( '|', $matches[2] );
-				for ( $index = 0; $index < count( $linkParts ); $index++ ) {
-					// trim whitespaces form the link parts to avoid issues with pageKeyToTitleMap
-					$value = $linkParts[$index];
-					$linkParts[$index] = trim( $value );
-				}
-				$target = $linkParts[0];
-				$target = trim( $target, ':' );
-
-				$hash = '';
-				$hashPos = strpos( $target, '#' );
-				if ( $hashPos ) {
-					$hash = substr( $target, strpos( $target, '#' ) );
-					$target = str_replace( $hash, '', $target );
-				}
-
-				$targetKey = $this->generalizeItem( $target );
-				if ( isset( $this->pageKeyToTitleMap[$targetKey] ) ) {
-					$linkParts[0] = $this->pageKeyToTitleMap[$targetKey] . $hash;
-					$lastLinkPart = array_key_last( $linkParts );
-					if ( $linkParts[$lastLinkPart] === '' ) {
-						// If the last part is empty conversion will last in |]]. Therefore we set the target as label
-						$linkParts[$lastLinkPart] = $this->pageKeyToTitleMap[$targetKey];
-					}
-					$replacement = implode( '###PRESERVEINTERNALLINKPIPE###', $linkParts );
-					$replacement = $this->wrapPreserveMarker( $replacement );
-				} else {
-					// try to create a valid wiki link if map does not contain a key for this page
-					$guessedTitle = $this->getGuessedTitle( $target );
-					$linkParts[0] = $guessedTitle . $hash;
-					$lastLinkPart = array_key_last( $linkParts );
-					if ( $linkParts[$lastLinkPart] === '' ) {
-						// If the last part is empty conversion will last in |]]. Therefore we set the target as label
-						$linkParts[$lastLinkPart] = $guessedTitle;
-					}
-					$replacement = implode( '###PRESERVEINTERNALLINKPIPE###', $linkParts );
-					$replacement = $this->wrapPreserveMarker( $replacement );
-
-					$category = CategoryBuilder::getPreservedMigrationCategory( 'Guessed link title' );
-					$replacement .= " {$category}";
-				}
+			if ( $this->isMailToLink( $target ) ) {
+				$replacement = $this->handleMailToLink( $target );
+				return $replacement;
+			} else {
+				$replacement = $this->handlePageLink( $target );
 				return $replacement;
 			}
-
-			// replace link target for link without label
-			$hash = '';
-			$hashPos = strpos( $target, '#' );
-			if ( $hashPos ) {
-				$hash = substr( $target, strpos( $target, '#' ) );
-				$target = str_replace( $hash, '', $target );
-			}
-
-			$target = trim( $target, ':' );
-			$targetKey = $this->generalizeItem( $target );
-			if ( isset( $this->pageKeyToTitleMap[$targetKey] ) ) {
-				$replacement = $this->pageKeyToTitleMap[$targetKey] . $hash;
-				$replacement = $this->wrapPreserveMarker( $replacement );
-			} else {
-				$guessedTitle = $this->getGuessedTitle( $target );
-				$replacement = $guessedTitle . $hash;
-				$replacement = $this->wrapPreserveMarker( $replacement );
-
-				$category = CategoryBuilder::getPreservedMigrationCategory( 'Guessed link title' );
-				$replacement .= " {$category}";
-			}
-			return $replacement;
 		 }, $text );
 
 		return $text;
@@ -118,14 +57,6 @@ class Link implements IProcessor {
 			return true;
 		}
 		return false;
-	}
-
-	/**
-	 * @param string $text
-	 * @return string
-	 */
-	private function wrapPreserveMarker( string $text ): string {
-		return "###PRESERVEINTERNALLINKOPEN###$text###PRESERVEINTERNALLINKCLOSE###";
 	}
 
 	/**
@@ -158,6 +89,7 @@ class Link implements IProcessor {
 				$title = $this->pageKeyToTitleMap[$guessedKey];
 			} else {
 				$tail = $parts[$index];
+				$tail = ucfirst( $tail );
 				if ( $title === $tail ) {
 					// Dokuwiki pages with subpages can have double name in key
 					// abc:abc:def
@@ -168,5 +100,157 @@ class Link implements IProcessor {
 			}
 		}
 		return $title;
+	}
+
+	/**
+	 * @param string $data
+	 * @return boolean
+	 */
+	private function hasLabel( string $data ): bool {
+		if ( strpos( $data, '|' ) ) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * @param string $data
+	 * @return boolean
+	 */
+	private function isMailToLink( string $data ): bool {
+		if ( $this->hasLabel( $data ) ) {
+			$pipePos = strpos( $data, '|' );
+			$data = substr( $data, 0, $pipePos );
+			$data = trim( $data );
+		}
+
+		if ( strpos( $data, '@' ) !== false ) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * @param string $data
+	 * @return string
+	 */
+	private function handleMailToLink( string $data ): string {
+		$replacement = $data;
+
+		if ( $this->hasLabel( $data ) ) {
+			$linkParts = $this->getLinkParts( $data );
+			$linkParts[0] = trim( $linkParts[0], ':' );;
+			$replacement = $this->getPreservedLinkReplacement( $linkParts );
+		} else {
+			$replacement = $this->getPreservedLinkReplacement( [ $data ] );
+		}
+
+		return $replacement;
+	}
+
+	/**
+	 * @param string $data
+	 * @return string
+	 */
+	private function handlePageLink( string $data ): string {
+		$replacement = $data;
+
+		if ( $this->hasLabel( $data ) ) {
+			$linkParts = $this->getLinkParts( $data );
+			$target = trim( $linkParts[0], ':' );
+			$hash = $this->getHash( $target );
+
+			$title = $this->getTargetWikiTitle( $target );
+			$linkParts[0] = $title . $hash;
+			$linkParts = $this->fixEmptyLabel( $linkParts, $title );
+
+			$replacement = $this->getPreservedLinkReplacement( $linkParts );
+
+			$targetKey = $this->generalizeItem( $target );
+			if ( !isset( $this->pageKeyToTitleMap[$targetKey] ) ) {
+				$category = CategoryBuilder::getPreservedMigrationCategory( 'Guessed link title' );
+				$replacement .= " {$category}";
+			}
+		} else {
+			$hash = $this->getHash( $data );
+			$target = $this->getTargetWikiTitle( $data );
+
+			$replacement = $this->getPreservedLinkReplacement( [ $target . $hash ] );
+
+			$targetKey = $this->generalizeItem( $data );
+			if ( !isset( $this->pageKeyToTitleMap[$targetKey] ) ) {
+				$category = CategoryBuilder::getPreservedMigrationCategory( 'Guessed link title' );
+				$replacement .= " {$category}";
+			}
+		}
+
+		return $replacement;
+	}
+
+	/**
+	 * @param string &$data
+	 * @return string
+	 */
+	private function getHash( string &$data ): string {
+		$hash = '';
+		$hashPos = strpos( $data, '#' );
+		if ( $hashPos ) {
+			$hash = substr( $data, strpos( $data, '#' ) );
+			$data = str_replace( $hash, '', $data );
+		}
+
+		return $hash;
+	}
+
+	/**
+	 * @param string $target
+	 * @return string
+	 */
+	private function getTargetWikiTitle( string $target ): string {
+		$targetKey = $this->generalizeItem( $target );
+		if ( isset( $this->pageKeyToTitleMap[$targetKey] ) ) {
+			return $this->pageKeyToTitleMap[$targetKey];
+		}
+		// Guess wiki title if targetKey is not set in map
+		$guessedTitle = $this->getGuessedTitle( $target );
+		return $guessedTitle;
+	}
+
+	/**
+	 * @param array $linkParts
+	 * @param string $title
+	 * @return array
+	 */
+	private function fixEmptyLabel( array $linkParts, string $title ): array {
+		$lastKey = array_key_last( $linkParts );
+		if ( $linkParts[$lastKey] === '' ) {
+			// If the last part is empty conversion will last in |]]. Therefore we set the target as label
+			$linkParts[$lastKey] = $title;
+		}
+
+		return $linkParts;
+	}
+
+	/**
+	 * @param string $data
+	 * @return array
+	 */
+	private function getLinkParts( string $data ): array {
+		$linkParts = explode( '|', $data );
+		for ( $index = 0; $index < count( $linkParts ); $index++ ) {
+			// trim whitespaces form the link parts to avoid issues with pageKeyToTitleMap
+			$value = $linkParts[$index];
+			$linkParts[$index] = trim( $value );
+		}
+		return $linkParts;
+	}
+
+	/**
+	 * @param array $linkparts
+	 * @return string
+	 */
+	private function getPreservedLinkReplacement( array $linkParts ): string {
+		$data = implode( '###PRESERVEINTERNALLINKPIPE###', $linkParts );
+		return "###PRESERVEINTERNALLINKOPEN###$data###PRESERVEINTERNALLINKCLOSE###";
 	}
 }
