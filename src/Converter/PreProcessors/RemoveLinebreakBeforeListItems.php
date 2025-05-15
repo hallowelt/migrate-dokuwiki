@@ -20,25 +20,21 @@ class RemoveLinebreakBeforeListItems implements IProcessor {
 			$line = $lines[$index];
 			$lastLine = $lines[$index - 1];
 
-			$lineTest = trim( $line );
-			$lastLineTest = trim( $line );
+			$regEx = '#^(\s+)([\*,\-])(\s*)(.*)#';
 
-			if ( strpos( $lineTest, '*' ) !== 0 && strpos( $lastLineTest, '*' ) !== 0 ) {
-				continue;
-			}
-
-			if ( strpos( $lastLineTest, '*' ) === 0 ) {
-				// remove linebreak befor list
-				if ( strpos( $lastLine, '\\' ) === strlen( $lastLine ) - 2 ) {
-					$lines[$index - 1] = substr( $lastLine, 0, strlen( $lastLine ) - 2 );
+			$lineMatches = [];
+			$statusLine = preg_match( $regEx, $line, $lineMatches );
+			if ( $statusLine ) {
+				// remove linebreak at end of list item
+				if ( strpos( $line, '\\' ) === strlen( $line ) - 2 ) {
+					$lines[$index] = substr( $line, 0, strlen( $line ) - 2 );
 				}
 			}
 
-			// remove linebreak at end of list item
-			if ( strpos( $line, '\\' ) === strlen( $line ) - 2 ) {
-				$lines[$index] = substr( $line, 0, strlen( $line ) - 2 );
+			// remove linebreak befor list
+			if ( strpos( $lastLine, '\\' ) === strlen( $lastLine ) - 2 ) {
+				$lines[$index - 1] = substr( $lastLine, 0, strlen( $lastLine ) - 2 );
 			}
-			
 		}
 
 		$text = implode( "\n", $lines );

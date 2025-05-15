@@ -39,8 +39,7 @@ class Link implements IProcessor {
 
 			$replacement = $this->handlePageLink( $target );
 			return $replacement;
-
-		}, $text );
+		 }, $text );
 
 		return $text;
 	}
