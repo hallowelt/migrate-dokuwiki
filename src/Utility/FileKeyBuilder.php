@@ -7,13 +7,14 @@ class FileKeyBuilder {
 	/** @var array */
 	private $titleSegments = [];
 
+	/** @var string */
 	private $fileExtension = '';
 
 	/**
 	 * @param array $paths
 	 * @return string
 	 */
-	public function build( array $paths ) {
+	public function build( array $paths ): string {
 		$this->makeTitleKeyFromPaths( $paths );
 
 		$key = implode( ':', $this->titleSegments );
@@ -25,7 +26,7 @@ class FileKeyBuilder {
 	 * @param array $paths
 	 * @return string
 	 */
-	public function buildDoubleKey( array $paths ) {
+	public function buildDoubleKey( array $paths ): string {
 		$this->makeTitleKeyFromPaths( $paths );
 
 		$doubleKey = end( $this->titleSegments );
@@ -64,10 +65,10 @@ class FileKeyBuilder {
 	}
 
 	/**
-	 *
 	 * @param string $segment
+	 * @return void
 	 */
-	private function appendTitleSegment( $segment ) {
+	private function appendTitleSegment( string $segment ): void {
 		$this->titleSegments[] = $segment;
 	}
 

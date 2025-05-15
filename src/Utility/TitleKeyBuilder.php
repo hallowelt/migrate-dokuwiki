@@ -11,7 +11,7 @@ class TitleKeyBuilder {
 	 * @param array $paths
 	 * @return string
 	 */
-	public function build( array $paths ) {
+	public function build( array $paths ): string {
 		$this->makeTitleKeyFromPaths( $paths );
 
 		$key = implode( ':', $this->titleSegments );
@@ -22,7 +22,7 @@ class TitleKeyBuilder {
 	 * @param array $paths
 	 * @return string
 	 */
-	public function buildDoubleKey( array $paths ) {
+	public function buildDoubleKey( array $paths ): string {
 		$this->makeTitleKeyFromPaths( $paths );
 
 		$doubleKey = end( $this->titleSegments );
@@ -61,10 +61,10 @@ class TitleKeyBuilder {
 	}
 
 	/**
-	 *
 	 * @param string $segment
+	 * @return void
 	 */
-	private function appendTitleSegment( $segment ) {
+	private function appendTitleSegment( $segment ): void {
 		$this->titleSegments[] = $segment;
 	}
 
