@@ -51,9 +51,9 @@ class Link implements IProcessor {
 				'/#####PRESERVEMAILLINKCLOSE#####/'
 			],
 			[
-				'[[',
-				'|',
-				']]'
+				'[',
+				' ',
+				']'
 			],
 			$text
 		);

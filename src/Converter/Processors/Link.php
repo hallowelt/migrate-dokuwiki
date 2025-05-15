@@ -35,11 +35,12 @@ class Link implements IProcessor {
 			if ( $this->isMailToLink( $target ) ) {
 				$replacement = $this->handleMailToLink( $target );
 				return $replacement;
-			} else {
-				$replacement = $this->handlePageLink( $target );
-				return $replacement;
 			}
-		 }, $text );
+
+			$replacement = $this->handlePageLink( $target );
+			return $replacement;
+
+		}, $text );
 
 		return $text;
 	}

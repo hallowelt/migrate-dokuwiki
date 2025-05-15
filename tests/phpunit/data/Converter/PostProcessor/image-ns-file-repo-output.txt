@@ -15,7 +15,7 @@
 
 [[File:Example.jpg]]
 
-[[File:|Example.jpg]][[Category:Migration/Broken file target]]
+[[File:|Example.jpg]]#####CATEGORYOPEN#####Migration/Broken file target#####CATEGORYCLOSE#####
 
 [[File:ABC:Example.jpg|Example.jpg]]
 
