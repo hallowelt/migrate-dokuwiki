@@ -108,10 +108,10 @@ class Link implements IProcessor {
 	 * @return bool
 	 */
 	private function hasLabel( string $data ): bool {
-		if ( strpos( $data, '|' ) ) {
-			return true;
+		if ( strpos( $data, '|' ) === false ) {
+			return false;
 		}
-		return false;
+		return true;
 	}
 
 	/**
@@ -175,8 +175,8 @@ class Link implements IProcessor {
 			$replacement = $this->getPreservedLinkReplacement( $linkParts );
 
 			$targetKey = $this->generalizeItem( $target );
-			if ( !isset( $this->pageKeyToTitleMap[$targetKey] ) ) {
-				$category = CategoryBuilder::getPreservedMigrationCategory( 'Guessed link title' );
+			if ( $title !== '' && !isset( $this->pageKeyToTitleMap[$targetKey] ) ) {
+				$category = CategoryBuilder::getPreservedMigrationCategory( 'Guessed link target' );
 				$replacement .= " {$category}";
 			}
 		} else {
@@ -186,8 +186,8 @@ class Link implements IProcessor {
 			$replacement = $this->getPreservedLinkReplacement( [ $target . $hash ] );
 
 			$targetKey = $this->generalizeItem( $data );
-			if ( !isset( $this->pageKeyToTitleMap[$targetKey] ) ) {
-				$category = CategoryBuilder::getPreservedMigrationCategory( 'Guessed link title' );
+			if ( $target !== '' && !isset( $this->pageKeyToTitleMap[$targetKey] ) ) {
+				$category = CategoryBuilder::getPreservedMigrationCategory( 'Guessed link target' );
 				$replacement .= " {$category}";
 			}
 		}
@@ -259,7 +259,11 @@ class Link implements IProcessor {
 	 */
 	private function getPreservedLinkReplacement( array $linkParts ): string {
 		$data = implode( '#####PRESERVEINTERNALLINKPIPE#####', $linkParts );
-		return "#####PRESERVEINTERNALLINKOPEN#####$data#####PRESERVEINTERNALLINKCLOSE#####";
+		$replacement = "#####PRESERVEINTERNALLINKOPEN#####$data#####PRESERVEINTERNALLINKCLOSE#####";
+		if ( $linkParts[0] === '' ) {
+			$replacement .= ' ' . CategoryBuilder::getPreservedMigrationCategory( 'Missing link target' );
+		}
+		return $replacement;
 	}
 
 	/**
@@ -268,6 +272,10 @@ class Link implements IProcessor {
 	 */
 	private function getPreservedMailLinkReplacement( array $linkParts ): string {
 		$data = implode( '#####PRESERVEMAILLINKPIPE#####', $linkParts );
-		return "#####PRESERVEMAILLINKOPEN#####$data#####PRESERVEMAILLINKCLOSE#####";
+		$replacement = "#####PRESERVEMAILLINKOPEN#####$data#####PRESERVEMAILLINKCLOSE#####";
+		if ( $linkParts[0] === '' ) {
+			$replacement .= ' ' . CategoryBuilder::getPreservedMigrationCategory( 'Missing link target' );
+		}
+		return $replacement;
 	}
 }
