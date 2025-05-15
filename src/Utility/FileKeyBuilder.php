@@ -7,24 +7,45 @@ class FileKeyBuilder {
 	/** @var array */
 	private $titleSegments = [];
 
+	private $fileExtension = '';
+
 	/**
 	 * @param array $paths
 	 * @return string
 	 */
 	public function build( array $paths ) {
-		$this->titleSegments = [];
-		$title = $this->makeTitleKeyFromPaths( $paths );
-		return $title;
+		$this->makeTitleKeyFromPaths( $paths );
+
+		$key = implode( ':', $this->titleSegments );
+
+		return "{$key}.{$this->fileExtension}";
 	}
 
 	/**
 	 * @param array $paths
 	 * @return string
 	 */
-	private function makeTitleKeyFromPaths( array $paths ): string {
+	public function buildDoubleKey( array $paths ) {
+		$this->makeTitleKeyFromPaths( $paths );
+
+		$doubleKey = end( $this->titleSegments );
+		$this->titleSegments[] = $doubleKey;
+
+		$key = implode( ':', $this->titleSegments );
+
+		return "{$key}.{$this->fileExtension}";
+	}
+
+	/**
+	 * @param array $paths
+	 * @return void
+	 */
+	private function makeTitleKeyFromPaths( array $paths ): void {
+		$this->titleSegments = [];
+
 		$subpageName = array_pop( $paths );
 		$subpageParts = explode( '.', $subpageName );
-		$fileExtension = array_pop( $subpageParts );
+		$this->fileExtension = array_pop( $subpageParts );
 		$subpageName = implode( '.', $subpageParts );
 
 		for ( $index = 0; $index < count( $paths ); $index++ ) {
@@ -40,10 +61,6 @@ class FileKeyBuilder {
 
 		$subpageName = $this->generalizeItem( $subpageName );
 		$this->appendTitleSegment( $subpageName );
-
-		$key = implode( ':', $this->titleSegments );
-
-		return "$key.$fileExtension";
 	}
 
 	/**

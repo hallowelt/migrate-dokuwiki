@@ -14,13 +14,23 @@ class FileKeyBuilderTest extends TestCase {
 
 		// latest revision title
 		$pages = $this->getPageFilePaths();
+
 		$actualTitles = [];
 		foreach ( $pages as $filepath ) {
 			$paths = explode( '/', trim( $filepath, '/' ) );
 			$actualTitles[] = $titleBuilder->build( $paths );
 		}
-		$expectedTitles = $this->getExpectedTitles();
+		$expectedTitles = $this->getExpectedKeys();
 		$this->assertEquals( $expectedTitles, $actualTitles );
+
+		$actualKeys = [];
+		foreach ( $pages as $filepath ) {
+			$paths = explode( '/', trim( $filepath, '/' ) );
+			$actualKeys[] = $titleBuilder->buildDoubleKey( $paths );
+		}
+
+		$expectedKeys = $this->getExpectedDoubleKeys();
+		$this->assertEquals( $expectedKeys, $actualKeys );
 	}
 
 	/**
@@ -38,12 +48,24 @@ class FileKeyBuilderTest extends TestCase {
 	/**
 	 * @return array
 	 */
-	private function getExpectedTitles(): array {
+	private function getExpectedKeys(): array {
 		return [
 			'start.txt',
 			'projects:types:ab.type_01.txt',
 			'tools:toolbox:wrench.txt',
 			'tools:toolbox:hammer.01.txt',
+		];
+	}
+
+	/**
+	 * @return array
+	 */
+	private function getExpectedDoubleKeys(): array {
+		return [
+			'start:start.txt',
+			'projects:types:ab.type_01:ab.type_01.txt',
+			'tools:toolbox:wrench:wrench.txt',
+			'tools:toolbox:hammer.01:hammer.01.txt',
 		];
 	}
 
