@@ -192,6 +192,10 @@ class Image implements IProcessor {
 					$align = '|right';
 					continue;
 				}
+				if ( $part === 'class=align-center' ) {
+					$align = '|center';
+					continue;
+				}
 				// size
 				$sizeMatches = [];
 				$hasSizeMatch = preg_match( '#(\d+|x\d+|\d+x\d+)px#', $part, $sizeMatches );
