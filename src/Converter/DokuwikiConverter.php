@@ -23,9 +23,11 @@ use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\PreserveCode;
 use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\PreserveImageCaption;
 use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\PreserveIndexMenu;
 use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\PreserveWrap;
+use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\RemoveLinebreakBeforeListItems;
 use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\Table\Colspan as ColspanPreProcessor;
 use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\Table\PreserveTableWidth;
 use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\Table\RemoveLinebreakAtEndOfRow;
+use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\Table\RemoveLinebreakBeforeTable;
 use HalloWelt\MigrateDokuwiki\Converter\Processors\Image as ImageProcessor;
 use HalloWelt\MigrateDokuwiki\Converter\Processors\Link;
 use HalloWelt\MigrateDokuwiki\IProcessor;
@@ -48,6 +50,8 @@ class DokuwikiConverter extends PandocDokuwiki implements IOutputAwareInterface 
 	 */
 	private function getPreProcessors(): array {
 		return [
+			new RemoveLinebreakBeforeListItems(),
+			new RemoveLinebreakBeforeTable(),
 			new RemoveLinebreakAtEndOfRow(),
 			new PreserveCode(),
 			new PreserveTableWidth(),
