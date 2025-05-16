@@ -14,6 +14,7 @@ class TitleKeyBuilderTest extends TestCase {
 
 		// latest revision title
 		$pages = $this->getPageFilePaths();
+
 		$actualKeys = [];
 		foreach ( $pages as $filepath ) {
 			$paths = explode( '/', trim( $filepath, '/' ) );

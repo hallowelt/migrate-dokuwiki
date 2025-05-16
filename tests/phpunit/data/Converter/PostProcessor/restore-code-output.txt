@@ -3,7 +3,7 @@
 
 <code>cat ~/config.yaml</code>
 
-<syntaxhighlight>
+<pre>
 "require-dev": {
 		"mediawiki/mediawiki-codesniffer": "43.0.0",
 		"mediawiki/mediawiki-phan-config": "0.14.0",
@@ -40,22 +40,22 @@
 			"dealerdirect/phpcodesniffer-composer-installer": true
 		}
 	}
-</syntaxhighlight>
+</pre>
 
-<syntaxhighlight>
+<pre>
 echo "Testing qoutes"
 
 $ mkdir ~/dev/
 $ cd ~/dev/
-</syntaxhighlight>
+</pre>
 
-<syntaxhighlight>
+<syntaxhighlight lang="bash">
 # m h  dom mon dow   command
 * 1 * * * command_with_qouted_params "quoted=true"
 * 20 * * * /opt/test/test_commond.sh
 </syntaxhighlight>
 
-<syntaxhighlight>
+<syntaxhighlight lang="bash">
 $ cat /etc/fstab
 ...
 # Some comment

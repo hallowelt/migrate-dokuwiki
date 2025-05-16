@@ -1,0 +1,2 @@
+====Test====
+Lorem <span class="font-size x-small">ipsum</span> dolor <span class="font-size x-small">sit</span> amet <span class="font-size xx-small">!</span>

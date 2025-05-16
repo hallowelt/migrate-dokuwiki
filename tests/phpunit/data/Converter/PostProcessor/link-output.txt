@@ -1,5 +1,6 @@
 lorem ipsum [[Tools:Toolbox/Hammer.01#test|First]] dolor [[Start|Second]]
 
-sit amet [[Tools:Toolbox/Wrench]] 
+sit amet [[Tools:Toolbox/Wrench]]
 
-* sit amet [[Tools:Toolbox/Screwdriver]] 
+* sit amet [[Tools:Toolbox/Screwdriver]]
+* sit amet [[Tools:Toolbox/Screwdriver|Tools:Toolbox/Screwdriver]]

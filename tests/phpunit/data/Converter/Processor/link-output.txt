@@ -1,5 +1,18 @@
-lorem ipsum ###PRESERVEINTERNALLINKOPEN###Tools:Toolbox/Hammer.01#test###PRESERVEINTERNALLINKPIPE###First###PRESERVEINTERNALLINKCLOSE### dolor ###PRESERVEINTERNALLINKOPEN###Start###PRESERVEINTERNALLINKPIPE###Second###PRESERVEINTERNALLINKCLOSE###
+lorem ipsum #####PRESERVEINTERNALLINKOPEN#####Tools:Toolbox/Hammer.01#test#####PRESERVEINTERNALLINKPIPE#####First#####PRESERVEINTERNALLINKCLOSE##### dolor #####PRESERVEINTERNALLINKOPEN#####Start#####PRESERVEINTERNALLINKPIPE#####Second#####PRESERVEINTERNALLINKCLOSE#####
 
-sit amet ###PRESERVEINTERNALLINKOPEN###Tools:Toolbox/Wrench###PRESERVEINTERNALLINKCLOSE### 
+sit amet #####PRESERVEINTERNALLINKOPEN#####Tools:Toolbox/Wrench#####PRESERVEINTERNALLINKCLOSE#####
 
-* sit amet ###PRESERVEINTERNALLINKOPEN###Tools:Toolbox/Screwdriver###PRESERVEINTERNALLINKCLOSE### 
+* sit amet #####PRESERVEINTERNALLINKOPEN#####Tools:Toolbox/Screwdriver#####PRESERVEINTERNALLINKCLOSE#####
+* sit amet #####PRESERVEINTERNALLINKOPEN#####Tools:Toolbox/Screwdriver#####PRESERVEINTERNALLINKPIPE#####Tools:Toolbox/Screwdriver#####PRESERVEINTERNALLINKCLOSE#####
+
+Link to a page with missing page key
+* sit amet #####PRESERVEINTERNALLINKOPEN#####Tools:Toolbox/Screwdriver/IAmNotPartOfPagesTitlesMap#####PRESERVEINTERNALLINKPIPE#####Missing page key with label#####PRESERVEINTERNALLINKCLOSE##### #####CATEGORYOPEN#####Migration/Guessed link target#####CATEGORYCLOSE#####
+* sit amet #####PRESERVEINTERNALLINKOPEN#####Tools:Toolbox/Screwdriver/IAmNotPartOfPagesTitlesMap#####PRESERVEINTERNALLINKPIPE#####Tools:Toolbox/Screwdriver/IAmNotPartOfPagesTitlesMap#####PRESERVEINTERNALLINKCLOSE##### #####CATEGORYOPEN#####Migration/Guessed link target#####CATEGORYCLOSE#####
+* sit amet #####PRESERVEINTERNALLINKOPEN#####Tools:Toolbox/Screwdriver/IAmNotPartOfPagesTitlesMap#123#####PRESERVEINTERNALLINKPIPE#####Missing page key with label#####PRESERVEINTERNALLINKCLOSE##### #####CATEGORYOPEN#####Migration/Guessed link target#####CATEGORYCLOSE#####
+* sit amet #####PRESERVEINTERNALLINKOPEN#####Tools:Toolbox/Screwdriver/IAmNotPartOfPagesTitlesMap#123#####PRESERVEINTERNALLINKPIPE#####Tools:Toolbox/Screwdriver/IAmNotPartOfPagesTitlesMap#####PRESERVEINTERNALLINKCLOSE##### #####CATEGORYOPEN#####Migration/Guessed link target#####CATEGORYCLOSE#####
+* sit amet #####PRESERVEINTERNALLINKOPEN#####Xyz/Test#####PRESERVEINTERNALLINKPIPE#####Missing page key with label#####PRESERVEINTERNALLINKCLOSE##### #####CATEGORYOPEN#####Migration/Guessed link target#####CATEGORYCLOSE#####
+* sit amet #####PRESERVEINTERNALLINKOPEN#####Xyz/Test#####PRESERVEINTERNALLINKPIPE#####Xyz/Test#####PRESERVEINTERNALLINKCLOSE##### #####CATEGORYOPEN#####Migration/Guessed link target#####CATEGORYCLOSE#####
+* sit amet #####PRESERVEMAILLINKOPEN#####abc.def@example.com#####PRESERVEMAILLINKPIPE#####Name#####PRESERVEMAILLINKCLOSE#####
+* sit amet #####PRESERVEMAILLINKOPEN#####abc.def@example.com#####PRESERVEMAILLINKPIPE#####abc.def@example.com#####PRESERVEMAILLINKCLOSE#####
+* sit amet #####PRESERVEMAILLINKOPEN#####abc.def@example.com#####PRESERVEMAILLINKPIPE#####abc.def@example.com#####PRESERVEMAILLINKCLOSE#####
+* sit amet #####PRESERVEINTERNALLINKOPEN##########PRESERVEINTERNALLINKPIPE#####Label#####PRESERVEINTERNALLINKCLOSE##### #####CATEGORYOPEN#####Migration/Missing link target#####CATEGORYCLOSE#####

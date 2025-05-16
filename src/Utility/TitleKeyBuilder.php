@@ -11,9 +11,10 @@ class TitleKeyBuilder {
 	 * @param array $paths
 	 * @return string
 	 */
-	public function build( array $paths ) {
-		$this->titleSegments = [];
-		$key = $this->makeTitleKeyFromPaths( $paths );
+	public function build( array $paths ): string {
+		$this->makeTitleKeyFromPaths( $paths );
+
+		$key = implode( ':', $this->titleSegments );
 		return $key;
 	}
 
@@ -21,11 +22,12 @@ class TitleKeyBuilder {
 	 * @param array $paths
 	 * @return string
 	 */
-	public function buildDoubleKey( array $paths ) {
-		$this->titleSegments = [];
-		$defaultKey = $this->makeTitleKeyFromPaths( $paths );
+	public function buildDoubleKey( array $paths ): string {
+		$this->makeTitleKeyFromPaths( $paths );
+
 		$doubleKey = end( $this->titleSegments );
 		$this->titleSegments[] = $doubleKey;
+
 		$key = implode( ':', $this->titleSegments );
 
 		return $key;
@@ -33,9 +35,11 @@ class TitleKeyBuilder {
 
 	/**
 	 * @param array $paths
-	 * @return string
+	 * @return void
 	 */
-	private function makeTitleKeyFromPaths( array $paths ): string {
+	private function makeTitleKeyFromPaths( array $paths ): void {
+		$this->titleSegments = [];
+
 		$subpageName = array_pop( $paths );
 		$subpageParts = explode( '.', $subpageName );
 		$fileExtension = array_pop( $subpageParts );
@@ -54,17 +58,13 @@ class TitleKeyBuilder {
 
 		$subpageName = $this->generalizeItem( $subpageName );
 		$this->appendTitleSegment( $subpageName );
-
-		$key = implode( ':', $this->titleSegments );
-
-		return $key;
 	}
 
 	/**
-	 *
 	 * @param string $segment
+	 * @return void
 	 */
-	private function appendTitleSegment( $segment ) {
+	private function appendTitleSegment( $segment ): void {
 		$this->titleSegments[] = $segment;
 	}
 
