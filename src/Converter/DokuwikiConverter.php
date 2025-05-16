@@ -7,6 +7,7 @@ use HalloWelt\MediaWiki\Lib\Migration\IOutputAwareInterface;
 use HalloWelt\MediaWiki\Lib\Migration\Workspace;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Color;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Displaytitle;
+use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\FontSize;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Hidden;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Image as ImagePostProcessor;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Link as LinkPostProcessor;
@@ -83,6 +84,7 @@ class DokuwikiConverter extends PandocDokuwiki implements IOutputAwareInterface 
 			new RestoreImageCaption(),
 			new LinkPostProcessor(),
 			new Color(),
+			new FontSize(),
 			new Hidden(),
 			new RestoreWrap(),
 			new ColspanPostProcessor(),
