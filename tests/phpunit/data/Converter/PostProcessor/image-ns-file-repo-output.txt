@@ -17,8 +17,8 @@
 
 [[File:|Example.jpg]]#####CATEGORYOPEN#####Migration/Broken file target#####CATEGORYCLOSE#####
 
-[[File:Example.jpg|Example.jpg]]
+[[File:ABC:Example.jpg|Example.jpg]]
 
-[[Media:Example.pdf]]
+[[Media:Test:Example.pdf]]
 
 [[Media:Example.pdf|pdf test]]

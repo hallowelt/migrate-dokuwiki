@@ -305,9 +305,11 @@ class DokuwikiAnalyzer
 		}
 
 		$key = $this->makeFileKey( $paths );
+		$doubleKey = $this->makeFileDoubleKey( $paths );
 		$filename = $this->makeFileTitle( $paths );
 		$this->output->writeln( "Add media: $filename" );
 		$this->dataBuckets->addData( 'media-key-to-title-map', $key, $filename, false, true );
+		$this->dataBuckets->addData( 'media-key-to-title-map', $doubleKey, $filename, false, true );
 		$this->dataBuckets->addData( 'media-titles', 'media_titles', $filename, true, false );
 		$this->dataBuckets->addData( 'media-map', $filename, $file->getPathname(), true, true );
 	}
@@ -400,5 +402,13 @@ class DokuwikiAnalyzer
 	 */
 	private function makeFileKey( array $paths ): string {
 		return $this->fileKeyBuilder->build( $paths );
+	}
+
+		/**
+		 * @param array $paths
+		 * @return string
+		 */
+	private function makeFileDoubleKey( array $paths ): string {
+		return $this->fileKeyBuilder->buildDoubleKey( $paths );
 	}
 }

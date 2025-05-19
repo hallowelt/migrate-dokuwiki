@@ -7,9 +7,11 @@ use HalloWelt\MediaWiki\Lib\Migration\IOutputAwareInterface;
 use HalloWelt\MediaWiki\Lib\Migration\Workspace;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Color;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Displaytitle;
+use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\FontSize;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Hidden;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Image as ImagePostProcessor;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Link as LinkPostProcessor;
+use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\RestoreCategories;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\RestoreCode;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\RestoreImageCaption;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\RestoreIndexMenu;
@@ -22,9 +24,11 @@ use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\PreserveCode;
 use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\PreserveImageCaption;
 use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\PreserveIndexMenu;
 use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\PreserveWrap;
+use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\RemoveLinebreakBeforeListItems;
 use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\Table\Colspan as ColspanPreProcessor;
 use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\Table\PreserveTableWidth;
 use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\Table\RemoveLinebreakAtEndOfRow;
+use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\Table\RemoveLinebreakBeforeTable;
 use HalloWelt\MigrateDokuwiki\Converter\Processors\Image as ImageProcessor;
 use HalloWelt\MigrateDokuwiki\Converter\Processors\Link;
 use HalloWelt\MigrateDokuwiki\IProcessor;
@@ -47,6 +51,8 @@ class DokuwikiConverter extends PandocDokuwiki implements IOutputAwareInterface 
 	 */
 	private function getPreProcessors(): array {
 		return [
+			new RemoveLinebreakBeforeListItems(),
+			new RemoveLinebreakBeforeTable(),
 			new RemoveLinebreakAtEndOfRow(),
 			new PreserveCode(),
 			new PreserveTableWidth(),
@@ -78,13 +84,15 @@ class DokuwikiConverter extends PandocDokuwiki implements IOutputAwareInterface 
 			new RestoreImageCaption(),
 			new LinkPostProcessor(),
 			new Color(),
+			new FontSize(),
 			new Hidden(),
 			new RestoreWrap(),
 			new ColspanPostProcessor(),
 			new RowspanPostProcessor(),
 			new RestoreTableWidth(),
 			new RestoreIndexMenu( $this->dataBuckets->getBucketData( 'media-key-to-title-map' ) ),
-			new RestoreCode()
+			new RestoreCode(),
+			new RestoreCategories()
 		];
 	}
 

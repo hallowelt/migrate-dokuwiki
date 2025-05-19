@@ -21,8 +21,10 @@ class RestoreCode implements IProcessor {
 
 				$code = base64_decode( $matches[4] );
 
-				if ( strpos( $code, "\n" ) !== false ) {
+				if ( strpos( $code, "\n" ) !== false && $lang !== '' ) {
 					return "<syntaxhighlight{$lang}>{$code}</syntaxhighlight>";
+				} elseif ( strpos( $code, "\n" ) !== false ) {
+					return "<pre>{$code}</pre>";
 				} elseif ( $lang !== '' ) {
 					return "<syntaxhighlight{$lang}>{$code}</syntaxhighlight>";
 				}

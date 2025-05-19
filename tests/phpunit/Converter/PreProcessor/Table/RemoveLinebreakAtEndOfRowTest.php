@@ -13,8 +13,8 @@ class RemoveLinebreakAtEndOfRowTest extends TestCase {
 		$processor = new RemoveLinebreakAtEndOfRow();
 
 		$dataDir = dirname( __DIR__, 3 ) . '/data/Converter/PreProcessor/Table';
-		$input = file_get_contents( "$dataDir/remove-linebreak-input.txt" );
-		$expected = file_get_contents( "$dataDir/remove-linebreak-output.txt" );
+		$input = file_get_contents( "$dataDir/remove-linebreak-at-row-end-input.txt" );
+		$expected = file_get_contents( "$dataDir/remove-linebreak-at-row-end-output.txt" );
 		$actual = $processor->process( $input );
 		$this->assertEquals( $expected, $actual );
 	}
