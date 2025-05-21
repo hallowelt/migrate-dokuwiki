@@ -23,5 +23,15 @@ Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
 
 7. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
 <WRAP #id-2 :en>
-Phasellus viverra nulla ut metus varius laoreet. <wrap>Quisque rutrum. Aenean imperdiet</wrap>Aliquam lorem ante, feugiat a, tellus.</WRAP>
+Phasellus viverra nulla ut metus varius laoreet. <wrap class-1 class-2 50em class-3 :en>Quisque rutrum. Aenean imperdiet</wrap>Aliquam lorem ante, feugiat a, tellus.</WRAP>
+Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
+
+8. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+<block 50px class-3 :en>
+Phasellus viverra nulla ut metus varius laoreet. <inline class-1 class-2 50em class-3 :en>Quisque rutrum. Aenean imperdiet</inline>Aliquam lorem ante, feugiat a, tellus.</block>
+Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
+
+9. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+<div #id-2 :en>
+Phasellus viverra nulla ut metus varius laoreet. <span class-1 class-2 50em class-3 :en>Quisque rutrum. Aenean imperdiet</span>Aliquam lorem ante, feugiat a, tellus.</div>
 Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
