@@ -147,6 +147,9 @@ class PreserveWrap implements IProcessor {
 			if ( !empty( $widthMatches ) ) {
 				// is a width
 				$width = $param;
+				if ( strrpos( $width, ';', -1 ) === false ) {
+					$width = "{$width};";
+				}
 			} elseif ( is_numeric( strpos( $param, ':' ) ) && strpos( $param, ':' ) === 0 ) {
 				$lang[] = substr( $param, 1 );
 			} elseif ( is_numeric( strpos( $param, '#' ) ) && strpos( $param, '#' ) === 0 ) {

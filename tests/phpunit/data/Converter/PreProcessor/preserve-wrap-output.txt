@@ -11,24 +11,24 @@ Phasellus viverra nulla ut metus varius laoreet. #####PRESERVEWRAPOPENSPANSTART#
 Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
 
 3. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
-#####PRESERVEWRAPOPENDIVSTART##### class="wrap" style="width: 100%" #####PRESERVEWRAPOPENDIVEND#####Phasellus viverra nulla ut metus varius laoreet. #####PRESERVEWRAPOPENSPANSTART##### id="id-4" class="wrap" #####PRESERVEWRAPOPENSPANEND#####Quisque rutrum. Aenean imperdiet#####PRESERVEWRAPCLOSESPAN#####Aliquam lorem ante, feugiat a, tellus.#####PRESERVEWRAPCLOSEDIV#####
+#####PRESERVEWRAPOPENDIVSTART##### class="wrap" style="width: 100%;" #####PRESERVEWRAPOPENDIVEND#####Phasellus viverra nulla ut metus varius laoreet. #####PRESERVEWRAPOPENSPANSTART##### id="id-4" class="wrap" #####PRESERVEWRAPOPENSPANEND#####Quisque rutrum. Aenean imperdiet#####PRESERVEWRAPCLOSESPAN#####Aliquam lorem ante, feugiat a, tellus.#####PRESERVEWRAPCLOSEDIV#####
 
 Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
 
 4. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
-#####PRESERVEWRAPOPENDIVSTART##### id="id-3" class="wrap class-1 class-2 class-3" style="width: 50px" #####PRESERVEWRAPOPENDIVEND#####Phasellus viverra nulla ut metus varius laoreet. #####PRESERVEWRAPOPENSPANSTART##### class="wrap class-1" #####PRESERVEWRAPOPENSPANEND#####Quisque rutrum. Aenean imperdiet#####PRESERVEWRAPCLOSESPAN#####Aliquam lorem ante, feugiat a, tellus.#####PRESERVEWRAPCLOSEDIV#####
+#####PRESERVEWRAPOPENDIVSTART##### id="id-3" class="wrap class-1 class-2 class-3" style="width: 50px;" #####PRESERVEWRAPOPENDIVEND#####Phasellus viverra nulla ut metus varius laoreet. #####PRESERVEWRAPOPENSPANSTART##### class="wrap class-1" #####PRESERVEWRAPOPENSPANEND#####Quisque rutrum. Aenean imperdiet#####PRESERVEWRAPCLOSESPAN#####Aliquam lorem ante, feugiat a, tellus.#####PRESERVEWRAPCLOSEDIV#####
 Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
 
 5. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
 
-#####PRESERVEWRAPOPENDIVSTART##### class="wrap class-1 class-2 class-3" style="width: 50em" data-lang="en" #####PRESERVEWRAPOPENDIVEND#####
+#####PRESERVEWRAPOPENDIVSTART##### class="wrap class-1 class-2 class-3" style="width: 50em;" data-lang="en" #####PRESERVEWRAPOPENDIVEND#####
 Phasellus viverra nulla ut metus varius laoreet. #####PRESERVEWRAPOPENSPANSTART##### id="id-1" class="wrap class-1" #####PRESERVEWRAPOPENSPANEND#####Quisque rutrum. Aenean imperdiet#####PRESERVEWRAPCLOSESPAN#####Aliquam lorem ante, feugiat a, tellus.#####PRESERVEWRAPCLOSEDIV#####
 
 Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
 
 6. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
 
-#####PRESERVEWRAPOPENDIVSTART##### class="wrap class-3" style="width: 50px" data-lang="en" #####PRESERVEWRAPOPENDIVEND#####
+#####PRESERVEWRAPOPENDIVSTART##### class="wrap class-3" style="width: 50px;" data-lang="en" #####PRESERVEWRAPOPENDIVEND#####
 Phasellus viverra nulla ut metus varius laoreet. #####PRESERVEWRAPOPENSPANSTART##### class="wrap" #####PRESERVEWRAPOPENSPANEND#####Quisque rutrum. Aenean imperdiet#####PRESERVEWRAPCLOSESPAN#####Aliquam lorem ante, feugiat a, tellus.#####PRESERVEWRAPCLOSEDIV#####
 
 Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
