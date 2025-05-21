@@ -31,10 +31,12 @@ class RestoreImageCaption implements IProcessor {
 					return '[[' . implode( '|', $parts ) . ']]';
 				}
 
-			// Case: external image ( [http://example.com/test.png] )
+			// Case: external image ( [http://example.com/test.png] or http://example.com/test.png )
 				if ( strpos( $matches[4], '[' ) !== false ) {
-					$inside = substr( $matches[4], 1, strlen( $matches[4] ) - 2 );
+					$inside = trim( $matches[4], '[]' );
 					return '[' . $inside . ' ' . $caption . ']';
+				} else {
+					return '[' . $matches[4] . ' ' . $caption . ']';
 				}
 
 				return $matches[4];
