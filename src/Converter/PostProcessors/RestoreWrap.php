@@ -24,9 +24,9 @@ class RestoreWrap implements IProcessor {
 	private function restoreWrapWithDiv( string $text ): string {
 		$text = str_replace(
 			[
-				'######PRESERVEWRAPWITHDIVSTART######',
-				'######PRESERVEWRAPWITHDIVEND######',
-				'######PRESERVEWRAPWITHDIVCLOSE######'
+				'#####PRESERVEWRAPOPENDIVSTART#####',
+				'#####PRESERVEWRAPOPENDIVEND#####',
+				'#####PRESERVEWRAPCLOSEDIV#####'
 			],
 			[
 				'<div',
@@ -45,9 +45,9 @@ class RestoreWrap implements IProcessor {
 	private function restoreWrapWithSpan( string $text ): string {
 		$text = str_replace(
 			[
-				'######PRESERVEWRAPWITHSPANSTART######',
-				'######PRESERVEWRAPWITHSPANEND######',
-				'######PRESERVEWRAPWITHSPANCLOSE######'
+				'#####PRESERVEWRAPOPENSPANSTART#####',
+				'#####PRESERVEWRAPOPENSPANEND#####',
+				'#####PRESERVEWRAPCLOSESPAN#####'
 			],
 			[
 				'<span',

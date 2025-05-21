@@ -1,29 +1,55 @@
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
+1. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+
 <div class="wrap" >
-Phasellus viverra nulla ut metus varius laoreet. <span class="wrap" >Quisque rutrum. Aenean imperdiet</span>Aliquam lorem ante, feugiat a, tellus.</div>
+Phasellus viverra nulla ut metus varius laoreet. <span class="wrap" >Quisque rutrum. Aenean imperdiet</span> Aliquam lorem ante, feugiat a, tellus.</div>
 Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
 
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
-<div class="wrap" style="width: 100%" >
-Phasellus viverra nulla ut metus varius laoreet. <span id="id-4" class="wrap" >Quisque rutrum. Aenean imperdiet</span>Aliquam lorem ante, feugiat a, tellus.</div>
+2. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+<div class="wrap" >
+Phasellus viverra nulla ut metus varius laoreet. <span class="wrap" >Quisque rutrum. Aenean imperdiet</span> Aliquam lorem ante, feugiat a, tellus.</div>
+
 Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
 
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
-<div id="id-3" class="wrap class-1 class-2 class-3" style="width: 50px" >
-Phasellus viverra nulla ut metus varius laoreet. <span class="wrap class-1" >Quisque rutrum. Aenean imperdiet</span>Aliquam lorem ante, feugiat a, tellus.</div>
+3. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+<div class="wrap" style="width: 100%;" >Phasellus viverra nulla ut metus varius laoreet. <span id="id-4" class="wrap" >Quisque rutrum. Aenean imperdiet</span>Aliquam lorem ante, feugiat a, tellus.</div>
+
 Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
 
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
-<div class="wrap class-1 class-2 class-3" style="width: 50em" data-lang="en" >
+4. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+<div id="id-3" class="wrap class-1 class-2 class-3" style="width: 50px;" >Phasellus viverra nulla ut metus varius laoreet. <span class="wrap class-1" >Quisque rutrum. Aenean imperdiet</span>Aliquam lorem ante, feugiat a, tellus.</div>
+Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
+
+5. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+
+<div class="wrap class-1 class-2 class-3" style="width: 50em;" data-lang="en" >
 Phasellus viverra nulla ut metus varius laoreet. <span id="id-1" class="wrap class-1" >Quisque rutrum. Aenean imperdiet</span>Aliquam lorem ante, feugiat a, tellus.</div>
+
 Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
 
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
-<div class="wrap class-3" style="width: 50px" data-lang="en" >
+6. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+
+<div class="wrap class-3" style="width: 50px;" data-lang="en" >
 Phasellus viverra nulla ut metus varius laoreet. <span class="wrap" >Quisque rutrum. Aenean imperdiet</span>Aliquam lorem ante, feugiat a, tellus.</div>
+
 Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
 
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
+7. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+
 <div id="id-2" class="wrap" data-lang="en" >
-Phasellus viverra nulla ut metus varius laoreet. <span class="wrap" >Quisque rutrum. Aenean imperdiet</span>Aliquam lorem ante, feugiat a, tellus.</div>
+Phasellus viverra nulla ut metus varius laoreet. <span class="wrap class-1 class-2 class-3" style="width: 50em;" data-lang="en" >Quisque rutrum. Aenean imperdiet</span>Aliquam lorem ante, feugiat a, tellus.</div>
+
+Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
+
+8. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+
+<div class="wrap class-3" style="width: 50px;" data-lang="en" >
+Phasellus viverra nulla ut metus varius laoreet. <span class="wrap class-1 class-2 class-3" style="width: 50em;" data-lang="en" >Quisque rutrum. Aenean imperdiet</span>Aliquam lorem ante, feugiat a, tellus.</div>
+
+Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
+
+9. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+
+<div id="id-2" class="wrap" data-lang="en" >
+Phasellus viverra nulla ut metus varius laoreet. <span class="wrap class-1 class-2 class-3" style="width: 50em;" data-lang="en" >Quisque rutrum. Aenean imperdiet</span>Aliquam lorem ante, feugiat a, tellus.</div>
+
 Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.

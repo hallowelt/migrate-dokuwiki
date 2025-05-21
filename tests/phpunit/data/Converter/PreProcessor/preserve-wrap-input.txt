@@ -1,29 +1,37 @@
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
+1. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
 <WRAP>
-Phasellus viverra nulla ut metus varius laoreet. <wrap>Quisque rutrum. Aenean imperdiet</wrap>Aliquam lorem ante, feugiat a, tellus.</WRAP>
+Phasellus viverra nulla ut metus varius laoreet. <wrap>Quisque rutrum. Aenean imperdiet</wrap> Aliquam lorem ante, feugiat a, tellus.</WRAP>Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
+
+2. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.<WRAP>
+Phasellus viverra nulla ut metus varius laoreet. <wrap>Quisque rutrum. Aenean imperdiet</wrap> Aliquam lorem ante, feugiat a, tellus.</WRAP>
 Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
 
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
-<WRAP 100%>
-Phasellus viverra nulla ut metus varius laoreet. <wrap #id-4>Quisque rutrum. Aenean imperdiet</wrap>Aliquam lorem ante, feugiat a, tellus.</WRAP>
+3. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.<WRAP 100%>Phasellus viverra nulla ut metus varius laoreet. <wrap #id-4>Quisque rutrum. Aenean imperdiet</wrap>Aliquam lorem ante, feugiat a, tellus.</WRAP>
 Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
 
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
-<WRAP class-1 class-2 50px class-3 #id-3>
-Phasellus viverra nulla ut metus varius laoreet. <wrap class-1>Quisque rutrum. Aenean imperdiet</wrap>Aliquam lorem ante, feugiat a, tellus.</WRAP>
-Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
+4. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.<WRAP class-1 class-2 50px class-3 #id-3>Phasellus viverra nulla ut metus varius laoreet. <wrap class-1>Quisque rutrum. Aenean imperdiet</wrap>Aliquam lorem ante, feugiat a, tellus.</WRAP>Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
 
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
+5. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
 <WRAP class-1 class-2 50em class-3 :en>
 Phasellus viverra nulla ut metus varius laoreet. <wrap class-1 #id-1>Quisque rutrum. Aenean imperdiet</wrap>Aliquam lorem ante, feugiat a, tellus.</WRAP>
 Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
 
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
+6. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
 <WRAP 50px class-3 :en>
 Phasellus viverra nulla ut metus varius laoreet. <wrap>Quisque rutrum. Aenean imperdiet</wrap>Aliquam lorem ante, feugiat a, tellus.</WRAP>
 Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
 
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
+7. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
 <WRAP #id-2 :en>
-Phasellus viverra nulla ut metus varius laoreet. <wrap>Quisque rutrum. Aenean imperdiet</wrap>Aliquam lorem ante, feugiat a, tellus.</WRAP>
+Phasellus viverra nulla ut metus varius laoreet. <wrap class-1 class-2 50em class-3 :en>Quisque rutrum. Aenean imperdiet</wrap>Aliquam lorem ante, feugiat a, tellus.</WRAP>
+Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
+
+8. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+<block 50px class-3 :en>
+Phasellus viverra nulla ut metus varius laoreet. <inline class-1 class-2 50em class-3 :en>Quisque rutrum. Aenean imperdiet</inline>Aliquam lorem ante, feugiat a, tellus.</block>
+Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
+
+9. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+<div #id-2 :en>
+Phasellus viverra nulla ut metus varius laoreet. <span class-1 class-2 50em class-3 :en>Quisque rutrum. Aenean imperdiet</span>Aliquam lorem ante, feugiat a, tellus.</div>
 Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
