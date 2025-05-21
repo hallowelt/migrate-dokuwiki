@@ -1,29 +1,41 @@
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
-######PRESERVEWRAPWITHDIVSTART###### class="wrap" ######PRESERVEWRAPWITHDIVEND######
-Phasellus viverra nulla ut metus varius laoreet. ######PRESERVEWRAPWITHSPANSTART###### class="wrap" ######PRESERVEWRAPWITHSPANEND######Quisque rutrum. Aenean imperdiet######PRESERVEWRAPWITHSPANCLOSE######Aliquam lorem ante, feugiat a, tellus.######PRESERVEWRAPWITHDIVCLOSE######
+1. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+
+#####PRESERVEWRAPOPENDIVSTART##### class="wrap" #####PRESERVEWRAPOPENDIVEND#####
+Phasellus viverra nulla ut metus varius laoreet. #####PRESERVEWRAPOPENSPANSTART##### class="wrap" #####PRESERVEWRAPOPENSPANEND#####Quisque rutrum. Aenean imperdiet#####PRESERVEWRAPCLOSESPAN##### Aliquam lorem ante, feugiat a, tellus.#####PRESERVEWRAPCLOSEDIV#####
 Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
 
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
-######PRESERVEWRAPWITHDIVSTART###### class="wrap" style="width: 100%" ######PRESERVEWRAPWITHDIVEND######
-Phasellus viverra nulla ut metus varius laoreet. ######PRESERVEWRAPWITHSPANSTART###### id="id-4" class="wrap" ######PRESERVEWRAPWITHSPANEND######Quisque rutrum. Aenean imperdiet######PRESERVEWRAPWITHSPANCLOSE######Aliquam lorem ante, feugiat a, tellus.######PRESERVEWRAPWITHDIVCLOSE######
+2. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+#####PRESERVEWRAPOPENDIVSTART##### class="wrap" #####PRESERVEWRAPOPENDIVEND#####
+Phasellus viverra nulla ut metus varius laoreet. #####PRESERVEWRAPOPENSPANSTART##### class="wrap" #####PRESERVEWRAPOPENSPANEND#####Quisque rutrum. Aenean imperdiet#####PRESERVEWRAPCLOSESPAN##### Aliquam lorem ante, feugiat a, tellus.#####PRESERVEWRAPCLOSEDIV#####
+
 Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
 
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
-######PRESERVEWRAPWITHDIVSTART###### id="id-3" class="wrap class-1 class-2 class-3" style="width: 50px" ######PRESERVEWRAPWITHDIVEND######
-Phasellus viverra nulla ut metus varius laoreet. ######PRESERVEWRAPWITHSPANSTART###### class="wrap class-1" ######PRESERVEWRAPWITHSPANEND######Quisque rutrum. Aenean imperdiet######PRESERVEWRAPWITHSPANCLOSE######Aliquam lorem ante, feugiat a, tellus.######PRESERVEWRAPWITHDIVCLOSE######
+3. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+#####PRESERVEWRAPOPENDIVSTART##### class="wrap" style="width: 100%" #####PRESERVEWRAPOPENDIVEND#####Phasellus viverra nulla ut metus varius laoreet. #####PRESERVEWRAPOPENSPANSTART##### id="id-4" class="wrap" #####PRESERVEWRAPOPENSPANEND#####Quisque rutrum. Aenean imperdiet#####PRESERVEWRAPCLOSESPAN#####Aliquam lorem ante, feugiat a, tellus.#####PRESERVEWRAPCLOSEDIV#####
+
 Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
 
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
-######PRESERVEWRAPWITHDIVSTART###### class="wrap class-1 class-2 class-3" style="width: 50em" data-lang="en" ######PRESERVEWRAPWITHDIVEND######
-Phasellus viverra nulla ut metus varius laoreet. ######PRESERVEWRAPWITHSPANSTART###### id="id-1" class="wrap class-1" ######PRESERVEWRAPWITHSPANEND######Quisque rutrum. Aenean imperdiet######PRESERVEWRAPWITHSPANCLOSE######Aliquam lorem ante, feugiat a, tellus.######PRESERVEWRAPWITHDIVCLOSE######
+4. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+#####PRESERVEWRAPOPENDIVSTART##### id="id-3" class="wrap class-1 class-2 class-3" style="width: 50px" #####PRESERVEWRAPOPENDIVEND#####Phasellus viverra nulla ut metus varius laoreet. #####PRESERVEWRAPOPENSPANSTART##### class="wrap class-1" #####PRESERVEWRAPOPENSPANEND#####Quisque rutrum. Aenean imperdiet#####PRESERVEWRAPCLOSESPAN#####Aliquam lorem ante, feugiat a, tellus.#####PRESERVEWRAPCLOSEDIV#####
 Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
 
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
-######PRESERVEWRAPWITHDIVSTART###### class="wrap class-3" style="width: 50px" data-lang="en" ######PRESERVEWRAPWITHDIVEND######
-Phasellus viverra nulla ut metus varius laoreet. ######PRESERVEWRAPWITHSPANSTART###### class="wrap" ######PRESERVEWRAPWITHSPANEND######Quisque rutrum. Aenean imperdiet######PRESERVEWRAPWITHSPANCLOSE######Aliquam lorem ante, feugiat a, tellus.######PRESERVEWRAPWITHDIVCLOSE######
+5. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+
+#####PRESERVEWRAPOPENDIVSTART##### class="wrap class-1 class-2 class-3" style="width: 50em" data-lang="en" #####PRESERVEWRAPOPENDIVEND#####
+Phasellus viverra nulla ut metus varius laoreet. #####PRESERVEWRAPOPENSPANSTART##### id="id-1" class="wrap class-1" #####PRESERVEWRAPOPENSPANEND#####Quisque rutrum. Aenean imperdiet#####PRESERVEWRAPCLOSESPAN#####Aliquam lorem ante, feugiat a, tellus.#####PRESERVEWRAPCLOSEDIV#####
+
 Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
 
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
-######PRESERVEWRAPWITHDIVSTART###### id="id-2" class="wrap" data-lang="en" ######PRESERVEWRAPWITHDIVEND######
-Phasellus viverra nulla ut metus varius laoreet. ######PRESERVEWRAPWITHSPANSTART###### class="wrap" ######PRESERVEWRAPWITHSPANEND######Quisque rutrum. Aenean imperdiet######PRESERVEWRAPWITHSPANCLOSE######Aliquam lorem ante, feugiat a, tellus.######PRESERVEWRAPWITHDIVCLOSE######
+6. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+
+#####PRESERVEWRAPOPENDIVSTART##### class="wrap class-3" style="width: 50px" data-lang="en" #####PRESERVEWRAPOPENDIVEND#####
+Phasellus viverra nulla ut metus varius laoreet. #####PRESERVEWRAPOPENSPANSTART##### class="wrap" #####PRESERVEWRAPOPENSPANEND#####Quisque rutrum. Aenean imperdiet#####PRESERVEWRAPCLOSESPAN#####Aliquam lorem ante, feugiat a, tellus.#####PRESERVEWRAPCLOSEDIV#####
+
+Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
+
+7. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+
+#####PRESERVEWRAPOPENDIVSTART##### id="id-2" class="wrap" data-lang="en" #####PRESERVEWRAPOPENDIVEND#####
+Phasellus viverra nulla ut metus varius laoreet. #####PRESERVEWRAPOPENSPANSTART##### class="wrap" #####PRESERVEWRAPOPENSPANEND#####Quisque rutrum. Aenean imperdiet#####PRESERVEWRAPCLOSESPAN#####Aliquam lorem ante, feugiat a, tellus.#####PRESERVEWRAPCLOSEDIV#####
+
 Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.

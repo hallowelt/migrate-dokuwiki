@@ -6,6 +6,18 @@ use HalloWelt\MigrateDokuwiki\IProcessor;
 
 class PreserveWrap implements IProcessor {
 
+	/** @var string */
+	private $id = '';
+
+	/** @var array */
+	private $classes = [];
+
+	/** @var string */
+	private $width = '';
+
+	/** @var array */
+	private $lang = [];
+
 	/**
 	 * https://www.dokuwiki.org/plugin:wrap
 	 *
@@ -25,73 +37,42 @@ class PreserveWrap implements IProcessor {
 	 * @return string
 	 */
 	private function replaceWrapWithDiv( string $text ): string {
-		// Opening tag with params
-		$regEx = '#<WRAP(.*?)>#';
+		$regEx = '#(.*?)(<)(WRAP|block|div)(.*?)(>)(.*?)(<\/)(\3)(>)#s';
 		$text = preg_replace_callback( $regEx, static function ( $matches ) {
 			$replacement = $matches[0];
 
-			$id = '';
-			$classes = [ 'wrap' ];
-			$width = '';
-			$lang = [];
+			$type = $matches[3];
+			$params = trim( $matches[4] );
 
-			$params = explode( ' ', $matches[1] );
-			foreach ( $params as $param ) {
-				$param = trim( $param );
-
-				if ( $param === '' ) {
-					continue;
-				}
-
-				$widthMatches = [];
-				preg_match(
-					'#(\d+)([%,px,em,rem,ex,ch,vw,vh,pt,pc,cm,mm,in])#',
-					$param,
-					$widthMatches
-				);
-				if ( !empty( $widthMatches ) ) {
-					// is a width
-					$width = $param;
-				} elseif ( is_numeric( strpos( $param, ':' ) ) && strpos( $param, ':' ) === 0 ) {
-					$lang[] = substr( $param, 1 );
-				} elseif ( is_numeric( strpos( $param, '#' ) ) && strpos( $param, '#' ) === 0 ) {
-					$id = substr( $param, 1 );
-				} else {
-					$classes[] = $param;
+			if ( $type === 'div' ) {
+				if ( strlen( $params ) === 0 || strpos( $params, '"' ) !== false ) {
+					// Real htm div and not a WRAP element
+					return $replacement;
 				}
 			}
 
-			$data = [];
-			if ( $id !== '' ) {
-				$data[] = 'id="' . $id . '"';
-			}
-			if ( !empty( $classes ) ) {
-				$data[] = 'class="' . implode( ' ', $classes ) . '"';
-			}
-			if ( $width !== '' ) {
-				$data[] = 'style="width: ' . $width . '"';
-			}
-			if ( !empty( $lang ) ) {
-				$data[] = 'data-lang="' . implode( ' ', $lang ) . '"';
+			// break lines befor div
+			$matches[2] = "\n";
+			$matches[3] = '#####PRESERVEWRAPOPENDIVSTART#####';
+			$matches[5] = '#####PRESERVEWRAPOPENDIVEND#####';
+			// break lines after div
+			$matches[7] = '#####PRESERVEWRAPCLOSEDIV#####';
+			$matches[8] = '';
+			$matches[9] = "\n";
+
+			$attribs = self::processAttributes( $params );
+			if ( !empty( $attribs ) ) {
+				$matches[4] = ' ' . implode( ' ', $attribs ) . ' ';
+			} else {
+				$matches[4] = '';
 			}
 
-			$replacement = '######PRESERVEWRAPWITHDIVSTART######';
-			if ( !empty( $data ) ) {
-				$replacement .= ' ';
-				$replacement .= implode( ' ', $data );
-				$replacement .= ' ';
-			}
-			$replacement .= '######PRESERVEWRAPWITHDIVEND######';
+			unset( $matches[0] );
+			$matches = array_values( $matches );
 
+			$replacement = implode( '', $matches );
 			return $replacement;
 		}, $text );
-
-		// Closing tag
-		$text = str_replace(
-			'</WRAP>',
-			'######PRESERVEWRAPWITHDIVCLOSE######',
-			$text
-		);
 
 		return $text;
 	}
@@ -101,55 +82,94 @@ class PreserveWrap implements IProcessor {
 	 * @return string
 	 */
 	private function replaceWrapWithSpan( string $text ): string {
-		// Opening tag with params
-		$regEx = '#<wrap(.*?)>#';
+		$regEx = '#(.*?)(<)(wrap|inline|span)(.*?)(>)(.*?)(<\/)(\3)(>)#s';
 		$text = preg_replace_callback( $regEx, static function ( $matches ) {
 			$replacement = $matches[0];
 
-			$id = '';
-			$classes = [ 'wrap' ];
+			$type = $matches[3];
+			$params = trim( $matches[4] );
 
-			$params = explode( ' ', $matches[1] );
-			foreach ( $params as $param ) {
-				$param = trim( $param );
-
-				if ( $param === '' ) {
-					continue;
-				}
-
-				if ( is_numeric( strpos( $param, '#' ) ) && strpos( $param, '#' ) === 0 ) {
-					$id = substr( $param, 1 );
-				} else {
-					$classes[] = $param;
+			if ( $type === 'span' ) {
+				if ( strlen( $params ) === 0 || strpos( $params, '"' ) !== false ) {
+					// Real htm div and not a WRAP element
+					return $replacement;
 				}
 			}
 
-			$data = [];
-			if ( $id !== '' ) {
-				$data[] = 'id="' . $id . '"';
-			}
-			if ( !empty( $classes ) ) {
-				$data[] = 'class="' . implode( ' ', $classes ) . '"';
+			$matches[2] = '';
+			$matches[3] = '#####PRESERVEWRAPOPENSPANSTART#####';
+			$matches[5] = '#####PRESERVEWRAPOPENSPANEND#####';
+			$matches[7] = '#####PRESERVEWRAPCLOSESPAN#####';
+			$matches[8] = $matches[9] = '';
+
+			$attribs = self::processAttributes( $params );
+			if ( !empty( $attribs ) ) {
+				$matches[4] = ' ' . implode( ' ', $attribs ) . ' ';
+			} else {
+				$matches[4] = '';
 			}
 
-			$replacement = '######PRESERVEWRAPWITHSPANSTART######';
-			if ( !empty( $data ) ) {
-				$replacement .= ' ';
-				$replacement .= implode( ' ', $data );
-				$replacement .= ' ';
-			}
-			$replacement .= '######PRESERVEWRAPWITHSPANEND######';
+			unset( $matches[0] );
+			$matches = array_values( $matches );
 
+			$replacement = implode( '', $matches );
 			return $replacement;
 		}, $text );
 
-		// Closing tag
-		$text = str_replace(
-			'</wrap>',
-			'######PRESERVEWRAPWITHSPANCLOSE######',
-			$text
-		);
-
 		return $text;
+	}
+
+	/**
+	 * @param string $data
+	 * @return array
+	 */
+	private static function processAttributes( string $data ): array {
+		$id = '';
+		$width = '';
+		$classes = [ 'wrap' ];
+		$lang = [];
+		$attribs = [];
+
+		$params = explode( ' ', $data );
+		foreach ( $params as $param ) {
+			$param = trim( $param );
+
+			if ( $param === '' ) {
+				continue;
+			}
+
+			$widthMatches = [];
+			preg_match(
+				'#(\d+)([%,px,em,rem,ex,ch,vw,vh,pt,pc,cm,mm,in])#',
+				$param,
+				$widthMatches
+			);
+			if ( !empty( $widthMatches ) ) {
+				// is a width
+				$width = $param;
+			} elseif ( is_numeric( strpos( $param, ':' ) ) && strpos( $param, ':' ) === 0 ) {
+				$lang[] = substr( $param, 1 );
+			} elseif ( is_numeric( strpos( $param, '#' ) ) && strpos( $param, '#' ) === 0 ) {
+				$id = substr( $param, 1 );
+			} else {
+				$classes[] = $param;
+			}
+		}
+
+		$attribs = [];
+		if ( $id !== '' ) {
+			$attribs[] = 'id="' . $id . '"';
+		}
+		if ( !empty( $classes ) ) {
+			$attribs[] = 'class="' . implode( ' ', $classes ) . '"';
+		}
+		if ( $width !== '' ) {
+			$attribs[] = 'style="width: ' . $width . '"';
+		}
+		if ( !empty( $lang ) ) {
+			$attribs[] = 'data-lang="' . implode( ' ', $lang ) . '"';
+		}
+
+		return $attribs;
 	}
 }
