@@ -19,6 +19,7 @@ use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\RestoreWrap;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Table\Colspan as ColspanPostProcessor;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Table\RestoreTableWidth;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Table\Rowspan as RowspanPostProcessor;
+use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\EmoticonsAndSymbols;
 use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\EnsureListIndention;
 use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\PreserveCode;
 use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\PreserveImageCaption;
@@ -51,6 +52,7 @@ class DokuwikiConverter extends PandocDokuwiki implements IOutputAwareInterface 
 	 */
 	private function getPreProcessors(): array {
 		return [
+			new EmoticonsAndSymbols(),
 			new RemoveLinebreakBeforeListItems(),
 			new RemoveLinebreakBeforeTable(),
 			new RemoveLinebreakAtEndOfRow(),

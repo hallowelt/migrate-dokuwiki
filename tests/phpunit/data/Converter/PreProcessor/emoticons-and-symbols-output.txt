@@ -1,0 +1,43 @@
+====== Emoticons ======
+
+&#x1F60E;
+
+&#x1F60A;
+
+&#x1F641;
+
+&#x1F642;
+
+&#x1F600;
+
+&#x1F615;
+
+&#x1F615;
+
+&#x1F616;
+
+&#x1F601;
+
+&#x1F61B;
+
+&#x1F62F;
+
+&#x1F910;
+
+&#x1F610;
+
+&#x1F609;
+
+&#x1F601;
+
+&#x2753;
+
+&#x2757;
+
+&#x1F923;
+
+<span style="padding: 2px; background-color:yellow;">&#x1F527; FIXME</span>
+
+<span style="padding: 2px; background-color:yellow;">&#x1F5D1; DELETEME</span>
+
+Lorem ipsum dolor.
