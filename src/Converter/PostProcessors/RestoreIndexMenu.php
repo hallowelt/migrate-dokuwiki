@@ -3,6 +3,7 @@
 namespace HalloWelt\MigrateDokuwiki\Converter\PostProcessors;
 
 use HalloWelt\MigrateDokuwiki\IProcessor;
+use HalloWelt\MigrateDokuwiki\Utility\CategoryBuilder;
 
 class RestoreIndexMenu implements IProcessor {
 
@@ -32,6 +33,8 @@ class RestoreIndexMenu implements IProcessor {
 	 * @return string
 	 */
 	private function restoreMetaSort( string $text ): string {
+		$originalText = $text;
+
 		$text = preg_replace(
 			[
 				'/######PRESERVEINDEXMENUMETASORTSTART######/',
@@ -44,6 +47,11 @@ class RestoreIndexMenu implements IProcessor {
 			$text
 		);
 
+		if ( !is_string( $text ) ) {
+			$category = CategoryBuilder::getPreservedMigrationCategory( 'Indexment meta sort failure' );
+			$text = "{$originalText} {$category}";
+		}
+
 		return $text;
 	}
 
@@ -52,6 +60,8 @@ class RestoreIndexMenu implements IProcessor {
 		 * @return string
 		 */
 	private function restoreView( string $text ): string {
+		$originalText = $text;
+
 		$text = preg_replace_callback(
 			'/######PRESERVEINDEXMENUSTART######(.*?)######PRESERVEINDEXMENEND######/',
 			function ( $matches ) {
@@ -88,6 +98,11 @@ class RestoreIndexMenu implements IProcessor {
 				return $replacement;
 			}, $text
 		);
+
+		if ( !is_string( $text ) ) {
+			$category = CategoryBuilder::getPreservedMigrationCategory( 'Indexmenu view failure' );
+			$text = "{$originalText} {$category}";
+		}
 
 		return $text;
 	}

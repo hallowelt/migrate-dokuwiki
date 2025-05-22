@@ -49,6 +49,8 @@ class Image implements IProcessor {
 	 * @return string
 	 */
 	private function removeLeadingSlash( string $text ): string {
+		$originalText = $text;
+
 		$regEx = '#(\[\[File:)(/)(.*?)(\]\])#';
 		$text = preg_replace_callback( $regEx, static function ( $matches ) {
 			unset( $matches[0] );
@@ -57,6 +59,12 @@ class Image implements IProcessor {
 			$replacement = implode( '', $matches );
 			return $replacement;
 		}, $text );
+
+		if ( !is_string( $text ) ) {
+			$category = CategoryBuilder::getPreservedMigrationCategory( 'Image leading slash failure' );
+			$text = "{$originalText} {$category}";
+		}
+
 		return $text;
 	}
 
@@ -67,6 +75,8 @@ class Image implements IProcessor {
 	 * @return string
 	 */
 	private function addFileCaption( string $text ): string {
+		$originalText = $text;
+
 		$advancedConfig = $this->advancedConfig;
 		$regEx = '#(\[\[File:)(.*?)(\]\])#';
 		$text = preg_replace_callback( $regEx, static function ( $matches ) use ( $advancedConfig ) {
@@ -106,6 +116,12 @@ class Image implements IProcessor {
 			$replacement = implode( '', $matches );
 			return $replacement;
 		}, $text );
+
+		if ( !is_string( $text ) ) {
+			$category = CategoryBuilder::getPreservedMigrationCategory( 'Image caption failure' );
+			$text = "{$originalText} {$category}";
+		}
+
 		return $text;
 	}
 
@@ -116,6 +132,8 @@ class Image implements IProcessor {
 	 * @return string
 	 */
 	private function markBrokenFileTarget( string $text ): string {
+		$originalText = $text;
+
 		$regEx = '#(\[\[File:)(.*?)(\]\])#';
 		$text = preg_replace_callback( $regEx, static function ( $matches ) {
 			$pipePos = strpos( $matches[2], '|' );
@@ -130,6 +148,12 @@ class Image implements IProcessor {
 			$category = CategoryBuilder::getPreservedMigrationCategory( 'Broken file target' );
 			return "{$matches[0]}{$category}";
 		}, $text );
+
+		if ( !is_string( $text ) ) {
+			$category = CategoryBuilder::getPreservedMigrationCategory( 'Image target failure' );
+			$text = "{$originalText} {$category}";
+		}
+
 		return $text;
 	}
 
@@ -141,6 +165,8 @@ class Image implements IProcessor {
 	 * @return string
 	 */
 	private function fixExternalFileLinks( string $text ): string {
+		$originalText = $text;
+
 		$regEx = '#(\[\[File:)(.*?)(\]\])#';
 		$text = preg_replace_callback( $regEx, static function ( $matches ) {
 			$target = $matches[2];
@@ -164,6 +190,11 @@ class Image implements IProcessor {
 			return $replacement;
 		}, $text );
 
+		if ( !is_string( $text ) ) {
+			$category = CategoryBuilder::getPreservedMigrationCategory( 'Image external link failure' );
+			$text = "{$originalText} {$category}";
+		}
+
 		return $text;
 	}
 
@@ -172,6 +203,8 @@ class Image implements IProcessor {
 	 * @return string
 	 */
 	private function fixAlignment( string $text ): string {
+		$originalText = $text;
+
 		$regEx = '#(\[\[File:)(.*?)(\]\])#';
 		$text = preg_replace_callback( $regEx, static function ( $matches ) {
 			$inside = $matches[2];
@@ -210,6 +243,11 @@ class Image implements IProcessor {
 			return $matches[1] . $target . $align . $size . $caption . $matches[3];
 		}, $text );
 
+		if ( !is_string( $text ) ) {
+			$category = CategoryBuilder::getPreservedMigrationCategory( 'Image alignment failure' );
+			$text = "{$originalText} {$category}";
+		}
+
 		return $text;
 	}
 
@@ -218,6 +256,8 @@ class Image implements IProcessor {
 	 * @return string
 	 */
 	private function restoreNamespace( string $text ): string {
+		$originalText = $text;
+
 		$regEx = '#(\[\[File:)(.*?)(\]\])#';
 		$text = preg_replace_callback( $regEx, static function ( $matches ) {
 			$target = $matches[2];
@@ -226,6 +266,11 @@ class Image implements IProcessor {
 			return $matches[1] . $target . $matches[3];
 		},
 		$text );
+
+		if ( !is_string( $text ) ) {
+			$category = CategoryBuilder::getPreservedMigrationCategory( 'Image namespace failure' );
+			$text = "{$originalText} {$category}";
+		}
 
 		return $text;
 	}
@@ -236,6 +281,8 @@ class Image implements IProcessor {
 	 * @return string
 	 */
 	private function convertToMediaLink( string $text, array $extensions ): string {
+		$originalText = $text;
+
 		$regEx = '#(\[\[File:)(.*?)(\]\])#';
 		$text = preg_replace_callback( $regEx, static function ( $matches ) use ( $extensions ) {
 			$data = $matches[2];
@@ -268,6 +315,11 @@ class Image implements IProcessor {
 			return $matches[0];
 		},
 		$text );
+
+		if ( !is_string( $text ) ) {
+			$category = CategoryBuilder::getPreservedMigrationCategory( 'Image media link failure' );
+			$text = "{$originalText} {$category}";
+		}
 
 		return $text;
 	}

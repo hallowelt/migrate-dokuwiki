@@ -3,6 +3,7 @@
 namespace HalloWelt\MigrateDokuwiki\Converter\PostProcessors;
 
 use HalloWelt\MigrateDokuwiki\IProcessor;
+use HalloWelt\MigrateDokuwiki\Utility\CategoryBuilder;
 
 class RestoreCode implements IProcessor {
 
@@ -12,6 +13,8 @@ class RestoreCode implements IProcessor {
 	 * @return string
 	 */
 	public function process( string $text, string $path = '' ): string {
+		$originalText = $text;
+
 		$text = preg_replace_callback(
 			'/(#####PRESERVECODESTART)(.*?)(#####)(.*?)(#####PRESERVECODEEND#####)/s', static function ( $matches ) {
 				$lang = '';
@@ -30,6 +33,11 @@ class RestoreCode implements IProcessor {
 				}
 				return "<code>{$code}</code>";
 			}, $text );
+
+		if ( !is_string( $text ) ) {
+			$category = CategoryBuilder::getPreservedMigrationCategory( 'Code failure' );
+			$text = "{$originalText} {$category}";
+		}
 
 		return $text;
 	}

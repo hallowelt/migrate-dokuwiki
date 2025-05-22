@@ -3,6 +3,7 @@
 namespace HalloWelt\MigrateDokuwiki\Converter\PostProcessors;
 
 use HalloWelt\MigrateDokuwiki\IProcessor;
+use HalloWelt\MigrateDokuwiki\Utility\CategoryBuilder;
 
 class Color implements IProcessor {
 
@@ -23,8 +24,9 @@ class Color implements IProcessor {
 			return $replacement;
 		}, $text );
 
-		if ( $text === null ) {
-			$text = $originalText;
+		if ( !is_string( $text ) ) {
+			$category = CategoryBuilder::getPreservedMigrationCategory( 'Color failure' );
+			$text = "{$originalText} {$category}";
 		}
 
 		return $text;

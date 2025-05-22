@@ -3,6 +3,7 @@
 namespace HalloWelt\MigrateDokuwiki\Converter\PreProcessors;
 
 use HalloWelt\MigrateDokuwiki\IProcessor;
+use HalloWelt\MigrateDokuwiki\Utility\CategoryBuilder;
 
 class PreserveIndexMenu implements IProcessor {
 
@@ -25,6 +26,8 @@ class PreserveIndexMenu implements IProcessor {
 	 * @return string
 	 */
 	private function preserveMetaSort( string $text ): string {
+		$originalText = $text;
+
 		$regEx = '#\{\{indexmenu_n>(.*?)\}\}#';
 		$text = preg_replace_callback( $regEx, static function ( $matches ) {
 			$replacement = $matches[0];
@@ -34,6 +37,11 @@ class PreserveIndexMenu implements IProcessor {
 			$replacement .= '######PRESERVEINDEXMENUMETASORTEND######';
 			return $replacement;
 		}, $text );
+
+		if ( !is_string( $text ) ) {
+			$category = CategoryBuilder::getPreservedMigrationCategory( 'Indexmenu meta sort failure' );
+			$text = "{$originalText} {$category}";
+		}
 
 		return $text;
 	}
@@ -48,6 +56,8 @@ class PreserveIndexMenu implements IProcessor {
 	 * @return string
 	 */
 	private function preserveView( string $text ): string {
+		$originalText = $text;
+
 		$regEx = '#\{\{indexmenu>(.*?)\}\}#';
 		$text = preg_replace_callback( $regEx, static function ( $matches ) {
 			$replacement = '######PRESERVEINDEXMENUSTART######';
@@ -55,6 +65,11 @@ class PreserveIndexMenu implements IProcessor {
 			$replacement .= '######PRESERVEINDEXMENEND######';
 			return $replacement;
 		}, $text );
+
+		if ( !is_string( $text ) ) {
+			$category = CategoryBuilder::getPreservedMigrationCategory( 'Indexmenu view failure' );
+			$text = "{$originalText} {$category}";
+		}
 
 		return $text;
 	}

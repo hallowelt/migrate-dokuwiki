@@ -6,6 +6,7 @@ use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Displaytitle;
 use PHPUnit\Framework\TestCase;
 
 class DisplaytitleTest extends TestCase {
+
 	/**
 	 * @covers \HalloWelt\MigrateDokuwiki\Converter\PostProcessor\Displaytitle::process()
 	 */
@@ -20,7 +21,7 @@ TEXT;
 		$expected = <<<TEXT
 <span id="test"></span>
 {{DISPLAYTITLE:Test}}
-lorem ipsum dolor
+lorem ipsum dolor #####CATEGORYOPEN#####Migration/Displaytitle set#####CATEGORYCLOSE#####
 TEXT;
 		$actual = $processor->process( $input );
 		$this->assertEquals( $expected, $actual );
@@ -34,7 +35,7 @@ TEXT;
 		$expected = <<<TEXT
 <span id="new-test"></span>
 {{DISPLAYTITLE:New test}}
-lorem ipsum dolor
+lorem ipsum dolor #####CATEGORYOPEN#####Migration/Displaytitle set#####CATEGORYCLOSE#####
 TEXT;
 		$actual = $processor->process( $input );
 		$this->assertEquals( $expected, $actual );

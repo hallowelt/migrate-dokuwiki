@@ -3,6 +3,7 @@
 namespace HalloWelt\MigrateDokuwiki\Converter\Processors;
 
 use HalloWelt\MigrateDokuwiki\IProcessor;
+use HalloWelt\MigrateDokuwiki\Utility\CategoryBuilder;
 
 class Image implements IProcessor {
 
@@ -27,6 +28,8 @@ class Image implements IProcessor {
 	 * @return string
 	 */
 	public function process( string $text, string $path = '' ): string {
+		$originalText = $text;
+
 		// replace src url
 		$regEx = '#({{\s*:{0,1})(.*?)(\s*}})#';
 		$text = preg_replace_callback( $regEx, function ( $matches ) {
@@ -78,6 +81,12 @@ class Image implements IProcessor {
 			}
 			return $replacement;
 		}, $text );
+
+		if ( !is_string( $text ) ) {
+			$category = CategoryBuilder::getPreservedMigrationCategory( 'Image failure' );
+			$text = "{$originalText} {$category}";
+		}
+
 		return $text;
 	}
 
