@@ -3,6 +3,7 @@
 namespace HalloWelt\MigrateDokuwiki\Converter\PostProcessors;
 
 use HalloWelt\MigrateDokuwiki\IProcessor;
+use HalloWelt\MigrateDokuwiki\Utility\CategoryBuilder;
 
 class RestoreImageCaption implements IProcessor {
 
@@ -12,6 +13,8 @@ class RestoreImageCaption implements IProcessor {
 	 * @return string
 	 */
 	public function process( string $text, string $path = '' ): string {
+		$originalText = $text;
+
 		$text = preg_replace_callback(
 			'/(#####PRESERVEIMAGECAPTIONSTART)(.*?)(#####)(.*?)(#####PRESERVEIMAGECAPTIONEND#####)/s',
 			static function ( $matches ) {
@@ -41,6 +44,11 @@ class RestoreImageCaption implements IProcessor {
 			},
 			$text
 		);
+
+		if ( !is_string( $text ) ) {
+			$category = CategoryBuilder::getPreservedMigrationCategory( 'Image caption failure' );
+			$text = "{$originalText} {$category}";
+		}
 
 		return $text;
 	}

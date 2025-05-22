@@ -23,6 +23,8 @@ class Link implements IProcessor {
 	 * @return string
 	 */
 	public function process( string $text, string $path = '' ): string {
+		$originalText = $text;
+
 		 $regEx = '#(\[\[)(.*?)(\]\])#';
 		 $text = preg_replace_callback( $regEx, function ( $matches ) {
 			$replacement = $matches[0];
@@ -40,6 +42,11 @@ class Link implements IProcessor {
 			$replacement = $this->handlePageLink( $target );
 			return $replacement;
 		 }, $text );
+
+		if ( !is_string( $text ) ) {
+			$category = CategoryBuilder::getPreservedMigrationCategory( 'Link failure' );
+			$text = "{$originalText} {$category}";
+		}
 
 		return $text;
 	}

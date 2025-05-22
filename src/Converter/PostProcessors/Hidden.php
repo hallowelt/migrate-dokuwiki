@@ -3,6 +3,7 @@
 namespace HalloWelt\MigrateDokuwiki\Converter\PostProcessors;
 
 use HalloWelt\MigrateDokuwiki\IProcessor;
+use HalloWelt\MigrateDokuwiki\Utility\CategoryBuilder;
 
 class Hidden implements IProcessor {
 
@@ -54,8 +55,10 @@ class Hidden implements IProcessor {
 			return $replacement;
 		}, $text );
 
-		if ( $text === null ) {
+		if ( !is_string( $text ) ) {
 			$text = $originalText;
+			$category = CategoryBuilder::getPreservedMigrationCategory( 'Hidden failure' );
+			$text = "{$originalText} {$category}";
 		}
 
 		return $text;

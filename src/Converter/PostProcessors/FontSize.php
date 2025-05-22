@@ -3,6 +3,7 @@
 namespace HalloWelt\MigrateDokuwiki\Converter\PostProcessors;
 
 use HalloWelt\MigrateDokuwiki\IProcessor;
+use HalloWelt\MigrateDokuwiki\Utility\CategoryBuilder;
 
 class FontSize implements IProcessor {
 
@@ -24,8 +25,9 @@ class FontSize implements IProcessor {
 			return $replacement;
 		}, $text );
 
-		if ( $text === null ) {
-			$text = $originalText;
+		if ( !is_string( $text ) ) {
+			$category = CategoryBuilder::getPreservedMigrationCategory( 'Fontsize failure' );
+			$text = "{$originalText} {$category}";
 		}
 
 		return $text;

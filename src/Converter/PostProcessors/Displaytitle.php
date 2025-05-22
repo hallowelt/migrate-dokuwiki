@@ -3,6 +3,7 @@
 namespace HalloWelt\MigrateDokuwiki\Converter\PostProcessors;
 
 use HalloWelt\MigrateDokuwiki\IProcessor;
+use HalloWelt\MigrateDokuwiki\Utility\CategoryBuilder;
 
 class Displaytitle implements IProcessor {
 
@@ -14,6 +15,7 @@ class Displaytitle implements IProcessor {
 	public function process( string $text, string $path = '' ): string {
 		$lines = explode( "\n", $text );
 
+		$hasDisplayTitle = false;
 		$idMatches = [];
 		preg_match( '#<span id="(.*?)"\s*></span>#', $lines[0], $idMatches );
 		if ( empty( $idMatches ) ) {
@@ -25,6 +27,8 @@ class Displaytitle implements IProcessor {
 		$headingMatches = [];
 		preg_match_all( '#(=+)\s*(.*?)\s*(=+)#', $lines[1], $headingMatches );
 		if ( empty( $headingMatches[0] ) ) {
+			$category = CategoryBuilder::getPreservedMigrationCategory( 'Displaytitle not set' );
+			$text .= " {$category}";
 			return $text;
 		}
 
@@ -32,12 +36,17 @@ class Displaytitle implements IProcessor {
 			$heading = $headingMatches[2][$index];
 			$replacement = $this->makeReplacement( $heading );
 
-			if ( strtolower( $heading ) === strtolower( $id ) ) {
+			if ( strtolower( str_replace( '-', ' ', $heading ) ) === strtolower( $id ) ) {
 				$text = str_replace( $headingMatches[0][$index], $replacement, $text );
+				$hasDisplayTitle = true;
 				break;
 			}
 		}
 
+		if ( $hasDisplayTitle ) {
+			$category = CategoryBuilder::getPreservedMigrationCategory( 'Displaytitle set' );
+			$text .= " {$category}";
+		}
 		return $text;
 	}
 

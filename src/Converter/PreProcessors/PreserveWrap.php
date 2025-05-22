@@ -3,20 +3,9 @@
 namespace HalloWelt\MigrateDokuwiki\Converter\PreProcessors;
 
 use HalloWelt\MigrateDokuwiki\IProcessor;
+use HalloWelt\MigrateDokuwiki\Utility\CategoryBuilder;
 
 class PreserveWrap implements IProcessor {
-
-	/** @var string */
-	private $id = '';
-
-	/** @var array */
-	private $classes = [];
-
-	/** @var string */
-	private $width = '';
-
-	/** @var array */
-	private $lang = [];
 
 	/**
 	 * https://www.dokuwiki.org/plugin:wrap
@@ -37,10 +26,11 @@ class PreserveWrap implements IProcessor {
 	 * @return string
 	 */
 	private function replaceWrapWithDiv( string $text ): string {
-		$regEx = '#(.*?)(<)(WRAP|block|div)(.*?)(>)(.*?)(<\/)(\3)(>)#s';
+		$originalText = $text;
+
+		$regEx = '#(.*?)(<){1}(WRAP|block|div){1}(.*?)(>){1}(.*?)(<\/){1}(\3){1}(>){1}#s';
 		$text = preg_replace_callback( $regEx, static function ( $matches ) {
 			$replacement = $matches[0];
-
 			$type = $matches[3];
 			$params = trim( $matches[4] );
 
@@ -74,6 +64,11 @@ class PreserveWrap implements IProcessor {
 			return $replacement;
 		}, $text );
 
+		if ( !is_string( $text ) ) {
+			$category = CategoryBuilder::getPreservedMigrationCategory( 'WRAP failure' );
+			$text = "{$originalText} {$category}";
+		}
+
 		return $text;
 	}
 
@@ -82,6 +77,8 @@ class PreserveWrap implements IProcessor {
 	 * @return string
 	 */
 	private function replaceWrapWithSpan( string $text ): string {
+		$originalText = $text;
+
 		$regEx = '#(.*?)(<)(wrap|inline|span)(.*?)(>)(.*?)(<\/)(\3)(>)#s';
 		$text = preg_replace_callback( $regEx, static function ( $matches ) {
 			$replacement = $matches[0];
@@ -115,6 +112,11 @@ class PreserveWrap implements IProcessor {
 			$replacement = implode( '', $matches );
 			return $replacement;
 		}, $text );
+
+		if ( !is_string( $text ) ) {
+			$category = CategoryBuilder::getPreservedMigrationCategory( 'wrap failure' );
+			$text = "{$originalText} {$category}";
+		}
 
 		return $text;
 	}
