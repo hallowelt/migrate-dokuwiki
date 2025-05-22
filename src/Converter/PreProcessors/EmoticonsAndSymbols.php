@@ -2,8 +2,8 @@
 
 namespace HalloWelt\MigrateDokuwiki\Converter\PreProcessors;
 
-use HalloWelt\MigrateDokuwiki\Utility\CategoryBuilder;
 use HalloWelt\MigrateDokuwiki\IProcessor;
+use HalloWelt\MigrateDokuwiki\Utility\CategoryBuilder;
 
 class EmoticonsAndSymbols implements IProcessor {
 
@@ -13,6 +13,7 @@ class EmoticonsAndSymbols implements IProcessor {
 	public function __construct( array $advancedConfig ) {
 		$this->advancedConfig = $advancedConfig;
 	}
+
 	/**
 	 * @param string $text
 	 * @param string $path

@@ -11,7 +11,7 @@ class EmoticonsAndSymbolsTest extends TestCase {
 	 * @covers \HalloWelt\MigrateDokuwiki\Converter\PreProcessors\EmoticonsAndSymbols::process()
 	 */
 	public function testProcess() {
-		$processor = new EmoticonsAndSymbols();
+		$processor = new EmoticonsAndSymbols( [] );
 
 		$dataDir = dirname( __DIR__, 2 ) . '/data/Converter/PreProcessor';
 		$input = file_get_contents( "$dataDir/emoticons-and-symbols-input.txt" );
