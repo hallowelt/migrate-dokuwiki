@@ -7,6 +7,12 @@ use HalloWelt\MigrateDokuwiki\IProcessor;
 
 class EmoticonsAndSymbols implements IProcessor {
 
+	/** @var array */
+	private $advancedConfig = [];
+
+	public function __construct( array $advancedConfig ) {
+		$this->advancedConfig = $advancedConfig;
+	}
 	/**
 	 * @param string $text
 	 * @param string $path
@@ -38,7 +44,7 @@ class EmoticonsAndSymbols implements IProcessor {
 	 * @return array
 	 */
 	private function getSymbolsMap(): array {
-		return [
+		$defaultSymbols = [
 			'8-)' => '&#x1F60E;',
 			'8-O' => '&#x1F60A;',
 			':-(' => '&#x1F641;',
@@ -60,5 +66,19 @@ class EmoticonsAndSymbols implements IProcessor {
 			'FIXME' => '<span style="padding: 2px; background-color:yellow;">&#x1F527; FIXME</span>',
 			'DELETEME' => '<span style="padding: 2px; background-color:yellow;">&#x1F5D1; DELETEME</span>'
 		];
+
+		if ( isset( $this->advancedConfig['custom-symbols'] ) &&
+			is_array( $this->advancedConfig['custom-symbols'] ) &&
+			!empty( $this->advancedConfig['custom-symbols'] )
+		) {
+			$customSymbols = array_merge(
+				$defaultSymbols,
+				$this->advancedConfig['custom-symbols']
+			);
+
+			return $customSymbols;
+		}
+
+		return $defaultSymbols;
 	}
 }

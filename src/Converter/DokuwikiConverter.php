@@ -52,7 +52,7 @@ class DokuwikiConverter extends PandocDokuwiki implements IOutputAwareInterface 
 	 */
 	private function getPreProcessors(): array {
 		return [
-			new EmoticonsAndSymbols(),
+			new EmoticonsAndSymbols( $this->advancedConfig ),
 			new RemoveLinebreakBeforeListItems(),
 			new RemoveLinebreakBeforeTable(),
 			new RemoveLinebreakAtEndOfRow(),
