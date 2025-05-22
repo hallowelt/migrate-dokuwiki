@@ -1,6 +1,6 @@
 <?php
 
-namespace HalloWelt\MigrateDokuwiki\Tests\Converter\PreProcessor\Table;
+namespace HalloWelt\MigrateDokuwiki\Tests\Converter\PreProcessor;
 
 use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\RemoveLinebreakBeforeListItems;
 use PHPUnit\Framework\TestCase;
