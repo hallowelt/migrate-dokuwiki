@@ -21,3 +21,11 @@ Center with width and label #####PRESERVEIMAGECAPTIONSTART caption#####[[File:te
 Left with width and label #####PRESERVEIMAGECAPTIONSTART caption#####[[File:test.png|100x200px|class=align-right|test.png]]#####PRESERVEIMAGECAPTIONEND#####
 
 Right with width and label #####PRESERVEIMAGECAPTIONSTART caption#####[[File:test.png|100x200px|class=align-left|test.png]]#####PRESERVEIMAGECAPTIONEND#####
+
+#####PRESERVEIMAGECAPTIONSTART My label#####[https://example.com/abc.pdf]#####PRESERVEIMAGECAPTIONEND#####
+
+#####PRESERVEIMAGECAPTIONSTART My label#####https://example.com/abc.pdf#####PRESERVEIMAGECAPTIONEND#####
+
+#####PRESERVEIMAGECAPTIONSTART#####https://example.com/abc.pdf#####PRESERVEIMAGECAPTIONEND#####
+
+https://example.com/abc.pdf

@@ -80,8 +80,8 @@ class DokuwikiConverter extends PandocDokuwiki implements IOutputAwareInterface 
 	private function getPostProcessors(): array {
 		return [
 			new Displaytitle(),
-			new ImagePostProcessor( $this->advancedConfig ),
 			new RestoreImageCaption(),
+			new ImagePostProcessor( $this->advancedConfig ),
 			new LinkPostProcessor(),
 			new Color(),
 			new FontSize(),

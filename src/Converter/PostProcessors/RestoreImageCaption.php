@@ -7,6 +7,8 @@ use HalloWelt\MigrateDokuwiki\IProcessor;
 class RestoreImageCaption implements IProcessor {
 
 	/**
+	 * This post processor has to run before Image post processor
+	 *
 	 * @param string $text
 	 * @param string $path
 	 * @return string
@@ -24,17 +26,19 @@ class RestoreImageCaption implements IProcessor {
 
 			// Case: internal image ( [[File:a/b/c.png|c.png]] )
 				if ( strpos( $matches[4], '[[' ) !== false ) {
-					$inside = substr( $matches[4], 2, strlen( $matches[4] ) - 4 );
+					$inside = trim( $matches[4], '[]' );
 					$parts = explode( '|', $inside );
 					$items = count( $parts );
 					$parts[$items - 1] = $caption;
 					return '[[' . implode( '|', $parts ) . ']]';
 				}
 
-			// Case: external image ( [http://example.com/test.png] )
+			// Case: external image ( [http://example.com/test.png] or http://example.com/test.png )
 				if ( strpos( $matches[4], '[' ) !== false ) {
-					$inside = substr( $matches[4], 1, strlen( $matches[4] ) - 2 );
+					$inside = trim( $matches[4], '[]' );
 					return '[' . $inside . ' ' . $caption . ']';
+				} else {
+					return '[' . $matches[4] . ' ' . $caption . ']';
 				}
 
 				return $matches[4];

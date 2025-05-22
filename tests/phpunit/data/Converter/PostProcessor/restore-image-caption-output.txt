@@ -21,3 +21,11 @@ Center with width and label [[File:test.png|100x200px|caption]]
 Left with width and label [[File:test.png|100x200px|class=align-right|caption]]
 
 Right with width and label [[File:test.png|100x200px|class=align-left|caption]]
+
+[https://example.com/abc.pdf My label]
+
+[https://example.com/abc.pdf My label]
+
+https://example.com/abc.pdf
+
+https://example.com/abc.pdf
