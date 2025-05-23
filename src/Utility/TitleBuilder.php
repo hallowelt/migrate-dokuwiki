@@ -7,6 +7,12 @@ class TitleBuilder {
 	/** @var array */
 	private $titleSegments = [];
 
+	/** @var array */
+	private $prefixMap = [];
+
+	/** @var bool */
+	private $keepPrefix = false;
+
 	/**
 	 * @param array $paths
 	 * @param bool $history
@@ -15,11 +21,18 @@ class TitleBuilder {
 	 */
 	public function build( array $paths, $history = false, array $config = [] ) {
 		$this->titleSegments = [];
-		if ( isset( $config['put-all-in-this-namespace'] ) ) {
-			$title = $this->makeTitleFromPaths( $paths, $history, $config['put-all-in-this-namespace'] );
-		} else {
-			$title = $this->makeTitleFromPathsWithNamespace( $paths, $history );
+		$this->prefixMap = [];
+		$this->keepPrefix = [];
+
+		if ( isset( $config['space-prefix'] ) && is_array( $config['space-prefix'] ) ) {
+			$this->prefixMap = $config['space-prefix'];
 		}
+
+		if ( isset( $config['keep-mapped-prefix'] ) && is_bool( $config['keep-mapped-prefix'] ) ) {
+			$this->keepPrefix = $config['keep-mapped-prefix'];
+		}
+
+		$title = $this->makeTitleFromPaths( $paths, $history );
 
 		return $title;
 	}
@@ -27,10 +40,23 @@ class TitleBuilder {
 	/**
 	 * @param array $paths
 	 * @param bool $history
-	 * @param string $namespace
 	 * @return string
 	 */
-	private function makeTitleFromPaths( array $paths, $history = false, string $namespace = '' ): string {
+	private function makeTitleFromPaths( array $paths, $history = false ): string {
+		$namespace = '';
+		if ( count( $paths ) > 1 ) {
+			$namespace = $paths[0];
+			if ( isset( $this->prefixMap[$namespace] ) ) {
+				$namespace = $this->prefixMap[$namespace];
+
+				if ( !$this->keepPrefix ) {
+					$dropNamespace = array_shift( $paths );
+				}
+			} else {
+				$dropNamespace = array_shift( $paths );
+			}
+		}
+
 		$subpageName = array_pop( $paths );
 		$subpageParts = explode( '.', $subpageName );
 		$fileExtension = array_pop( $subpageParts );
