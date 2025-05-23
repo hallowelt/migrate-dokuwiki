@@ -33,7 +33,10 @@ class TitleBuilderTest extends TestCase {
 		$this->assertEquals( $expectedTitles, $actualTitles );
 
 		$config = [
-			'put-all-in-this-namespace' => 'My_namespace'
+			'space-prefix' => [
+				'tools' => "MyTools",
+				"box-a" => "MyBox_A"
+			]
 		];
 
 		$actualTitles = [];
@@ -41,7 +44,23 @@ class TitleBuilderTest extends TestCase {
 			$paths = explode( '/', trim( $filepath, '/' ) );
 			$actualTitles[] = $titleBuilder->build( $paths, true, $config );
 		}
-		$expectedTitles = $this->getExpectedTitlesAllInOneNamespace();
+		$expectedTitles = $this->getExpectedTitlesMappedPrefix();
+		$this->assertEquals( $expectedTitles, $actualTitles );
+
+		$config = [
+			'space-prefix' => [
+				'tools' => "MyTools",
+				"box-a" => "MyBox_A"
+			],
+			'keep-mapped-prefix' => true
+		];
+
+		$actualTitles = [];
+		foreach ( $pages as $filepath ) {
+			$paths = explode( '/', trim( $filepath, '/' ) );
+			$actualTitles[] = $titleBuilder->build( $paths, true, $config );
+		}
+		$expectedTitles = $this->getExpectedTitlesMappedPrefixKeepingPrefix();
 		$this->assertEquals( $expectedTitles, $actualTitles );
 	}
 
@@ -90,14 +109,28 @@ class TitleBuilderTest extends TestCase {
 	/**
 	 * @return array
 	 */
-	private function getExpectedTitlesAllInOneNamespace(): array {
+	private function getExpectedTitlesMappedPrefix(): array {
 		return [
-			'My_namespace:Start',
-			'My_namespace:Test',
-			'My_namespace:Projects/Types/Ab.type_01',
-			'My_namespace:Tools/Toolbox/Wrench',
-			'My_namespace:Tools/Toolbox/Hammer.01',
-			'My_namespace:Box-a/Item-01',
+			'Start',
+			'Test',
+			'Projects:Types/Ab.type_01',
+			'MyTools:Toolbox/Wrench',
+			'MyTools:Toolbox/Hammer.01',
+			'MyBox_A:Item-01',
+		];
+	}
+
+	/**
+	 * @return array
+	 */
+	private function getExpectedTitlesMappedPrefixKeepingPrefix(): array {
+		return [
+			'Start',
+			'Test',
+			'Projects:Types/Ab.type_01',
+			'MyTools:Tools/Toolbox/Wrench',
+			'MyTools:Tools/Toolbox/Hammer.01',
+			'MyBox_A:Box-a/Item-01',
 		];
 	}
 }

@@ -8,7 +8,10 @@ class FileTitleBuilder {
 	private $titleSegments = [];
 
 	/** @var array */
-	private $config = [];
+	private $prefixMap = [];
+
+	/** @var bool */
+	private $keepPrefix = false;
 
 	/** @var bool */
 	private $nsFileRepoCompat = false;
@@ -20,27 +23,35 @@ class FileTitleBuilder {
 	 * @return string
 	 */
 	public function build( array $paths, bool $history = false, array $config = [] ) {
-		$this->config = $config;
-		$this->nsFileRepoCompat = $this->getNSFileRepoConfig();
 		$this->titleSegments = [];
-		if ( isset( $config['put-all-in-this-namespace'] ) ) {
-			$title = $this->makeTitleFromPaths( $paths, $history, $config['put-all-in-this-namespace'] );
-		} else {
-			$title = $this->makeTitleFromPathsWithNamespace( $paths, $history );
+		$this->prefixMap = [];
+		$this->keepPrefix = [];
+
+		$this->nsFileRepoCompat = $this->getNSFileRepoConfig( $config );
+
+		if ( isset( $config['space-prefix'] ) && is_array( $config['space-prefix'] ) ) {
+			$this->prefixMap = $config['space-prefix'];
 		}
+
+		if ( isset( $config['keep-mapped-prefix'] ) && is_bool( $config['keep-mapped-prefix'] ) ) {
+			$this->keepPrefix = $config['keep-mapped-prefix'];
+		}
+
+		$title = $this->makeTitleFromPaths( $paths, $history );
 
 		return $title;
 	}
 
 	/**
+	 * @param array $config
 	 * @return bool
 	 */
-	private function getNSFileRepoConfig(): bool {
-		if ( !isset( $this->config['ext-ns-file-repo-compat'] ) ) {
+	private function getNSFileRepoConfig( array $config ): bool {
+		if ( !isset( $config['ext-ns-file-repo-compat'] ) ) {
 			return false;
 		}
 
-		$value = $this->config['ext-ns-file-repo-compat'];
+		$value = $config['ext-ns-file-repo-compat'];
 		if ( is_bool( $value ) ) {
 			return $value;
 		}
@@ -59,6 +70,20 @@ class FileTitleBuilder {
 	 * @return string
 	 */
 	private function makeTitleFromPaths( array $paths, bool $history, string $namespace = '' ): string {
+		$namespace = '';
+		if ( count( $paths ) > 1 ) {
+			$namespace = $paths[0];
+			if ( isset( $this->prefixMap[$namespace] ) ) {
+				$namespace = $this->prefixMap[$namespace];
+
+				if ( !$this->keepPrefix ) {
+					$dropNamespace = array_shift( $paths );
+				}
+			} else {
+				$dropNamespace = array_shift( $paths );
+			}
+		}
+
 		$filename = array_pop( $paths );
 		$filenameParts = explode( '.', $filename );
 		$fileExtension = array_pop( $filenameParts );
@@ -96,29 +121,13 @@ class FileTitleBuilder {
 	}
 
 	/**
-	 * @param array $paths
-	 * @param bool $history
-	 * @return string
-	 */
-	private function makeTitleFromPathsWithNamespace( array $paths, bool $history ): string {
-		$namespace = '';
-		if ( count( $paths ) > 1 ) {
-			$namespace = array_shift( $paths );
-		}
-
-		$title = $this->makeTitleFromPaths( $paths, $history, $namespace );
-
-		return ucfirst( $title );
-	}
-
-	/**
 	 *
 	 * @param string $segment
 	 */
 	private function appendTitleSegment( $segment ) {
 		$cleanedSegment = $this->cleanTitleSegment( $segment );
 		if ( !empty( $cleanedSegment ) ) {
-			$this->titleSegments[] = $cleanedSegment;
+			$this->titleSegments[] = ucfirst( $cleanedSegment );
 		}
 	}
 
