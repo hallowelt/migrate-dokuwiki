@@ -16,3 +16,4 @@ Link to a page with missing page key
 * sit amet #####PRESERVEMAILLINKOPEN#####abc.def@example.com#####PRESERVEMAILLINKPIPE#####abc.def@example.com#####PRESERVEMAILLINKCLOSE#####
 * sit amet #####PRESERVEMAILLINKOPEN#####abc.def@example.com#####PRESERVEMAILLINKPIPE#####abc.def@example.com#####PRESERVEMAILLINKCLOSE#####
 * sit amet #####PRESERVEINTERNALLINKOPEN##########PRESERVEINTERNALLINKPIPE#####Label#####PRESERVEINTERNALLINKCLOSE##### #####CATEGORYOPEN#####Migration/Missing link target#####CATEGORYCLOSE#####
+* sit amet #####PRESERVEINTERNALLINKOPEN#####Ä:Xyz/Test#####PRESERVEINTERNALLINKPIPE#####Accented page key#####PRESERVEINTERNALLINKCLOSE#####

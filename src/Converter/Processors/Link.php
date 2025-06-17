@@ -3,6 +3,7 @@
 namespace HalloWelt\MigrateDokuwiki\Converter\Processors;
 
 use HalloWelt\MigrateDokuwiki\IProcessor;
+use HalloWelt\MigrateDokuwiki\Utility\AccentedChars;
 use HalloWelt\MigrateDokuwiki\Utility\CategoryBuilder;
 
 class Link implements IProcessor {
@@ -182,8 +183,12 @@ class Link implements IProcessor {
 
 			$targetKey = $this->generalizeItem( $target );
 			if ( $title !== '' && !isset( $this->pageKeyToTitleMap[$targetKey] ) ) {
-				$category = CategoryBuilder::getPreservedMigrationCategory( 'Guessed link target' );
-				$replacement .= " {$category}";
+				// Try again with accented characters
+				$targetKey = AccentedChars::normalizeAccentedText( $targetKey );
+				if ( $title !== '' && !isset( $this->pageKeyToTitleMap[$targetKey] ) ) {
+					$category = CategoryBuilder::getPreservedMigrationCategory( 'Guessed link target' );
+					$replacement .= " {$category}";
+				}
 			}
 		} else {
 			$hash = $this->getHash( $data );
@@ -222,6 +227,11 @@ class Link implements IProcessor {
 	 */
 	private function getTargetWikiTitle( string $target ): string {
 		$targetKey = $this->generalizeItem( $target );
+		if ( isset( $this->pageKeyToTitleMap[$targetKey] ) ) {
+			return $this->pageKeyToTitleMap[$targetKey];
+		}
+		// Try again with accented characters
+		$targetKey = AccentedChars::normalizeAccentedText( $targetKey );
 		if ( isset( $this->pageKeyToTitleMap[$targetKey] ) ) {
 			return $this->pageKeyToTitleMap[$targetKey];
 		}

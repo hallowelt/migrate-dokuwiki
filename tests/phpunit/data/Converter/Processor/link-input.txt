@@ -16,3 +16,4 @@ Link to a page with missing page key
 * sit amet [[abc.def@example.com| ]]
 * sit amet [[abc.def@example.com]]
 * sit amet [[|Label]]
+* sit amet [[ä:xyz:test | Accented page key]]

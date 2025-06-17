@@ -38,6 +38,7 @@ class LinkTest extends TestCase {
 			'tools:toolbox:hammer.01' => 'Tools:Toolbox/Hammer.01',
 			'tools:toolbox:screwdriver' => 'Tools:Toolbox/Screwdriver',
 			'tools:toolbox:screwdriver:screwdriver' => 'Tools:Toolbox/Screwdriver',
+			'ae:xyz:test' => 'Ä:Xyz/Test'
 		];
 	}
 
