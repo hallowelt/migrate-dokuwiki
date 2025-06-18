@@ -26,7 +26,7 @@ class Link implements IProcessor {
 	public function process( string $text, string $path = '' ): string {
 		$originalText = $text;
 
-		 $regEx = '#(\[\[)(.*?)(\]\])#';
+		 $regEx = '#(\[\[)(.*?)(\]\])#s';
 		 $text = preg_replace_callback( $regEx, function ( $matches ) {
 			$replacement = $matches[0];
 			$target = trim( $matches[2] );
@@ -73,7 +73,7 @@ class Link implements IProcessor {
 	 */
 	private function generalizeItem( string $text ): string {
 		$text = str_replace( ' ', '_', $text );
-		$text = strtolower( $text );
+		$text = mb_strtolower( $text );
 
 		return $text;
 	}

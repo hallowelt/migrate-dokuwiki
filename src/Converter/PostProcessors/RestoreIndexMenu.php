@@ -88,7 +88,7 @@ class RestoreIndexMenu implements IProcessor {
 					$src = $range;
 				}
 
-				$key = strtolower( trim( $src, ':' ) );
+				$key = mb_strtolower( trim( $src, ':' ) );
 				if ( isset( $this->pageKeyToTitleMap[$key] ) ) {
 					$src = $this->pageKeyToTitleMap[$key];
 				}

@@ -13,13 +13,9 @@ class AccentedChars {
 	 * @return string
 	 */
 	public static function normalizeAccentedText( string $text ): string {
-		$search = [];
-		$replace = [];
 		foreach ( self::getMap() as $accented => $normalized ) {
-			$search[] = $accented;
-			$replace[] = $normalized;
+			$text = str_replace( $accented, $normalized, $text );
 		}
-		$text = str_replace( $search, $replace, $text );
 		return $text;
 	}
 

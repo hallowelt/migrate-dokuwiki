@@ -16,31 +16,19 @@ class Displaytitle implements IProcessor {
 		$lines = explode( "\n", $text );
 
 		$hasDisplayTitle = false;
-		$idMatches = [];
-		preg_match( '#<span id="(.*?)"\s*></span>#', $lines[0], $idMatches );
-		if ( empty( $idMatches ) ) {
-			return $text;
-		}
-		$id = $idMatches[1];
-		$id = str_replace( '-', ' ', $id );
-
 		$headingMatches = [];
-		preg_match_all( '#(=+)\s*(.*?)\s*(=+)#', $lines[1], $headingMatches );
+		preg_match( '#(=+)\s*(.*?)\s*(=+)#', $lines[1], $headingMatches );
 		if ( empty( $headingMatches[0] ) ) {
-			$category = CategoryBuilder::getPreservedMigrationCategory( 'Displaytitle not set' );
-			$text .= " {$category}";
+			#$category = CategoryBuilder::getPreservedMigrationCategory( 'Displaytitle not set' );
+			#$text .= " {$category}";
 			return $text;
 		}
 
-		for ( $index = 0; $index < count( $headingMatches[0] ); $index++ ) {
-			$heading = $headingMatches[2][$index];
+		if ( isset( $headingMatches[2] ) && $headingMatches[2] !== '' ) {
+			$heading = $headingMatches[2];
 			$replacement = $this->makeReplacement( $heading );
-
-			if ( strtolower( str_replace( '-', ' ', $heading ) ) === strtolower( $id ) ) {
-				$text = str_replace( $headingMatches[0][$index], $replacement, $text );
-				$hasDisplayTitle = true;
-				break;
-			}
+			$text = str_replace( $headingMatches[0], $replacement, $text );
+			$hasDisplayTitle = true;
 		}
 
 		if ( $hasDisplayTitle ) {

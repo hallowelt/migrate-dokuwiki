@@ -78,7 +78,7 @@ class FileKeyBuilder {
 	 */
 	private function generalizeItem( string $text ): string {
 		$text = str_replace( ' ', '_', $text );
-		$text = strtolower( $text );
+		$text = mb_strtolower( $text );
 
 		return $text;
 	}
