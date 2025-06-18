@@ -35,7 +35,6 @@ class RemoveLinebreakBeforeListItems implements IProcessor {
 				}
 			}
 
-			
 		}
 
 		$text = implode( "\n", $lines );

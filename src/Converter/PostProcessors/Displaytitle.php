@@ -19,7 +19,7 @@ class Displaytitle implements IProcessor {
 		$headingMatches = [];
 		preg_match( '#(=+)\s*(.*?)\s*(=+)#', $lines[1], $headingMatches );
 		if ( empty( $headingMatches[0] ) ) {
-			#$category = CategoryBuilder::getPreservedMigrationCategory( 'Displaytitle not set' );
+			# $category = CategoryBuilder::getPreservedMigrationCategory( 'Displaytitle not set' );
 			#$text .= " {$category}";
 			return $text;
 		}
