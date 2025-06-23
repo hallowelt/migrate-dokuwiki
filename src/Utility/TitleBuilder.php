@@ -46,7 +46,7 @@ class TitleBuilder {
 		if ( count( $subpageParts ) > 1 ) {
 			$fileExtension = array_pop( $subpageParts );
 		}
-		if ( $history && count( $subpageParts ) > 1  ) {
+		if ( $history && count( $subpageParts ) > 1 ) {
 			$historyTimestamp = array_pop( $subpageParts );
 		}
 		$subpageText = implode( '.', $subpageParts );
