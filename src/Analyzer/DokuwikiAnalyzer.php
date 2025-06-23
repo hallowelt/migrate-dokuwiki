@@ -241,8 +241,10 @@ class DokuwikiAnalyzer
 		}
 
 		if ( count( $paths ) < 2 ) {
-			// .txt is a direct child of pages directory. It has to result in a page in NS_MAIN
+			// .txt is a direct child of pages directory.
+			// It has to result in a page in NS_MAIN or it is the main page of a namespace.
 			$namespace = 'NS_MAIN';
+			$this->namespaceMainpage( $namespace, $paths, $file );
 		} else {
 			$namespace = trim( $paths[0] );
 			$namespace = trim( $namespace, " _\t" );
@@ -262,6 +264,35 @@ class DokuwikiAnalyzer
 	}
 
 	/**
+	 * @param string &$namespace
+	 * @param array &$paths
+	 * @param SplFileInfo $file
+	 * @param bool $history
+	 * @return void
+	 */
+	private function namespaceMainpage( string &$namespace, array &$paths, SplFileInfo $file, $history = false ): void {
+		$name = end( $paths );
+		// Removing file extension
+		$name = substr( $name, 0, strrpos( $name, '.' ) );
+		$length = strlen( $name );
+		if ( $history ) {
+			// Removing timestamp
+			$name = substr( $name, 0, strrpos( $name, '.' ) );
+			$length = strlen( $name );
+		}
+		$dirname = substr( $file->getRealPath(), 0, $length );
+		if ( is_dir( $dirname ) ) {
+			$namespace = trim( $paths[0] );
+			$namespace = trim( $namespace, '.txt' );
+			$namespace = trim( $namespace, " _\t" );
+			$namespace = ucfirst( $namespace );
+			$namespace = str_replace( [ '-', ' ' ], '_', $namespace );
+
+			$paths[0] = $namespace;
+		}
+	}
+
+	/**
 	 * @param SplFileInfo $file
 	 * @param array $paths
 	 */
@@ -275,10 +306,18 @@ class DokuwikiAnalyzer
 			$paths = array_values( $paths );
 		}
 
-		$namespace = trim( $paths[0] );
-		$namespace = trim( $namespace, " _\t" );
-		$namespace = ucfirst( $namespace );
-		$namespace = str_replace( [ '-', ' ' ], '_', $namespace );
+		if ( count( $paths ) < 2 ) {
+			// .txt is a direct child of pages directory.
+			// It has to result in a page in NS_MAIN or it is the main page of a namespace.
+			$namespace = 'NS_MAIN';
+			$this->namespaceMainpage( $namespace, $paths, $file, true );
+		} else {
+			$namespace = trim( $paths[0] );
+			$namespace = trim( $namespace, " _\t" );
+			$namespace = ucfirst( $namespace );
+			$namespace = str_replace( [ '-', ' ' ], '_', $namespace );
+		}
+
 		$this->dataBuckets->addData( 'attic-namespaces-map', 'namespaces', $namespace, true, true );
 
 		$title = $this->makeTitle( $paths, true );
