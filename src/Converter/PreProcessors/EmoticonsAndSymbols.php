@@ -24,13 +24,13 @@ class EmoticonsAndSymbols implements IProcessor {
 
 		$symbolsMap = $this->getSymbolsMap();
 		foreach ( $symbolsMap as $symbol => $replacement ) {
-			$regEx = preg_quote( $symbol );
-
-			$text = preg_replace(
-				"#$regEx#",
-				$replacement,
-				$text
-			);
+			$symbolQuoted = preg_quote( $symbol );
+			$regEx = '#(^|\s+)(' . $symbolQuoted . ')(\.*\s+)#';
+			$text = preg_replace_callback( $regEx, static function ( $matches ) use ( $replacement ) {
+				unset( $matches[0] );
+				$matches[2] = $replacement;
+				return implode( '', $matches );
+			}, $text );
 		}
 
 		if ( !is_string( $text ) ) {
