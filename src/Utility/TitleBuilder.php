@@ -10,8 +10,8 @@ class TitleBuilder {
 	/** @var array */
 	private $prefixMap = [];
 
-	/** @var bool */
-	private $keepPrefix = false;
+	/** @var string */
+	private $mainpageTitle = 'Main_Page';
 
 	/**
 	 * @param array $paths
@@ -22,19 +22,35 @@ class TitleBuilder {
 	public function build( array $paths, $history = false, array $config = [] ) {
 		$this->titleSegments = [];
 		$this->prefixMap = [];
-		$this->keepPrefix = [];
 
 		if ( isset( $config['space-prefix'] ) && is_array( $config['space-prefix'] ) ) {
 			$this->prefixMap = $config['space-prefix'];
 		}
 
-		if ( isset( $config['keep-mapped-prefix'] ) && is_bool( $config['keep-mapped-prefix'] ) ) {
-			$this->keepPrefix = $config['keep-mapped-prefix'];
+		if ( isset( $config['mainpage'] ) && $config['mainpage'] !== '' ) {
+			$this->mainpageTitle = $config['mainpage'];
 		}
 
 		$title = $this->makeTitleFromPaths( $paths, $history );
 
 		return $title;
+	}
+
+	/**
+	 * @param string $path
+	 * @param bool $history
+	 * @return string
+	 */
+	private function getSubpageText( string $path, $history = false ): string {
+		$subpageParts = explode( '.', $path );
+		if ( count( $subpageParts ) > 1 ) {
+			$fileExtension = array_pop( $subpageParts );
+		}
+		if ( $history && count( $subpageParts ) > 1 ) {
+			$historyTimestamp = array_pop( $subpageParts );
+		}
+		$subpageText = implode( '.', $subpageParts );
+		return $subpageText;
 	}
 
 	/**
@@ -46,58 +62,44 @@ class TitleBuilder {
 		$namespace = '';
 		if ( count( $paths ) > 1 ) {
 			$namespace = $paths[0];
+			if ( $paths[0] === $this->getSubpageText( $paths[1], $history ) ) {
+				$paths[1] = str_replace(
+					$this->getSubpageText( $paths[1], $history ),
+					$this->mainpageTitle,
+					$paths[1]
+				);
+			}
+
 			if ( isset( $this->prefixMap[$namespace] ) ) {
 				$namespace = $this->prefixMap[$namespace];
-
-				if ( !$this->keepPrefix ) {
-					$dropNamespace = array_shift( $paths );
-				}
 			} else {
-				$dropNamespace = array_shift( $paths );
+				$namespace = ucfirst( $paths[0] );
+				$namespace .= ':';
 			}
+
+			unset( $paths[0] );
+			$paths = array_values( $paths );
 		}
 
-		$subpageName = array_pop( $paths );
-		$subpageParts = explode( '.', $subpageName );
-		$fileExtension = array_pop( $subpageParts );
-		if ( $history ) {
-			$historyTimestamp = array_pop( $subpageParts );
-		}
-		$subpageName = implode( '.', $subpageParts );
+		$subpageText = array_pop( $paths );
+		$subpageText = $this->getSubpageText( $subpageText, $history );
 
 		for ( $index = 0; $index < count( $paths ); $index++ ) {
 			if ( ( $index === count( $paths ) - 1 )
-				&& $paths[$index] === $subpageName ) {
+				&& $this->getSubpageText( $paths[$index], $history ) === $subpageText ) {
 				break;
 			}
 			$this->appendTitleSegment( $paths[$index] );
 		}
 
-		$this->appendTitleSegment( $subpageName );
+		$this->appendTitleSegment( $subpageText );
 
 		$title = implode( '/', $this->titleSegments );
 
 		if ( $namespace !== '' ) {
 			$namespace = str_replace( [ '-', ' ' ], '_', $namespace );
-			$prefix = ucfirst( $namespace ) . ':';
-			$title = $prefix . $title;
+			$title = $namespace . $title;
 		}
-
-		return $title;
-	}
-
-	/**
-	 * @param array $paths
-	 * @param bool $history
-	 * @return string
-	 */
-	private function makeTitleFromPathsWithNamespace( array $paths, $history = false ): string {
-		$namespace = '';
-		if ( count( $paths ) > 1 ) {
-			$namespace = array_shift( $paths );
-		}
-
-		$title = $this->makeTitleFromPaths( $paths, $history, $namespace );
 
 		return $title;
 	}

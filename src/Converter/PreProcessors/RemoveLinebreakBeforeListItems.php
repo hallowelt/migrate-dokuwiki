@@ -29,12 +29,12 @@ class RemoveLinebreakBeforeListItems implements IProcessor {
 				if ( strpos( $line, '\\' ) === strlen( $line ) - 2 ) {
 					$lines[$index] = substr( $line, 0, strlen( $line ) - 2 );
 				}
+				// remove linebreak before list
+				if ( strpos( $lastLine, '\\' ) === strlen( $lastLine ) - 2 ) {
+					$lines[$index - 1] = substr( $lastLine, 0, strlen( $lastLine ) - 2 );
+				}
 			}
 
-			// remove linebreak befor list
-			if ( strpos( $lastLine, '\\' ) === strlen( $lastLine ) - 2 ) {
-				$lines[$index - 1] = substr( $lastLine, 0, strlen( $lastLine ) - 2 );
-			}
 		}
 
 		$text = implode( "\n", $lines );

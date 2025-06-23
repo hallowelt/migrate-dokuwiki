@@ -34,8 +34,8 @@ class TitleBuilderTest extends TestCase {
 
 		$config = [
 			'space-prefix' => [
-				'tools' => "MyTools",
-				"box-a" => "MyBox_A"
+				'tools' => "MyTools:",
+				"box-a" => "MyBox_A:"
 			]
 		];
 
@@ -49,10 +49,10 @@ class TitleBuilderTest extends TestCase {
 
 		$config = [
 			'space-prefix' => [
-				'tools' => "MyTools",
-				"box-a" => "MyBox_A"
+				'tools' => "MyTools:",
+				"box-a" => "MyBox_A:"
 			],
-			'keep-mapped-prefix' => true
+			'mainpage' => 'MyMainpage'
 		];
 
 		$actualTitles = [];
@@ -60,7 +60,7 @@ class TitleBuilderTest extends TestCase {
 			$paths = explode( '/', trim( $filepath, '/' ) );
 			$actualTitles[] = $titleBuilder->build( $paths, true, $config );
 		}
-		$expectedTitles = $this->getExpectedTitlesMappedPrefixKeepingPrefix();
+		$expectedTitles = $this->getExpectedTitlesMappedMainPage();
 		$this->assertEquals( $expectedTitles, $actualTitles );
 	}
 
@@ -71,6 +71,8 @@ class TitleBuilderTest extends TestCase {
 		return [
 			'start.txt',
 			'__test.txt',
+			'projects/projects.txt',
+			'projects/projects/subpage.txt',
 			'projects/types/ab.type_01.txt',
 			'tools/toolbox/wrench.txt',
 			'tools/toolbox/hammer.01.txt',
@@ -85,6 +87,8 @@ class TitleBuilderTest extends TestCase {
 		return [
 			'Start',
 			'Test',
+			'Projects:Main_Page',
+			'Projects:Main_Page/Subpage',
 			'Projects:Types/Ab.type_01',
 			'Tools:Toolbox/Wrench',
 			'Tools:Toolbox/Hammer.01',
@@ -99,6 +103,8 @@ class TitleBuilderTest extends TestCase {
 		return [
 			'start.20240730.txt',
 			'___test.20240830.txt',
+			'projects/projects.20250623.txt',
+			'projects/projects/subpage.20250623.txt',
 			'projects/types/ab.type_01.20240730.txt',
 			'tools/toolbox/wrench.20240730.txt',
 			'tools/toolbox/hammer.01.20240730.txt',
@@ -113,6 +119,8 @@ class TitleBuilderTest extends TestCase {
 		return [
 			'Start',
 			'Test',
+			'Projects:Main_Page',
+			'Projects:Main_Page/Subpage',
 			'Projects:Types/Ab.type_01',
 			'MyTools:Toolbox/Wrench',
 			'MyTools:Toolbox/Hammer.01',
@@ -123,14 +131,16 @@ class TitleBuilderTest extends TestCase {
 	/**
 	 * @return array
 	 */
-	private function getExpectedTitlesMappedPrefixKeepingPrefix(): array {
+	private function getExpectedTitlesMappedMainPage(): array {
 		return [
 			'Start',
 			'Test',
+			'Projects:MyMainpage',
+			'Projects:MyMainpage/Subpage',
 			'Projects:Types/Ab.type_01',
-			'MyTools:Tools/Toolbox/Wrench',
-			'MyTools:Tools/Toolbox/Hammer.01',
-			'MyBox_A:Box-a/Item-01',
+			'MyTools:Toolbox/Wrench',
+			'MyTools:Toolbox/Hammer.01',
+			'MyBox_A:Item-01',
 		];
 	}
 }
