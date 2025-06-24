@@ -240,6 +240,9 @@ class DokuwikiAnalyzer
 			$paths = array_values( $paths );
 		}
 
+		$key = $this->makeTitleKey( $paths );
+		$doubleKey = $this->makeTitleDoubleKey( $paths );
+
 		if ( count( $paths ) < 2 ) {
 			// .txt is a direct child of pages directory.
 			// It has to result in a page in NS_MAIN or it is the main page of a namespace.
@@ -248,48 +251,17 @@ class DokuwikiAnalyzer
 		} else {
 			$namespace = trim( $paths[0] );
 			$namespace = trim( $namespace, " _\t" );
-			$namespace = ucfirst( $namespace );
 			$namespace = str_replace( [ '-', ' ' ], '_', $namespace );
 		}
-		$this->dataBuckets->addData( 'namespaces-map', 'namespaces', $namespace, true, true );
 
-		$key = $this->makeTitleKey( $paths );
-		$doubleKey = $this->makeTitleDoubleKey( $paths );
+		$this->dataBuckets->addData( 'namespaces-map', 'namespaces', ucfirst( $namespace ), true, true );
+
 		$title = $this->makeTitle( $paths );
 		$this->output->writeln( "Add title:  $title" );
 		$this->dataBuckets->addData( 'page-key-to-title-map', $key, $title, false, true );
 		$this->dataBuckets->addData( 'page-key-to-title-map', $doubleKey, $title, false, true );
 		$this->dataBuckets->addData( 'page-titles', 'pages_titles', $title, true, false );
 		$this->dataBuckets->addData( 'pages-map', $title, $file->getPathname(), true, false );
-	}
-
-	/**
-	 * @param string &$namespace
-	 * @param array &$paths
-	 * @param SplFileInfo $file
-	 * @param bool $history
-	 * @return void
-	 */
-	private function namespaceMainpage( string &$namespace, array &$paths, SplFileInfo $file, $history = false ): void {
-		$name = end( $paths );
-		// Removing file extension
-		$name = substr( $name, 0, strrpos( $name, '.' ) );
-		$length = strlen( $name );
-		if ( $history ) {
-			// Removing timestamp
-			$name = substr( $name, 0, strrpos( $name, '.' ) );
-			$length = strlen( $name );
-		}
-		$dirname = substr( $file->getRealPath(), 0, $length );
-		if ( is_dir( $dirname ) ) {
-			$namespace = trim( $paths[0] );
-			$namespace = trim( $namespace, '.txt' );
-			$namespace = trim( $namespace, " _\t" );
-			$namespace = ucfirst( $namespace );
-			$namespace = str_replace( [ '-', ' ' ], '_', $namespace );
-
-			$paths[0] = $namespace;
-		}
 	}
 
 	/**
@@ -323,6 +295,31 @@ class DokuwikiAnalyzer
 		$title = $this->makeTitle( $paths, true );
 		$this->output->writeln( "Add history version of:  $title" );
 		$this->dataBuckets->addData( 'attic-pages-map', $title, $file->getPathname(), true, false );
+	}
+
+	/**
+	 * @param string &$namespace
+	 * @param array &$paths
+	 * @param SplFileInfo $file
+	 * @param bool $history
+	 * @return void
+	 */
+	private function namespaceMainpage( string &$namespace, array &$paths, SplFileInfo $file, $history = false ): void {
+		// Removing file extension
+		$dir = substr( $file->getRealPath(), 0, strrpos( $file->getRealPath(), '.' ) );
+		if ( $history ) {
+			// Removing timestamp
+			$dir = substr( $dir, 0, strrpos( $dir, '.' ) );
+		}
+		if ( is_dir( $dir ) ) {
+			$namespace = trim( $paths[0] );
+			$namespace = trim( $namespace, '.txt' );
+			$namespace = trim( $namespace, " _\t" );
+			$namespace = str_replace( [ '-', ' ' ], '_', $namespace );
+
+			$paths[1] = $paths[0];
+			$paths[0] = $namespace;
+		}
 	}
 
 	/**
