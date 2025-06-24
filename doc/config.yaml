@@ -1,0 +1,7 @@
+config:
+  mainpage: MyMainpage
+  space-prefix:
+    tools: MyTools:
+    box-a: MyBox_A:TEST/
+  media-link-extensions:
+    - pdf

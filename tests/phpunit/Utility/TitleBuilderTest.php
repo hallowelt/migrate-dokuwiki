@@ -35,7 +35,7 @@ class TitleBuilderTest extends TestCase {
 		$config = [
 			'space-prefix' => [
 				'tools' => "MyTools:",
-				"box-a" => "MyBox_A:"
+				"box-a" => "MyBox_A:TEST/"
 			]
 		];
 
@@ -50,7 +50,7 @@ class TitleBuilderTest extends TestCase {
 		$config = [
 			'space-prefix' => [
 				'tools' => "MyTools:",
-				"box-a" => "MyBox_A:"
+				"box-a" => "MyBox_A:TEST/"
 			],
 			'mainpage' => 'MyMainpage'
 		];
@@ -124,7 +124,7 @@ class TitleBuilderTest extends TestCase {
 			'Projects:Types/Ab.type_01',
 			'MyTools:Toolbox/Wrench',
 			'MyTools:Toolbox/Hammer.01',
-			'MyBox_A:Item-01',
+			'MyBox_A:TEST/Item-01',
 		];
 	}
 
@@ -140,7 +140,7 @@ class TitleBuilderTest extends TestCase {
 			'Projects:Types/Ab.type_01',
 			'MyTools:Toolbox/Wrench',
 			'MyTools:Toolbox/Hammer.01',
-			'MyBox_A:Item-01',
+			'MyBox_A:TEST/Item-01',
 		];
 	}
 }
