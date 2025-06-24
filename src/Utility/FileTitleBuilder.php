@@ -32,7 +32,6 @@ class FileTitleBuilder {
 			$this->prefixMap = $config['space-prefix'];
 		}
 
-
 		if ( isset( $config['mainpage'] ) && $config['mainpage'] !== '' ) {
 			$this->mainpageTitle = $config['mainpage'];
 		}

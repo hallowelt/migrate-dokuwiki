@@ -79,7 +79,6 @@ class FileTitleBuilderTest extends TestCase {
 		$actualTitles = $this->doTest( $titleBuilder, $pages, true, $config );
 		$expectedTitles = $this->getExpectedTitlesMappedNamespaceNSFileRepoCombatibility();
 		$this->assertEquals( $expectedTitles, $actualTitles );
-
 	}
 
 	/**
