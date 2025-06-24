@@ -10,8 +10,8 @@ class FileTitleBuilder {
 	/** @var array */
 	private $prefixMap = [];
 
-	/** @var bool */
-	private $keepPrefix = false;
+	/** @var string */
+	private $mainpageTitle = 'Main_Page';
 
 	/** @var bool */
 	private $nsFileRepoCompat = false;
@@ -25,7 +25,6 @@ class FileTitleBuilder {
 	public function build( array $paths, bool $history = false, array $config = [] ) {
 		$this->titleSegments = [];
 		$this->prefixMap = [];
-		$this->keepPrefix = [];
 
 		$this->nsFileRepoCompat = $this->getNSFileRepoConfig( $config );
 
@@ -33,8 +32,9 @@ class FileTitleBuilder {
 			$this->prefixMap = $config['space-prefix'];
 		}
 
-		if ( isset( $config['keep-mapped-prefix'] ) && is_bool( $config['keep-mapped-prefix'] ) ) {
-			$this->keepPrefix = $config['keep-mapped-prefix'];
+
+		if ( isset( $config['mainpage'] ) && $config['mainpage'] !== '' ) {
+			$this->mainpageTitle = $config['mainpage'];
 		}
 
 		$title = $this->makeTitleFromPaths( $paths, $history );
@@ -73,15 +73,16 @@ class FileTitleBuilder {
 		$namespace = '';
 		if ( count( $paths ) > 1 ) {
 			$namespace = $paths[0];
+
 			if ( isset( $this->prefixMap[$namespace] ) ) {
 				$namespace = $this->prefixMap[$namespace];
-
-				if ( !$this->keepPrefix ) {
-					$dropNamespace = array_shift( $paths );
-				}
 			} else {
-				$dropNamespace = array_shift( $paths );
+				$namespace = ucfirst( $paths[0] );
+				$namespace .= ':';
 			}
+
+			unset( $paths[0] );
+			$paths = array_values( $paths );
 		}
 
 		$filename = array_pop( $paths );
@@ -108,11 +109,14 @@ class FileTitleBuilder {
 		$title .= ".$fileExtension";
 
 		if ( $namespace !== '' ) {
+			$namespace = str_replace( [ ':', '/' ], '_', $namespace );
+			$namespace = trim( $namespace, '_' );
 			$prefix = $namespace . '_';
 			if ( $this->nsFileRepoCompat ) {
 				$prefix = $namespace . ':';
 				$prefix = str_replace( [ '-', ' ' ], '_', $prefix );
 				$title = ucfirst( $title );
+				$title = trim( $title, '_' );
 			}
 			$title = $prefix . $title;
 		}

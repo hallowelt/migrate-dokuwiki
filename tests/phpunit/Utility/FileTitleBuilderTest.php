@@ -43,7 +43,7 @@ class FileTitleBuilderTest extends TestCase {
 
 		$config = [
 			'space-prefix' => [
-				'tools' => 'MyNamespace',
+				'tools' => 'MyNamespace:',
 			]
 		];
 
@@ -62,42 +62,24 @@ class FileTitleBuilderTest extends TestCase {
 
 		$config = [
 			'space-prefix' => [
-				'tools' => 'MyNamespace',
+				'tools' => 'MyNamespace:',
 			],
-			'keep-mapped-prefix' => true,
-		];
-
-		// latest revision title
-		$pages = $this->getPageFilePaths();
-		$actualTitles = $this->doTest( $titleBuilder, $pages, false, $config );
-		$expectedTitles = $this->getExpectedTitlesMappedNamespaceKeepPrefix();
-		$this->assertEquals( $expectedTitles, $actualTitles );
-
-		// attic revision titles
-		$pages = $this->getAtticPageFilePaths();
-		$actualTitles = $this->doTest( $titleBuilder, $pages, true, $config );
-		$expectedTitles = $this->getExpectedTitlesMappedNamespaceKeepPrefix();
-		$this->assertEquals( $expectedTitles, $actualTitles );
-
-		$config = [
-			'space-prefix' => [
-				'tools' => 'MyNamespace',
-			],
-			'keep-mapped-prefix' => true,
 			'ext-ns-file-repo-compat' => true,
 		];
 
 		// latest revision title
 		$pages = $this->getPageFilePaths();
 		$actualTitles = $this->doTest( $titleBuilder, $pages, false, $config );
-		$expectedTitles = $this->getExpectedTitlesMappedNamespaceKeepPrefixAndFileRepoCompatiblity();
+		$expectedTitles = $this->getExpectedTitlesMappedNamespaceNSFileRepoCombatibility();
 		$this->assertEquals( $expectedTitles, $actualTitles );
 
 		// attic revision titles
 		$pages = $this->getAtticPageFilePaths();
+		$actualTitles = [];
 		$actualTitles = $this->doTest( $titleBuilder, $pages, true, $config );
-		$expectedTitles = $this->getExpectedTitlesMappedNamespaceKeepPrefixAndFileRepoCompatiblity();
+		$expectedTitles = $this->getExpectedTitlesMappedNamespaceNSFileRepoCombatibility();
 		$this->assertEquals( $expectedTitles, $actualTitles );
+
 	}
 
 	/**
@@ -123,6 +105,7 @@ class FileTitleBuilderTest extends TestCase {
 	 */
 	private function getPageFilePaths(): array {
 		return [
+			'test.png',
 			'projects/types/ab.type_01.png',
 			'tools/toolbox/wrench.pdf',
 			'tools/toolbox/hammer.01.csv',
@@ -135,6 +118,7 @@ class FileTitleBuilderTest extends TestCase {
 	 */
 	private function getAtticPageFilePaths(): array {
 		return [
+			'test.20250624.png',
 			'projects/types/ab.type_01.20240730.png',
 			'tools/toolbox/wrench.20240730.pdf',
 			'tools/toolbox/hammer.01.20240730.csv',
@@ -147,6 +131,7 @@ class FileTitleBuilderTest extends TestCase {
 	 */
 	private function getExpectedTitles(): array {
 		return [
+			'Test.png',
 			'Projects_Types_Ab_type_01.png',
 			'Tools_Toolbox_Wrench.pdf',
 			'Tools_Toolbox_Hammer_01.csv',
@@ -159,6 +144,7 @@ class FileTitleBuilderTest extends TestCase {
 	 */
 	private function getExpectedTitlesWithFileRepoCompatibility(): array {
 		return [
+			'Test.png',
 			'Projects:Types_Ab_type_01.png',
 			'Tools:Toolbox_Wrench.pdf',
 			'Tools:Toolbox_Hammer_01.csv',
@@ -171,6 +157,7 @@ class FileTitleBuilderTest extends TestCase {
 	 */
 	private function getExpectedTitlesMappedNamespace(): array {
 		return [
+			'Test.png',
 			'Projects_Types_Ab_type_01.png',
 			'MyNamespace_Toolbox_Wrench.pdf',
 			'MyNamespace_Toolbox_Hammer_01.csv',
@@ -181,24 +168,14 @@ class FileTitleBuilderTest extends TestCase {
 	/**
 	 * @return array
 	 */
-	private function getExpectedTitlesMappedNamespaceKeepPrefix(): array {
+	private function getExpectedTitlesMappedNamespaceNSFileRepoCombatibility(): array {
 		return [
-			'Projects_Types_Ab_type_01.png',
-			'MyNamespace_Tools_Toolbox_Wrench.pdf',
-			'MyNamespace_Tools_Toolbox_Hammer_01.csv',
-			'Box-a_Item-01.jpg',
-		];
-	}
-
-	/**
-	 * @return array
-	 */
-	private function getExpectedTitlesMappedNamespaceKeepPrefixAndFileRepoCompatiblity(): array {
-		return [
+			'Test.png',
 			'Projects:Types_Ab_type_01.png',
-			'MyNamespace:Tools_Toolbox_Wrench.pdf',
-			'MyNamespace:Tools_Toolbox_Hammer_01.csv',
+			'MyNamespace:Toolbox_Wrench.pdf',
+			'MyNamespace:Toolbox_Hammer_01.csv',
 			'Box_a:Item-01.jpg',
 		];
 	}
+
 }
