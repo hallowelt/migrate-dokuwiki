@@ -31,17 +31,19 @@ class Link implements IProcessor {
 			$replacement = $matches[0];
 			$target = trim( $matches[2] );
 
+			if ( $this->isWindowsShare( $target ) ) {
+				return $this->handleWindowsShare( $target );
+			}
+
 			if ( $this->isExternalUrl( $target ) ) {
-				return $replacement;
+				return $this->handleExternalLink( $target );
 			}
 
 			if ( $this->isMailToLink( $target ) ) {
-				$replacement = $this->handleMailToLink( $target );
-				return $replacement;
+				return $this->handleMailToLink( $target );
 			}
 
-			$replacement = $this->handlePageLink( $target );
-			return $replacement;
+			return $this->handlePageLink( $target );
 		 }, $text );
 
 		if ( !is_string( $text ) ) {
@@ -50,6 +52,31 @@ class Link implements IProcessor {
 		}
 
 		return $text;
+	}
+
+	/**
+	 * @param string $data
+	 * @return boolean
+	 */
+	private function isWindowsShare( string $data ): bool {
+		if ( strpos( $data, '\\' ) === 0 ) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * @param string $data
+	 * @return string
+	 */
+	private function handleWindowsShare( string $data ): string {
+		if ( $this->hasLabel( $data ) ) {
+			$linkParts = $this->getLinkParts( $data );
+			$linkParts = $this->fixEmptyLabel( $linkParts, $linkParts[0] );
+			return $this->getPreservedExternalLinkReplacement( $linkParts );
+		} else {
+			return $this->getPreservedExternalLinkReplacement( [ $data ] );
+		}
 	}
 
 	/**
@@ -68,57 +95,17 @@ class Link implements IProcessor {
 	}
 
 	/**
-	 * @param string $text
-	 * @return string
-	 */
-	private function generalizeItem( string $text ): string {
-		$text = str_replace( ' ', '_', $text );
-		$text = mb_strtolower( $text );
-
-		return $text;
-	}
-
-	/**
-	 * Remove last part of the key and try to find a match in map
-	 * to build a wiki page title
-	 *
-	 * @param string $text
-	 * @return string
-	 */
-	private function getGuessedTitle( string $text ): string {
-		$trimmed = trim( $text, ':' );
-		$parts = explode( ':', $trimmed );
-		$title = '';
-		for ( $index = 0; $index < count( $parts ); $index++ ) {
-			$guessed = array_slice( $parts, 0, $index + 1 );
-			$guessedKey = implode( ':', $guessed );
-			$guessedKey = $this->generalizeItem( $guessedKey );
-			if ( isset( $this->pageKeyToTitleMap[$guessedKey] ) ) {
-				$title = $this->pageKeyToTitleMap[$guessedKey];
-			} else {
-				$tail = $parts[$index];
-				$tail = ucfirst( $tail );
-				if ( $title === $tail ) {
-					// Dokuwiki pages with subpages can have double name in key
-					// abc:abc:def
-					continue;
-				}
-				$title = "{$title}/{$tail}";
-				$title = trim( $title, '/' );
-			}
-		}
-		return $title;
-	}
-
-	/**
 	 * @param string $data
-	 * @return bool
+	 * @return string
 	 */
-	private function hasLabel( string $data ): bool {
-		if ( strpos( $data, '|' ) === false ) {
-			return false;
+	private function handleExternalLink( string $data ): string {
+		if ( $this->hasLabel( $data ) ) {
+			$linkParts = $this->getLinkParts( $data );
+			$linkParts = $this->fixEmptyLabel( $linkParts, $linkParts[0] );
+			return $this->getPreservedExternalLinkReplacement( $linkParts );
+		} else {
+			return $data;
 		}
-		return true;
 	}
 
 	/**
@@ -165,6 +152,17 @@ class Link implements IProcessor {
 
 	/**
 	 * @param string $data
+	 * @return bool
+	 */
+	private function hasLabel( string $data ): bool {
+		if ( strpos( $data, '|' ) === false ) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * @param string $data
 	 * @return string
 	 */
 	private function handlePageLink( string $data ): string {
@@ -174,9 +172,8 @@ class Link implements IProcessor {
 			$linkParts = $this->getLinkParts( $data );
 			$target = trim( $linkParts[0], ':' );
 			// Some page names hava a slash (page name "car/bike")
-			// but in filesystem they are stored with underscore (filenam car_bike.txt)
+			// but in filesystem they are stored with underscore (filename car_bike.txt)
 			$target = str_replace( [ '/' ], '_', $target );
-			$target = str_replace( [ '(', ')', ',', '.' ], '', $target );
 
 			$hash = $this->getHash( $target );
 
@@ -210,6 +207,50 @@ class Link implements IProcessor {
 
 		return $replacement;
 	}
+
+	/**
+	 * @param string $text
+	 * @return string
+	 */
+	private function generalizeItem( string $text ): string {
+		$text = str_replace( ' ', '_', $text );
+		$text = mb_strtolower( $text );
+
+		return $text;
+	}
+
+	/**
+	 * Remove last part of the key and try to find a match in map
+	 * to build a wiki page title
+	 *
+	 * @param string $text
+	 * @return string
+	 */
+	private function getGuessedTitle( string $text ): string {
+		$trimmed = trim( $text, ':' );
+		$parts = explode( ':', $trimmed );
+		$title = '';
+		for ( $index = 0; $index < count( $parts ); $index++ ) {
+			$guessed = array_slice( $parts, 0, $index + 1 );
+			$guessedKey = implode( ':', $guessed );
+			$guessedKey = $this->generalizeItem( $guessedKey );
+			if ( isset( $this->pageKeyToTitleMap[$guessedKey] ) ) {
+				$title = $this->pageKeyToTitleMap[$guessedKey];
+			} else {
+				$tail = $parts[$index];
+				$tail = ucfirst( $tail );
+				if ( $title === $tail ) {
+					// Dokuwiki pages with subpages can have double name in key
+					// abc:abc:def
+					continue;
+				}
+				$title = "{$title}/{$tail}";
+				$title = trim( $title, '/' );
+			}
+		}
+		return $title;
+	}
+
 
 	/**
 	 * @param string &$data
@@ -272,6 +313,19 @@ class Link implements IProcessor {
 			$linkParts[$index] = trim( $value );
 		}
 		return $linkParts;
+	}
+
+	/**
+	 * @param array $linkParts
+	 * @return string
+	 */
+	private function getPreservedExternalLinkReplacement( array $linkParts ): string {
+		$data = implode( ' ', $linkParts );
+		$replacement = "#####PRESERVEEXTERNALLINKOPEN#####$data#####PRESERVEEXTERNALLINKCLOSE#####";
+		if ( $linkParts[0] === '' ) {
+			$replacement .= ' ' . CategoryBuilder::getPreservedMigrationCategory( 'Missing link target' );
+		}
+		return $replacement;
 	}
 
 	/**

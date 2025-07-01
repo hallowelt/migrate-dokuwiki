@@ -17,3 +17,13 @@ Link to a page with missing page key
 * sit amet #####PRESERVEMAILLINKOPEN#####abc.def@example.com#####PRESERVEMAILLINKPIPE#####abc.def@example.com#####PRESERVEMAILLINKCLOSE#####
 * sit amet #####PRESERVEINTERNALLINKOPEN##########PRESERVEINTERNALLINKPIPE#####Label#####PRESERVEINTERNALLINKCLOSE##### #####CATEGORYOPEN#####Migration/Missing link target#####CATEGORYCLOSE#####
 * sit amet #####PRESERVEINTERNALLINKOPEN#####Ä:Xyz/Test#####PRESERVEINTERNALLINKPIPE#####Accented page key#####PRESERVEINTERNALLINKCLOSE#####
+
+External links
+* http://example.com
+* http://example.com
+* #####PRESERVEEXTERNALLINKOPEN#####http://example.com external link label#####PRESERVEEXTERNALLINKCLOSE#####
+* #####PRESERVEEXTERNALLINKOPEN#####http://example.com http://example.com#####PRESERVEEXTERNALLINKCLOSE#####
+
+Windows share
+* #####PRESERVEEXTERNALLINKOPEN#####\\abc\def#####PRESERVEEXTERNALLINKCLOSE#####
+* #####PRESERVEEXTERNALLINKOPEN#####\\abc\def windows share label#####PRESERVEEXTERNALLINKCLOSE#####
