@@ -173,6 +173,11 @@ class Link implements IProcessor {
 		if ( $this->hasLabel( $data ) ) {
 			$linkParts = $this->getLinkParts( $data );
 			$target = trim( $linkParts[0], ':' );
+			// Some page names hava a slash (page name "car/bike")
+			// but in filesystem they are stored with underscore (filenam car_bike.txt)
+			$target = str_replace( [ '/' ], '_', $target );
+			$target = str_replace( [ '(', ')', ',', '.' ], '', $target );
+
 			$hash = $this->getHash( $target );
 
 			$title = $this->getTargetWikiTitle( $target );

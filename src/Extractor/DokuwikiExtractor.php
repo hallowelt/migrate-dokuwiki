@@ -7,6 +7,7 @@ use HalloWelt\MediaWiki\Lib\Migration\IOutputAwareInterface;
 use HalloWelt\MediaWiki\Lib\Migration\Workspace;
 use HalloWelt\MigrateDokuwiki\IExtractor;
 use HalloWelt\MigrateDokuwiki\Utility\FileTitleBuilder;
+use HalloWelt\MigrateDokuwiki\Utility\TitleBuilder;
 use SplFileInfo;
 
 class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
@@ -26,6 +27,12 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 	/** @var DataBuckets */
 	protected $dataBuckets = null;
 
+	/** @var TitleBuilder */
+	private $titleBuilder;
+
+	/** @var FileTitleBuilder */
+	private $fileTitleBuilder;
+
 	/** @var array */
 	private $advancedConfig = [];
 
@@ -41,6 +48,9 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 		if ( isset( $this->config['config'] ) ) {
 			$this->advancedConfig = $this->config['config'];
 		}
+	
+		$this->titleBuilder = new TitleBuilder();
+		$this->fileTitleBuilder = new FileTitleBuilder();
 	}
 
 	/**
@@ -57,25 +67,15 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 	 */
 	protected function getBucketKeys() {
 		return [
-			// From this step
-			'namespaces-map',
 			'pages-map',
-			'page-titles',
-			'page-key-to-title-map',
-			'page-changes-map',
-			'page-meta-map',
-			'media-map',
-			'media-titles',
-			'page-meta-map',
-			'page-changes-map',
-			'attic-namespaces-map',
 			'attic-pages-map',
+			'page-meta-map',
+			'page-changes-map',
+			'media-map',
 			'attic-media-map',
-			'attic-meta-map',
+			// From this step
 			'page-id-to-title-map',
-			'page-id-to-attic-page-id',
-			'media-key-to-title-map',
-			'media-title-to-media-path'
+			'media-id-to-title-map',
 		];
 	}
 
@@ -99,43 +99,120 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 	 * @return bool
 	 */
 	protected function doExtract(): bool {
-		$pageTitles = $this->dataBuckets->getBucketData( 'page-titles' );
-		$mediaTitles = $this->dataBuckets->getBucketData( 'media-titles' );
-
-		$titles = [];
-		if ( isset( $pageTitles['pages_titles'] ) ) {
-			$titles = $pageTitles['pages_titles'];
-		}
-
-		$media = [];
-		if ( isset( $mediaTitles['media_titles'] ) ) {
-			$media = $mediaTitles['media_titles'];
-		}
-
-		$this->extractCurrentPageRevisions( $titles );
-		$this->extractHistoryPageRevisions( $titles );
-		$this->extractCurrentMediaRevisions( $media );
-		// $this->extractHistoryMediaRevisions( $media );
-		$this->extractPageChanges( $titles );
-		$this->extractPageMeta( $titles );
+		// page meta and page titles
+		$pageIdToTitlesMap = $this->extractPageTitles();
+		// media meta and media titles
+		$mediaIdToTitles = $this->extractMediaTitles();
+		// extract content		
+		$this->extractCurrentPageRevisions( $pageIdToTitlesMap );
+		$this->extractHistoryPageRevisions( $pageIdToTitlesMap );
+		$this->extractCurrentMediaRevisions( $mediaIdToTitles );
+		$this->extractPageChanges( $pageIdToTitlesMap );
+		$this->extractPageMeta( $pageIdToTitlesMap );
 
 		$this->dataBuckets->saveToWorkspace( $this->workspace );
 		return true;
 	}
 
 	/**
-	 * @param array $titles
+	 * @return array
 	 */
-	private function extractCurrentPageRevisions( array $titles ) {
-		$pagesMap = $this->dataBuckets->getBucketData( 'pages-map' );
+	private function extractPageTitles(): array {
+		$this->output->writeln( "\t - Extract page titles:" );
 
+		$pagesMap = $this->dataBuckets->getBucketData( 'pages-map' );
+		$pageMetaMap = $this->dataBuckets->getBucketData( 'page-meta-map' );
+
+		$pagesMeta = [];
+		$pageIdToTitlesMap = [];
+		foreach ( $pagesMap as $id => $path ) {
+			$paths = [];
+			if ( str_contains( $id, ':' ) ) {
+				$paths = explode( ':', $id );
+			} else {
+				$paths = [ $id ];
+			}
+
+			for ( $index = 0; $index < count( $paths ); $index++ ) {
+				$partialId = implode( ':', array_slice( $paths, 0, $index + 1 ) );
+
+				if ( isset( $pageMetaMap[$partialId] ) && file_exists( $pageMetaMap[$partialId][0] ) ) {
+					$metaContent = file_get_contents( $pageMetaMap[$partialId][0] );
+					$meta = unserialize( $metaContent );
+
+					$pagesMeta[$partialId] = $meta;
+
+					if ( isset( $meta['current']['title'] ) ) {
+						$paths[$index] = $meta['current']['title'];
+					}
+				}
+			}
+
+			$title = $this->titleBuilder->build( $paths, false, $this->advancedConfig );
+			$pageIdToTitlesMap[$id] = $title;
+			$this->dataBuckets->addData( 'page-id-to-title-map', $id, $title, false, true );
+			$doubleId = explode( ':', $id );
+			$lastId = array_pop( $doubleId );
+			$doubleId[] = $lastId;
+			$doubleId[] = $lastId;
+			$doubleId = implode( ':', $doubleId );
+			$this->dataBuckets->addData( 'page-id-to-title-map', $id, $title, false, true );
+			$this->output->writeln( "\t - $id: $title" );
+		}
+
+		return $pageIdToTitlesMap;
+	}
+
+	/**
+	 * @return array
+	 */
+	private function extractMediaTitles(): array {
+		$this->output->writeln( "\t - Extract media titles:" );
+
+		$mediaMap = $this->dataBuckets->getBucketData( 'media-map' );
+		$pageIdToTitlesMap = $this->dataBuckets->getBucketData( 'page-id-to-title-map' ); 
+
+		$mediaIdToTitles = [];
+		foreach ( $mediaMap as $id => $path ) {
+			$paths = [];
+			if ( str_contains( $id, ':' ) ) {
+				$paths = explode( ':', $id );
+			} else {
+				$paths = [ $id ];
+			}
+
+			for ( $index = 0; $index < count( $paths ); $index++ ) {
+				$partialId = implode( ':', array_slice( $paths, 0, $index + 1 ) );
+				if ( isset( $pageIdToTitlesMap[$partialId] ) ) {
+					$paths[$index] = $pageIdToTitlesMap[$partialId];
+				}
+			}
+
+			$title = $this->fileTitleBuilder->build( $paths, false, $this->advancedConfig );
+			$mediaIdToTitles[$id] = $title;
+			$this->dataBuckets->addData( 'media-id-to-title-map', $id, $title, false, true );
+			$doubleId = explode( ':', $id );
+			$lastId = array_pop( $doubleId );
+			$doubleId[] = $lastId;
+			$doubleId[] = $lastId;
+			$doubleId = implode( ':', $doubleId );
+			$this->dataBuckets->addData( 'media-id-to-title-map', $id, $title, false, true );
+			$this->output->writeln( "\t - $id: $title" );
+		}
+
+		return $mediaIdToTitles;
+	}
+
+	/**
+	 * @param array $pageIdToTitlesMap
+	 */
+	private function extractCurrentPageRevisions( array $pageIdToTitlesMap ) {
 		$this->output->writeln( "Extract current revisons of page:" );
 
-		foreach ( $titles as $title ) {
-			$id = $this->getIdFromPageTitle( $title );
-
-			if ( isset( $pagesMap[$title] ) && !empty( $pagesMap[$title] ) ) {
-				$filepath = $pagesMap[$title][0];
+		$pagesMap = $this->dataBuckets->getBucketData( 'pages-map' );
+		foreach ( $pageIdToTitlesMap as $id => $title ) {
+			if ( isset( $pagesMap[$id] ) && !empty( $pagesMap[$id] ) ) {
+				$filepath = $pagesMap[$id][0];
 				if ( !file_exists( $filepath ) ) {
 					continue;
 				}
@@ -147,46 +224,68 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 	}
 
 	/**
+	 * @param string $title
+	 * @param string $filepath
+	 * @param string $id
+	 */
+	private function extractCurrentPageRevision( string $title, string $filepath, string $id ) {
+		$content = file_get_contents( $filepath );
+		$filename = str_replace( ':', '_', $id );
+		$targetFilePath = $this->workspace->saveRawContent( $filename, $content );
+		$this->dataBuckets->addData( 'page-id-to-page-contents', $id, $targetFilePath, true, true );
+		$this->output->writeln( "\t - Extract current revision of title: $title" );
+	}
+
+	/**
 	 * @param array $titles
 	 */
-	private function extractHistoryPageRevisions( array $titles ) {
-		$pagesMap = $this->dataBuckets->getBucketData( 'pages-map' );
-		$historyPageTitles = $this->dataBuckets->getBucketData( 'attic-pages-map' );
-		$pageTitles = $this->dataBuckets->getBucketData( 'page-titles' );
+	private function extractHistoryPageRevisions( array $pageIdToTitlesMap ) {
+		$this->output->writeln( "Extract history revisons of pages:" );
 
-		$this->output->writeln( "Extract history revisons of page:" );
-
-		foreach ( $titles as $title ) {
-			$id = $this->getIdFromPageTitle( $title );
-
-			if ( !isset( $pagesMap[$title] ) || empty( $pagesMap[$title] ) ) {
-				continue;
-			}
-
-			if ( isset( $historyPageTitles[$title] ) && !empty( $historyPageTitles[$title] ) ) {
-				foreach ( $historyPageTitles[$title] as $filepath ) {
+		$historyPagesMap = $this->dataBuckets->getBucketData( 'attic-pages-map' );
+		foreach ( $pageIdToTitlesMap as $id => $title ) {
+			if ( isset( $historyPagesMap[$id] ) && !empty( $historyPagesMap[$id] ) ) {
+				foreach ( $historyPagesMap[$id] as $filepath ) {
 					if ( !file_exists( $filepath ) ) {
 						continue;
 					}
-					$this->extractHistoryPageRevision( $title, $filepath, $id );
+
+					$parts = explode( '.', $filepath );
+					$extension = array_pop( $parts );
+					$timestamp = array_pop( $parts );
+					$this->extractHistoryPageRevision( $title, $filepath, $id, $timestamp );
 				}
 			}
 		}
 	}
 
 	/**
-	 * @param array $media
+	 * @param string $title
+	 * @param string $filepath
+	 * @param string $id
+	 * @param string $timestamp
+	 * @return void
 	 */
-	private function extractCurrentMediaRevisions( array $media ) {
-		$mediaMap = $this->dataBuckets->getBucketData( 'media-map' );
+	private function extractHistoryPageRevision( string $title, string $filepath, string $id, string $timestamp ) {
+		$filename = str_replace( ':', '_', $id );
+		$filename .= ".{$timestamp}";
+		$content = file_get_contents( $filepath );
+		$targetFileName = $this->workspace->saveRawContent( $filename, $content, 'content/raw' );
+		$this->dataBuckets->addData( 'page-id-to-attic-page-contents', $id, $targetFileName, true, true );
+		$this->output->writeln( "\t - Version of $id from $timestamp" );
+	}
 
+	/**
+	 * @param array $mediaTitles
+	 */
+	private function extractCurrentMediaRevisions( array $mediaTitles ) {
 		$this->output->writeln( "Extract current revision of media:" );
 
-		foreach ( $media as $title ) {
-			$id = $this->getIdFromMediaTitle( $title );
+		$mediaMap = $this->dataBuckets->getBucketData( 'media-map' );
 
-			if ( isset( $mediaMap[$title] ) && !empty( $mediaMap[$title] ) ) {
-				$filepath = $mediaMap[$title][0];
+		foreach ( $mediaTitles as $id => $title ) {
+			if ( isset( $mediaMap[$id] ) && !empty( $mediaMap[$id] ) ) {
+				$filepath = $mediaMap[$id][0];
 				if ( !file_exists( $filepath ) ) {
 					continue;
 				}
@@ -198,88 +297,37 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 	}
 
 	/**
-	 * @param array $media
-	 */
-	private function extractHistoryMediaRevisions( array $media ) {
-		$mediaMap = $this->dataBuckets->getBucketData( 'media-map' );
-		$historyMediaTitles = $this->dataBuckets->getBucketData( 'attic-media-map' );
-
-		$this->output->writeln( "Extract history revision of media:" );
-
-		foreach ( $media as $title ) {
-			$id = $this->getIdFromMediaTitle( $title );
-
-			if ( !isset( $mediaMap[$title] ) || empty( $mediaMap[$title] ) ) {
-				continue;
-			}
-
-			if ( isset( $historyMediaTitles[$title] ) && !empty( $historyMediaTitles[$title] ) ) {
-				foreach ( $historyMediaTitles[$title] as $filepath ) {
-					if ( !file_exists( $filepath ) ) {
-						continue;
-					}
-					$this->extractHistoryMediaRevision( $title, $filepath, $id );
-				}
-			}
-		}
-	}
-
-	/**
 	 * @param string $title
 	 * @param string $filepath
 	 * @param string $id
 	 */
-	private function extractCurrentPageRevision( string $title, string $filepath, string $id ) {
+	private function extractCurrentMediaRevision( string $title, string $filepath, string $id ) {
 		$content = file_get_contents( $filepath );
-		$id = str_replace( ':', '_', $id );
-		$targetFileName = $this->workspace->saveRawContent( $id, $content );
-		$this->dataBuckets->addData( 'page-id-to-title-map', $id, $title, true, true );
-		$this->dataBuckets->addData( 'page-id-to-page-contents', $id, $targetFileName, true, true );
-		$this->output->writeln( "\t - Extract current revision of title: $title" );
-	}
-
-	/**
-	 * @param string $title
-	 * @param string $filepath
-	 * @param string $id
-	 */
-	private function extractHistoryPageRevision( string $title, string $filepath, string $id ) {
-		$filenameParts = $this->getFilenameParts( $filepath );
-		if ( !$this->isValidHistoryVersion( $filenameParts ) ) {
-			return;
-		}
-
-		$timestamp = $this->getTimestampOfHistoryVersion( $filenameParts );
-		$filename = $this->makeFilenameForHistoryVersion( $filenameParts, $id );
-		$content = file_get_contents( $filepath );
-		$targetFileName = $this->workspace
-			->saveRawContent( $filename, $content, 'content/raw/' );
-		$this->dataBuckets->addData( 'page-id-to-attic-page-id', $id, $filename, true, true );
-		$this->dataBuckets->addData( 'page-id-to-attic-page-contents', $id, $targetFileName, true, true );
-		$this->output->writeln( "\t - $title (" . $this->getHumanReadableTimestamp( $timestamp ) . ")" );
+		$targetFileName = $this->workspace->saveUploadFile( $title, $content );
+		$this->dataBuckets->addData( 'media-title-to-media-contents', $id, $targetFileName, true, true );
+		$this->output->writeln( "\t - $title" );
 	}
 
 	/**
 	 * See: https://www.dokuwiki.org/tips:recreate_wiki_change_log
-	 * @param array $titles
+	 * @param array $pageIdToTitlesMap
 	 */
-	private function extractPageChanges( array $titles ) {
+	private function extractPageChanges( array $pageIdToTitlesMap ) {
 		$changesMap = $this->dataBuckets->getBucketData( 'page-changes-map' );
 
-		foreach ( $titles as $title ) {
-			if ( !isset( $changesMap[$title] ) || empty( $changesMap[$title] ) ) {
+		foreach ( $pageIdToTitlesMap as $id => $title ) {
+			if ( !isset( $changesMap[$id] ) || empty( $changesMap[$id] ) ) {
 				continue;
 			}
 
 			$this->output->writeln( "Extract page changes of $title" );
 
-			$filepath = $changesMap[$title][0];
+			$filepath = $changesMap[$id][0];
 			if ( !file_exists( $filepath ) ) {
 				continue;
 			}
 
-			$id = $this->getIdFromPageTitle( $title );
-			$id = str_replace( ':', '_', $id );
+			$filename = str_replace( ':', '_', $id );
 
 			$content = file_get_contents( $filepath );
 			$lines = explode( "\n", $content );
@@ -307,65 +355,38 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 				$changes[$timestamp] = $object;
 			}
 
-			$this->workspace->saveData( $id, $changes, $path = 'content/history/changes' );
+			$this->workspace->saveData( $filename, $changes, 'content/history/changes' );
 		}
 	}
 
 	/**
 	 * See: https://www.dokuwiki.org/devel:metadata
-	 * @param array $titles
+	 * @param array $pageIdToTitlesMap
 	 */
-	private function extractPageMeta( array $titles ) {
+	private function extractPageMeta( array $pageIdToTitlesMap ) {
 		$metaMap = $this->dataBuckets->getBucketData( 'page-meta-map' );
 
 		$titleBuilder = new FileTitleBuilder();
 
-		foreach ( $titles as $title ) {
-			if ( !isset( $metaMap[$title] ) || empty( $metaMap[$title] ) ) {
+		foreach ( $pageIdToTitlesMap as $id => $title ) {
+			if ( !isset( $metaMap[$id] ) || empty( $metaMap[$id] ) ) {
 				continue;
 			}
 
 			$this->output->writeln( "Extract page meta of $title" );
 
-			$filepath = $metaMap[$title][0];
+			$filepath = $metaMap[$id][0];
 			if ( !file_exists( $filepath ) ) {
 				continue;
 			}
 
-			$id = $this->getIdFromPageTitle( $title );
-			$id = str_replace( ':', '_', $id );
+			$filename = str_replace( ':', '_', $id );
 
 			$content = file_get_contents( $filepath );
 			$meta = unserialize( $content, [ 'allowed_classes' => false ] );
 
-			if ( isset( $meta['current']['relation']['media'] ) ) {
-				$media = $meta['current']['relation']['media'];
-
-				foreach ( $media as $name => $value ) {
-					$paths = explode( ':', $name );
-					$fileTitle = $titleBuilder->build( $paths );
-
-					$this->dataBuckets->addData( 'used-key-name-title-map', $name, $fileTitle, true, true );
-				}
-			}
-
-			// TODO: Run extract meta bevore extract media
-			// and extract only media linked in $meta['current']['relation']['media']
-
-			$this->workspace->saveData( $id, $meta, 'content/meta' );
+			$this->workspace->saveData( $filename, $meta, 'content/meta' );
 		}
-	}
-
-	/**
-	 * @param string $title
-	 * @param string $filepath
-	 * @param string $id
-	 */
-	private function extractCurrentMediaRevision( string $title, string $filepath, string $id ) {
-		$content = file_get_contents( $filepath );
-		$targetFileName = $this->workspace->saveUploadFile( $title, $content );
-		$this->dataBuckets->addData( 'media-title-to-media-path', $title, $targetFileName, true, true );
-		$this->output->writeln( "\t - $title" );
 	}
 
 	/**
@@ -384,37 +405,6 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 		$targetFileName = $this->workspace->saveUploadFile( $filename, $content, 'content/history/images/' . $id );
 		$this->dataBuckets->addData( 'media-id-to-attic-media-contents', $id, $targetFileName, true, true );
 		$this->output->writeln( "\t - $title (" . $this->getHumanReadableTimestamp( $timestamp ) . ")" );
-	}
-
-	/**
-	 * @return string
-	 */
-	private function getIdFromPageTitle( string $title ) {
-		$key = $this->getId( $title, 'page-key-to-title-map' );
-		return $key;
-	}
-
-	/**
-	 * @return string
-	 */
-	private function getIdFromMediaTitle( string $title ) {
-		$key = $this->getId( $title, 'media-key-to-title-map' );
-		return $key;
-	}
-
-	/**
-	 * @return string
-	 */
-	private function getId( string $title, string $bucket ) {
-		$key = md5( $title );
-		$keyMap = $this->dataBuckets->getBucketData( $bucket );
-		if ( in_array( $title, $keyMap ) ) {
-			$mapKey = array_search( $title, $keyMap );
-			if ( is_string( $mapKey ) ) {
-				$key = $mapKey;
-			}
-		}
-		return $key;
 	}
 
 	/**
@@ -440,6 +430,15 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 	}
 
 	/**
+	 * @param string $timestamp
+	 * @return string
+	 */
+	private function getHumanReadableTimestamp( string $timestamp ): string {
+		return date( 'Y-m-d H:i:s', $timestamp );
+	}
+
+
+	/**
 	 * @param array $paths
 	 * @return string
 	 */
@@ -461,11 +460,5 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 		return "$id.$timestamp";
 	}
 
-	/**
-	 * @param string $timestamp
-	 * @return string
-	 */
-	private function getHumanReadableTimestamp( string $timestamp ): string {
-		return date( 'Y-m-d H:i:s', $timestamp );
-	}
+
 }

@@ -44,7 +44,7 @@ class TitleBuilder {
 	private function getSubpageText( string $path, $history = false ): string {
 		$subpageParts = explode( '.', $path );
 		if ( count( $subpageParts ) > 1 ) {
-			$fileExtension = array_pop( $subpageParts );
+			#$fileExtension = array_pop( $subpageParts );
 		}
 		if ( $history && count( $subpageParts ) > 1 ) {
 			$historyTimestamp = array_pop( $subpageParts );

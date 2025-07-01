@@ -31,7 +31,6 @@ class DokuwikiComposer extends ComposerBase implements IOutputAwareInterface {
 		parent::__construct( $config, $workspace, $buckets );
 
 		$this->dataBuckets = new DataBuckets( [
-			'page-titles',
 			'page-id-to-title-map',
 			'page-id-to-page-contents',
 			'page-id-to-attic-page-id',
@@ -72,73 +71,49 @@ class DokuwikiComposer extends ComposerBase implements IOutputAwareInterface {
 	 * @return void
 	 */
 	private function addPages( Builder $builder ) {
-		$pageTitles = $this->dataBuckets->getBucketData( 'page-titles' );
 		$pageIdToTitleMap = $this->dataBuckets->getBucketData( 'page-id-to-title-map' );
-		$pageIdToContentsMap = $this->dataBuckets->getBucketData( 'page-id-to-page-contents' );
-		$pageIdToHistoryPageIdMap = $this->dataBuckets->getBucketData( 'page-id-to-attic-page-id' );
+		$pageIdToAtticPageContents = $this->dataBuckets->getBucketData( 'page-id-to-attic-page-contents' );
 
-		$titleToPageIdMap = [];
-		foreach ( $pageIdToTitleMap as $id => $titles ) {
-			$title = $titles[0];
-			$titleToPageIdMap[$title] = $id;
-		}
+		$titleToPageIdMap = array_flip( $pageIdToTitleMap );
 
-		foreach ( $pageTitles['pages_titles'] as $pageTitle ) {
-			if ( !isset( $titleToPageIdMap[$pageTitle] ) ) {
-				continue;
-			}
-			$pageId = $titleToPageIdMap[$pageTitle];
-
-			if ( !isset( $pageIdToContentsMap[$pageId] ) ) {
-				continue;
-			}
-
-			$wikiText = $this->workspace->getConvertedContent( $pageId );
+		foreach ( $titleToPageIdMap as $pageTitle => $pageId ) {
+			
+			$key = str_replace( ':', '_', $pageId );
+			$wikiText = $this->workspace->getConvertedContent( $key );
 
 			$this->output->writeln( "Add latest revison of $pageTitle" );
 			$builder->addRevision( $pageTitle, $wikiText );
 
-			if ( !isset( $pageIdToHistoryPageIdMap[$pageId] ) ) {
+			if ( !isset( $pageIdToAtticPageContents[$pageId] ) ) {
 				continue;
 			}
 
 			$this->output->writeln( "Add latest history revison of $pageTitle" );
 
-			// not for each attic page does a change file exist for some reason
-			#$pageChanges = $this->workspace->loadData( $pageId, 'content/history/changes' );
-
-			$historyVersions = $pageIdToHistoryPageIdMap[$pageId];
+			$historyVersions = $pageIdToAtticPageContents[$pageId];
 			foreach ( $historyVersions as $historyVersion ) {
-				$wikiText = $this->workspace->getConvertedContent( $historyVersion );
+				$paths = explode( '/', $historyVersion );
+				$filename = array_pop( $paths );
+				$filename = substr( $filename, 0, strlen( $filename ) - strlen( '.wiki' ) );
+				$wikiText = $this->workspace->getConvertedContent( $filename );
+
 				// unitx timestamp
-				$timestamp = str_replace( "$pageId.", '', $historyVersion );
-				$timestamp = str_replace( ".wiki", '', $timestamp );
+				$filenamePageIdPart = str_replace( ':', '_', $pageId );
+				$timestamp = str_replace( "$filenamePageIdPart.", '', $filename );
 
-				$dateTime = date( 'Y-m-d H:i:s', $timestamp );
+				$dateTime = date( 'Y-m-d H:i:s', (int)$timestamp );
 				$this->output->writeln( "\t- $dateTime" );
-				$mwTimestamp = date( 'YmdHis', $timestamp );
 
-				$user = '';
+				$mwTimestamp = date( 'YmdHis', (int)$timestamp );
+
+				$username = '';
 				$comment = '';
-
-				/*
-				if ( !isset( $pageChanges[$timestamp] ) ) {
-					continue;
-				}
-				$object = $pageChanges[$timestamp];
-
-				#$ip = $object['ip'];
-				#$flag = $object['flag'];
-				#$pageTitle = $object['title'];
-				$user = $object['user'];
-				$comment = $object['comment'];
-				*/
 
 				// do not handle attic versions with .change information
 
-				$builder->addRevision( $pageTitle, $wikiText, $mwTimestamp, $user, '', '', $comment );
-			}
 
+				$builder->addRevision( $pageTitle, $wikiText, $mwTimestamp, $username, '', '', $comment );
+			}
 		}
 	}
 
