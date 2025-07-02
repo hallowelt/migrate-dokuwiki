@@ -17,7 +17,7 @@ class TitleBuilderTest extends TestCase {
 		$actualTitles = [];
 		foreach ( $pages as $filepath ) {
 			$paths = explode( '/', trim( $filepath, '/' ) );
-			$actualTitles[] = $titleBuilder->build( $paths );
+			$actualTitles[] = $titleBuilder->build( implode( ':', $paths ), $paths );
 		}
 		$expectedTitles = $this->getExpectedTitles();
 		$this->assertEquals( $expectedTitles, $actualTitles );
@@ -32,7 +32,7 @@ class TitleBuilderTest extends TestCase {
 		$actualTitles = [];
 		foreach ( $pages as $filepath ) {
 			$paths = explode( '/', trim( $filepath, '/' ) );
-			$actualTitles[] = $titleBuilder->build( $paths, true, $config );
+			$actualTitles[] = $titleBuilder->build( implode( ':', $paths ), $paths, true, $config );
 		}
 		$expectedTitles = $this->getExpectedTitlesMappedPrefix();
 		$this->assertEquals( $expectedTitles, $actualTitles );
