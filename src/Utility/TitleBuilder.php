@@ -10,16 +10,14 @@ class TitleBuilder {
 	/** @var array */
 	private $prefixMap = [];
 
-	/** @var string */
-	private $mainpageTitle = 'Main_Page';
-
 	/**
+	 * @param string $id
 	 * @param array $paths
 	 * @param bool $history
 	 * @param array $config
 	 * @return string
 	 */
-	public function build( array $paths, $history = false, array $config = [] ) {
+	public function build( string $id, array $paths, $history = false, array $config = [] ) {
 		$this->titleSegments = [];
 		$this->prefixMap = [];
 
@@ -27,50 +25,31 @@ class TitleBuilder {
 			$this->prefixMap = $config['space-prefix'];
 		}
 
-		if ( isset( $config['mainpage'] ) && $config['mainpage'] !== '' ) {
-			$this->mainpageTitle = $config['mainpage'];
-		}
-
-		$title = $this->makeTitleFromPaths( $paths, $history );
+		$title = $this->makeTitleFromPaths( $id, $paths, $history );
 
 		return $title;
 	}
 
 	/**
-	 * @param string $path
-	 * @param bool $history
-	 * @return string
-	 */
-	private function getSubpageText( string $path, $history = false ): string {
-		$subpageParts = explode( '.', $path );
-		if ( count( $subpageParts ) > 1 ) {
-			#$fileExtension = array_pop( $subpageParts );
-		}
-		if ( $history && count( $subpageParts ) > 1 ) {
-			$historyTimestamp = array_pop( $subpageParts );
-		}
-		$subpageText = implode( '.', $subpageParts );
-		return $subpageText;
-	}
-
-	/**
+	 * @param string $id
 	 * @param array $paths
 	 * @param bool $history
 	 * @return string
 	 */
-	private function makeTitleFromPaths( array $paths, $history = false ): string {
+	private function makeTitleFromPaths( string $id, array $paths, $history = false ): string {
 		$namespace = '';
 		if ( count( $paths ) > 1 ) {
 			$namespace = $paths[0];
-			if ( $paths[0] === $this->getSubpageText( $paths[1], $history ) ) {
-				$paths[1] = str_replace(
-					$this->getSubpageText( $paths[1], $history ),
-					$this->mainpageTitle,
-					$paths[1]
-				);
+
+			$namespaceId = $id;
+			if ( str_contains( $id, ':' ) ) {
+				$namespaceId = substr( $namespaceId, 0, strpos( $namespaceId, ':' ) );
 			}
 
-			if ( isset( $this->prefixMap[$namespace] ) ) {
+			// Override namespace by namespace id or meta title
+			if ( isset( $this->prefixMap[$namespaceId] ) ) {
+				$namespace = $this->prefixMap[$namespaceId];
+			} elseif ( isset( $this->prefixMap[$namespace] ) ) {
 				$namespace = $this->prefixMap[$namespace];
 			} else {
 				$namespace = ucfirst( $paths[0] );
@@ -79,14 +58,35 @@ class TitleBuilder {
 
 			unset( $paths[0] );
 			$paths = array_values( $paths );
+		} elseif ( isset( $this->prefixMap['NS_MAIN'] ) ) {
+			$namespace = $this->prefixMap['NS_MAIN'];
+		}
+
+		if ( substr_count( $namespace, '/' ) === 1 ) {
+			// 'ABC:DEF/'
+			$test = trim( $namespace, '/' );
+			$test = substr( $test, strpos( $test, ':' ) + 1 );
+			$test = str_replace( '-', '_', $test );
+			if ( $test === str_replace( '-', '_', $paths[0] ) ) {
+				unset( $paths[0] );
+				$paths = array_values( $paths );
+			}
+		} elseif ( substr_count( $namespace, '/' ) > 1 ) {
+			// 'ABC:DEF/GEH/'
+			$test = trim( $namespace, '/' );
+			$test = strtolower( substr( $test, strrpos( $test, '/' ) + 1 ) );
+			$test = str_replace( '-', '_', $test );
+			if ( $test === $paths[0] ) {
+				unset( $paths[0] );
+				$paths = array_values( $paths );
+			}
 		}
 
 		$subpageText = array_pop( $paths );
-		$subpageText = $this->getSubpageText( $subpageText, $history );
 
 		for ( $index = 0; $index < count( $paths ); $index++ ) {
 			if ( ( $index === count( $paths ) - 1 )
-				&& $this->getSubpageText( $paths[$index], $history ) === $subpageText ) {
+				&& $paths[$index] === $subpageText ) {
 				break;
 			}
 			$this->appendTitleSegment( $paths[$index] );
@@ -101,7 +101,7 @@ class TitleBuilder {
 			$title = $namespace . $title;
 		}
 
-		return $title;
+		return trim( $title, '/' );
 	}
 
 	/**

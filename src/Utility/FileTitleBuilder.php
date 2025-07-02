@@ -10,9 +10,6 @@ class FileTitleBuilder {
 	/** @var array */
 	private $prefixMap = [];
 
-	/** @var string */
-	private $mainpageTitle = 'Main_Page';
-
 	/** @var bool */
 	private $nsFileRepoCompat = false;
 
@@ -30,10 +27,6 @@ class FileTitleBuilder {
 
 		if ( isset( $config['space-prefix'] ) && is_array( $config['space-prefix'] ) ) {
 			$this->prefixMap = $config['space-prefix'];
-		}
-
-		if ( isset( $config['mainpage'] ) && $config['mainpage'] !== '' ) {
-			$this->mainpageTitle = $config['mainpage'];
 		}
 
 		$title = $this->makeTitleFromPaths( $paths, $history );

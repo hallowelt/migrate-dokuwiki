@@ -1,5 +1,5 @@
 config:
-  mainpage: MyMainpage
+  ext-ns-file-repo-compat: true
   space-prefix:
     tools: MyTools:
     box-a: MyBox_A:TEST/

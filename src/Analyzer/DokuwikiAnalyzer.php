@@ -55,6 +55,7 @@ class DokuwikiAnalyzer
 	public function __construct( $config, Workspace $workspace, DataBuckets $buckets ) {
 		parent::__construct( $config, $workspace, $buckets );
 		$this->dataBuckets = new DataBuckets( [
+			'namespace-ids',
 			'pages-map',
 			'media-map',
 			'page-meta-map',
@@ -210,10 +211,15 @@ class DokuwikiAnalyzer
 		if ( count( $paths ) < 2 ) {
 			// .txt is a direct child of pages directory.
 			// It has to result in a page in NS_MAIN or it is the main page of a namespace.
-			$this->namespaceMainpage( $paths, $file, true );
+			$this->namespaceMainpage( $paths, $file );
 		}
 
 		$key = $this->makeTitleKey( $paths );
+		if ( count( $paths ) > 1 ) {
+			// Creating namespace id for bucket.
+			$namespaceId = $this->makeTitleKey( [ $paths[0] ] );
+			$this->dataBuckets->addData( 'namespace-ids', 'namespace-ids', $namespaceId, false, true );
+		}
 		$this->output->writeln( "Add latest page revision: {$file->getRealPath()}" );
 		$this->dataBuckets->addData( 'pages-map', $key, $file->getPathname(), true, false );
 	}

@@ -48,7 +48,7 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 		if ( isset( $this->config['config'] ) ) {
 			$this->advancedConfig = $this->config['config'];
 		}
-	
+
 		$this->titleBuilder = new TitleBuilder();
 		$this->fileTitleBuilder = new FileTitleBuilder();
 	}
@@ -75,6 +75,7 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 			'attic-media-map',
 			// From this step
 			'page-id-to-title-map',
+			'page-id-to-meta-title-map',
 			'media-id-to-title-map',
 		];
 	}
@@ -101,9 +102,10 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 	protected function doExtract(): bool {
 		// page meta and page titles
 		$pageIdToTitlesMap = $this->extractPageTitles();
+
 		// media meta and media titles
 		$mediaIdToTitles = $this->extractMediaTitles();
-		// extract content		
+		// extract content
 		$this->extractCurrentPageRevisions( $pageIdToTitlesMap );
 		$this->extractHistoryPageRevisions( $pageIdToTitlesMap );
 		$this->extractCurrentMediaRevisions( $mediaIdToTitles );
@@ -143,12 +145,20 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 					$pagesMeta[$partialId] = $meta;
 
 					if ( isset( $meta['current']['title'] ) ) {
-						$paths[$index] = $meta['current']['title'];
+						if ( isset( $paths[1] ) && $paths[0] === $paths[1] && $index === 0 ) {
+							// Namespace and namespace main page
+							$paths[0] = str_replace( ' ', '_', $meta['current']['title'] );
+							$paths[1] = str_replace( ' ', '_', $meta['current']['title'] );
+						} else {
+							$paths[$index] = str_replace( ' ', '_', $meta['current']['title'] );
+						}
 					}
 				}
 			}
+			$metaTitle = implode( ':', $paths );
+			$this->dataBuckets->addData( 'page-id-to-meta-title-map', $id, $metaTitle, false, true );
 
-			$title = $this->titleBuilder->build( $paths, false, $this->advancedConfig );
+			$title = $this->titleBuilder->build( $id, $paths, false, $this->advancedConfig );
 			$pageIdToTitlesMap[$id] = $title;
 			$this->dataBuckets->addData( 'page-id-to-title-map', $id, $title, false, true );
 			$doubleId = explode( ':', $id );
@@ -170,7 +180,7 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 		$this->output->writeln( "\t - Extract media titles:" );
 
 		$mediaMap = $this->dataBuckets->getBucketData( 'media-map' );
-		$pageIdToTitlesMap = $this->dataBuckets->getBucketData( 'page-id-to-title-map' ); 
+		$pageIdToTitlesMap = $this->dataBuckets->getBucketData( 'page-id-to-title-map' );
 
 		$mediaIdToTitles = [];
 		foreach ( $mediaMap as $id => $path ) {
@@ -237,7 +247,7 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 	}
 
 	/**
-	 * @param array $titles
+	 * @param array $pageIdToTitlesMap
 	 */
 	private function extractHistoryPageRevisions( array $pageIdToTitlesMap ) {
 		$this->output->writeln( "Extract history revisons of pages:" );
@@ -437,7 +447,6 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 		return date( 'Y-m-d H:i:s', $timestamp );
 	}
 
-
 	/**
 	 * @param array $paths
 	 * @return string
@@ -459,6 +468,5 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 		$id = str_replace( ':', '_', $id );
 		return "$id.$timestamp";
 	}
-
 
 }

@@ -77,7 +77,7 @@ class DokuwikiComposer extends ComposerBase implements IOutputAwareInterface {
 		$titleToPageIdMap = array_flip( $pageIdToTitleMap );
 
 		foreach ( $titleToPageIdMap as $pageTitle => $pageId ) {
-			
+
 			$key = str_replace( ':', '_', $pageId );
 			$wikiText = $this->workspace->getConvertedContent( $key );
 
@@ -110,7 +110,6 @@ class DokuwikiComposer extends ComposerBase implements IOutputAwareInterface {
 				$comment = '';
 
 				// do not handle attic versions with .change information
-
 
 				$builder->addRevision( $pageTitle, $wikiText, $mwTimestamp, $username, '', '', $comment );
 			}

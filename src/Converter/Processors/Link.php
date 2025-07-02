@@ -56,7 +56,7 @@ class Link implements IProcessor {
 
 	/**
 	 * @param string $data
-	 * @return boolean
+	 * @return bool
 	 */
 	private function isWindowsShare( string $data ): bool {
 		if ( strpos( $data, '\\' ) === 0 ) {
@@ -250,7 +250,6 @@ class Link implements IProcessor {
 		}
 		return $title;
 	}
-
 
 	/**
 	 * @param string &$data
