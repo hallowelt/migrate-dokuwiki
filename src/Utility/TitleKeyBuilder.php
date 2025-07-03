@@ -46,10 +46,6 @@ class TitleKeyBuilder {
 		$subpageName = implode( '.', $subpageParts );
 
 		for ( $index = 0; $index < count( $paths ); $index++ ) {
-			if ( ( $index === count( $paths ) - 1 )
-				&& $paths[$index] === $subpageName ) {
-				break;
-			}
 			$path = $paths[$index];
 			$path = $this->generalizeItem( $path );
 

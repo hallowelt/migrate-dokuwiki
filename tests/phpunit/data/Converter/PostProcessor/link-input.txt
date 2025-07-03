@@ -4,3 +4,13 @@ sit amet #####PRESERVEINTERNALLINKOPEN#####Tools:Toolbox/Wrench#####PRESERVEINTE
 
 * sit amet #####PRESERVEINTERNALLINKOPEN#####Tools:Toolbox/Screwdriver#####PRESERVEINTERNALLINKCLOSE#####
 * sit amet #####PRESERVEINTERNALLINKOPEN#####Tools:Toolbox/Screwdriver#####PRESERVEINTERNALLINKPIPE#####Tools:Toolbox/Screwdriver#####PRESERVEINTERNALLINKCLOSE#####
+
+External links
+* http://example.com
+* http://example.com
+* #####PRESERVEEXTERNALLINKOPEN#####http://example.com external link label#####PRESERVEEXTERNALLINKCLOSE#####
+* #####PRESERVEEXTERNALLINKOPEN#####http://example.com http://example.com#####PRESERVEEXTERNALLINKCLOSE#####
+
+Windows share
+* #####PRESERVEEXTERNALLINKOPEN#####file:////abc/def //abc/def#####PRESERVEEXTERNALLINKCLOSE#####
+* #####PRESERVEEXTERNALLINKOPEN#####file:////abc/def windows share label#####PRESERVEEXTERNALLINKCLOSE#####

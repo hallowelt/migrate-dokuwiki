@@ -12,8 +12,29 @@ class Link implements IProcessor {
 	 * @return string
 	 */
 	public function process( string $text, string $path = '' ): string {
+		$text = $this->replaceExternalLinkPreserveMarks( $text );
 		$text = $this->replacePageLinkPreserveMarks( $text );
 		$text = $this->replaceMailLinkPreserveMarks( $text );
+		return $text;
+	}
+
+	/**
+	 * @param string $text
+	 * @return string
+	 */
+	private function replaceExternalLinkPreserveMarks( string $text ): string {
+		$text = preg_replace(
+			[
+				'/#####PRESERVEEXTERNALLINKOPEN#####/',
+				'/#####PRESERVEEXTERNALLINKCLOSE#####/'
+			],
+			[
+				'[',
+				']'
+			],
+			$text
+		);
+
 		return $text;
 	}
 

@@ -71,8 +71,8 @@ class DokuwikiConverter extends PandocDokuwiki implements IOutputAwareInterface 
 	 */
 	private function getProcessors(): array {
 		return [
-			new Link( $this->dataBuckets->getBucketData( 'page-key-to-title-map' ) ),
-			new ImageProcessor( $this->dataBuckets->getBucketData( 'media-key-to-title-map' ), $this->advancedConfig )
+			new Link( $this->dataBuckets->getBucketData( 'page-id-to-title-map' ) ),
+			new ImageProcessor( $this->dataBuckets->getBucketData( 'media-id-to-title-map' ), $this->advancedConfig )
 		];
 	}
 
@@ -92,7 +92,7 @@ class DokuwikiConverter extends PandocDokuwiki implements IOutputAwareInterface 
 			new ColspanPostProcessor(),
 			new RowspanPostProcessor(),
 			new RestoreTableWidth(),
-			new RestoreIndexMenu( $this->dataBuckets->getBucketData( 'media-key-to-title-map' ) ),
+			new RestoreIndexMenu( $this->dataBuckets->getBucketData( 'media-id-to-title-map' ) ),
 			new RestoreCode(),
 			new RestoreCategories()
 		];
@@ -103,23 +103,15 @@ class DokuwikiConverter extends PandocDokuwiki implements IOutputAwareInterface 
 	 */
 	private function getBucketKeys(): array {
 		return [
-			// From this step
-			'namespaces-map',
 			'pages-map',
-			'page-titles',
-			'page-changes-map',
-			'page-meta-map',
-			'media-map',
-			'media-titles',
-			'page-meta-map',
-			'page-changes-map',
-			'attic-namespaces-map',
 			'attic-pages-map',
+			'page-meta-map',
+			'page-changes-map',
+			'media-map',
 			'attic-media-map',
-			'attic-meta-map',
 			'page-id-to-title-map',
-			'media-key-to-title-map',
-			'page-key-to-title-map',
+			'media-id-to-title-map',
+			// From this step
 		];
 	}
 

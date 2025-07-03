@@ -9,8 +9,6 @@ use HalloWelt\MediaWiki\Lib\Migration\IOutputAwareInterface;
 use HalloWelt\MediaWiki\Lib\Migration\Workspace;
 use HalloWelt\MigrateDokuwiki\ISourcePathAwareInterface;
 use HalloWelt\MigrateDokuwiki\Utility\FileKeyBuilder;
-use HalloWelt\MigrateDokuwiki\Utility\FileTitleBuilder;
-use HalloWelt\MigrateDokuwiki\Utility\TitleBuilder;
 use HalloWelt\MigrateDokuwiki\Utility\TitleKeyBuilder;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
@@ -42,14 +40,8 @@ class DokuwikiAnalyzer
 	/** @var string */
 	private $src = '';
 
-	/** @var TitleBuilder */
-	private $titleBuilder = null;
-
 	/** @var TitleKeyBuilder */
 	private $titleKeyBuilder = null;
-
-	/** @var FileTitleBuilder */
-	private $fileTitleBuilder = null;
 
 	/** @var FileKeyBuilder */
 	private $fileKeyBuilder = null;
@@ -63,23 +55,16 @@ class DokuwikiAnalyzer
 	public function __construct( $config, Workspace $workspace, DataBuckets $buckets ) {
 		parent::__construct( $config, $workspace, $buckets );
 		$this->dataBuckets = new DataBuckets( [
-			'namespaces-map',
+			'namespace-ids',
 			'pages-map',
-			'page-titles',
-			'page-key-to-title-map',
 			'media-map',
-			'media-titles',
-			'media-key-to-title-map',
 			'page-meta-map',
 			'page-changes-map',
-			'attic-namespaces-map',
 			'attic-pages-map',
 			'attic-media-map',
 		] );
 		$this->logger = new NullLogger();
-		$this->titleBuilder = new TitleBuilder();
 		$this->titleKeyBuilder = new TitleKeyBuilder();
-		$this->fileTitleBuilder = new FileTitleBuilder();
 		$this->fileKeyBuilder = new FileKeyBuilder();
 
 		if ( isset( $this->config['config'] ) ) {
@@ -152,19 +137,31 @@ class DokuwikiAnalyzer
 		$filepath = str_replace( $this->src, '', $file->getPathname() );
 		$paths = explode( '/', trim( $filepath, '/' ) );
 
-		// Sub directory in input folder
-		while ( !$this->isProperSource( $paths ) ) {
-			if ( count( $paths ) === 2 ) {
-				break;
-			}
-
+		if ( $paths[0] === 'data' ) {
 			unset( $paths[0] );
 			$paths = array_values( $paths );
 		}
 
-		if ( $paths[0] === 'pages'
-			|| ( $paths[0] === 'git' && $paths[1] === 'pages' )
-		) {
+		if ( $paths[0] === 'git' ) {
+			unset( $paths[0] );
+			$paths = array_values( $paths );
+		}
+
+		if ( empty( $paths ) ) {
+			return true;
+		}
+
+		// Sub directory in input folder
+		while ( !$this->isProperSource( $paths[0] ) ) {
+			if ( count( $paths ) > 2 ) {
+				unset( $paths[0] );
+				$paths = array_values( $paths );
+			} else {
+				return true;
+			}
+		}
+
+		if ( $paths[0] === 'pages' ) {
 			if ( $file->getExtension() !== 'txt' ) {
 				return true;
 			}
@@ -174,9 +171,7 @@ class DokuwikiAnalyzer
 				return true;
 			}
 			$this->makeHistoryRevisionPageMap( $file, $paths );
-		} elseif ( $paths[0] === 'media'
-			|| ( $paths[0] === 'git' && $paths[1] === 'media' )
-		) {
+		} elseif ( $paths[0] === 'media' ) {
 			$this->makeLatestRevisionMediaMap( $file, $paths );
 		} elseif ( $paths[0] === 'media_attic' ) {
 			// $this->makeHistoryRevisionMediaMap( $file, $paths );
@@ -188,37 +183,18 @@ class DokuwikiAnalyzer
 	}
 
 	/**
-	 * @param array $paths
+	 * @param string $path
 	 * @return bool
 	 */
-	private function isProperSource( array $paths ): bool {
-		if ( empty( $paths ) ) {
-			return false;
-		}
-		if ( $paths[0] === 'pages' ) {
+	private function isProperSource( string $path ): bool {
+		$validPaths = [
+			'pages', 'attic', 'meta',
+			'media', 'media_attic', 'media_meta'
+		];
+		if ( in_array( $path, $validPaths ) ) {
 			return true;
 		}
-		if ( $paths[0] === 'media' ) {
-			return true;
-		}
-		if ( $paths[0] === 'attic' ) {
-			return true;
-		}
-		if ( $paths[0] === 'media_attic' ) {
-			return true;
-		}
-		if ( $paths[0] === 'media_meta' ) {
-			return true;
-		}
-		if ( $paths[0] === 'meta' ) {
-			return true;
-		}
-		if ( $paths[0] === 'git' && $paths[1] === 'pages' ) {
-			return true;
-		}
-		if ( $paths[0] === 'git' && $paths[1] === 'media' ) {
-			return true;
-		}
+
 		return false;
 	}
 
@@ -227,14 +203,6 @@ class DokuwikiAnalyzer
 	 * @param array $paths
 	 */
 	private function makeLatestRevisionPageMap( SplFileInfo $file, array $paths ) {
-		if ( $paths[0] === 'data' ) {
-			unset( $paths[0] );
-			$paths = array_values( $paths );
-		}
-		if ( $paths[0] === 'git' ) {
-			unset( $paths[0] );
-			$paths = array_values( $paths );
-		}
 		if ( $paths[0] === 'pages' ) {
 			unset( $paths[0] );
 			$paths = array_values( $paths );
@@ -243,53 +211,17 @@ class DokuwikiAnalyzer
 		if ( count( $paths ) < 2 ) {
 			// .txt is a direct child of pages directory.
 			// It has to result in a page in NS_MAIN or it is the main page of a namespace.
-			$namespace = 'NS_MAIN';
-			$this->namespaceMainpage( $namespace, $paths, $file );
-		} else {
-			$namespace = trim( $paths[0] );
-			$namespace = trim( $namespace, " _\t" );
-			$namespace = ucfirst( $namespace );
-			$namespace = str_replace( [ '-', ' ' ], '_', $namespace );
+			$this->namespaceMainpage( $paths, $file );
 		}
-		$this->dataBuckets->addData( 'namespaces-map', 'namespaces', $namespace, true, true );
 
 		$key = $this->makeTitleKey( $paths );
-		$doubleKey = $this->makeTitleDoubleKey( $paths );
-		$title = $this->makeTitle( $paths );
-		$this->output->writeln( "Add title:  $title" );
-		$this->dataBuckets->addData( 'page-key-to-title-map', $key, $title, false, true );
-		$this->dataBuckets->addData( 'page-key-to-title-map', $doubleKey, $title, false, true );
-		$this->dataBuckets->addData( 'page-titles', 'pages_titles', $title, true, false );
-		$this->dataBuckets->addData( 'pages-map', $title, $file->getPathname(), true, false );
-	}
-
-	/**
-	 * @param string &$namespace
-	 * @param array &$paths
-	 * @param SplFileInfo $file
-	 * @param bool $history
-	 * @return void
-	 */
-	private function namespaceMainpage( string &$namespace, array &$paths, SplFileInfo $file, $history = false ): void {
-		$name = end( $paths );
-		// Removing file extension
-		$name = substr( $name, 0, strrpos( $name, '.' ) );
-		$length = strlen( $name );
-		if ( $history ) {
-			// Removing timestamp
-			$name = substr( $name, 0, strrpos( $name, '.' ) );
-			$length = strlen( $name );
+		if ( count( $paths ) > 1 ) {
+			// Creating namespace id for bucket.
+			$namespaceId = $this->makeTitleKey( [ $paths[0] ] );
+			$this->dataBuckets->addData( 'namespace-ids', 'namespace-ids', $namespaceId, true, true );
 		}
-		$dirname = substr( $file->getRealPath(), 0, $length );
-		if ( is_dir( $dirname ) ) {
-			$namespace = trim( $paths[0] );
-			$namespace = trim( $namespace, '.txt' );
-			$namespace = trim( $namespace, " _\t" );
-			$namespace = ucfirst( $namespace );
-			$namespace = str_replace( [ '-', ' ' ], '_', $namespace );
-
-			$paths[0] = $namespace;
-		}
+		$this->output->writeln( "Add latest page revision: {$file->getRealPath()}" );
+		$this->dataBuckets->addData( 'pages-map', $key, $file->getPathname(), true, false );
 	}
 
 	/**
@@ -297,10 +229,6 @@ class DokuwikiAnalyzer
 	 * @param array $paths
 	 */
 	private function makeHistoryRevisionPageMap( SplFileInfo $file, array $paths ) {
-		if ( $paths[0] === 'data' ) {
-			unset( $paths[0] );
-			$paths = array_values( $paths );
-		}
 		if ( $paths[0] === 'attic' ) {
 			unset( $paths[0] );
 			$paths = array_values( $paths );
@@ -309,20 +237,19 @@ class DokuwikiAnalyzer
 		if ( count( $paths ) < 2 ) {
 			// .txt is a direct child of pages directory.
 			// It has to result in a page in NS_MAIN or it is the main page of a namespace.
-			$namespace = 'NS_MAIN';
-			$this->namespaceMainpage( $namespace, $paths, $file, true );
-		} else {
-			$namespace = trim( $paths[0] );
-			$namespace = trim( $namespace, " _\t" );
-			$namespace = ucfirst( $namespace );
-			$namespace = str_replace( [ '-', ' ' ], '_', $namespace );
+			$this->namespaceMainpage( $paths, $file, true );
 		}
 
-		$this->dataBuckets->addData( 'attic-namespaces-map', 'namespaces', $namespace, true, true );
+		$lastKey = array_key_last( $paths );
+		$parts = explode( '.', $paths[$lastKey] );
+		$extension = array_pop( $parts );
+		$timestamp = array_pop( $parts );
+		$parts[] = $extension;
+		$paths[$lastKey] = implode( '.', $parts );
 
-		$title = $this->makeTitle( $paths, true );
-		$this->output->writeln( "Add history version of:  $title" );
-		$this->dataBuckets->addData( 'attic-pages-map', $title, $file->getPathname(), true, false );
+		$key = $this->makeTitleKey( $paths );
+		$this->output->writeln( "Add attic page revision: {$file->getRealPath()}" );
+		$this->dataBuckets->addData( 'attic-pages-map', $key, $file->getPathname(), true, false );
 	}
 
 	/**
@@ -330,27 +257,14 @@ class DokuwikiAnalyzer
 	 * @param array $paths
 	 */
 	private function makeLatestRevisionMediaMap( SplFileInfo $file, array $paths ) {
-		if ( $paths[0] === 'data' ) {
-			unset( $paths[0] );
-			$paths = array_values( $paths );
-		}
-		if ( $paths[0] === 'git' ) {
-			unset( $paths[0] );
-			$paths = array_values( $paths );
-		}
 		if ( $paths[0] === 'media' ) {
 			unset( $paths[0] );
 			$paths = array_values( $paths );
 		}
 
 		$key = $this->makeFileKey( $paths );
-		$doubleKey = $this->makeFileDoubleKey( $paths );
-		$filename = $this->makeFileTitle( $paths );
-		$this->output->writeln( "Add media: $filename" );
-		$this->dataBuckets->addData( 'media-key-to-title-map', $key, $filename, false, true );
-		$this->dataBuckets->addData( 'media-key-to-title-map', $doubleKey, $filename, false, true );
-		$this->dataBuckets->addData( 'media-titles', 'media_titles', $filename, true, false );
-		$this->dataBuckets->addData( 'media-map', $filename, $file->getPathname(), true, true );
+		$this->output->writeln( "Add media: {$file->getRealPath()}" );
+		$this->dataBuckets->addData( 'media-map', $key, $file->getPathname(), true, true );
 	}
 
 	/**
@@ -358,18 +272,14 @@ class DokuwikiAnalyzer
 	 * @param array $paths
 	 */
 	private function makeHistoryRevisionMediaMap( SplFileInfo $file, array $paths ) {
-		if ( $paths[0] === 'data' ) {
-			unset( $paths[0] );
-			$paths = array_values( $paths );
-		}
 		if ( $paths[0] === 'media_attic' ) {
 			unset( $paths[0] );
 			$paths = array_values( $paths );
 		}
 
-		$filename = $this->makeFileTitle( $paths, true );
-		$this->output->writeln( "Add history version of media: $filename" );
-		$this->dataBuckets->addData( 'attic-media-map', $filename, $file->getPathname(), true, true );
+		$key = $this->makeFileKey( $paths );
+		$this->output->writeln( "Add attic media: {$file->getRealPath()}" );
+		$this->dataBuckets->addData( 'attic-media-map', $key, $file->getPathname(), true, true );
 	}
 
 	/**
@@ -382,32 +292,43 @@ class DokuwikiAnalyzer
 			return;
 		}
 
-		if ( $paths[0] === 'data' ) {
-			unset( $paths[0] );
-			$paths = array_values( $paths );
-		}
 		if ( $paths[0] === 'meta' ) {
 			unset( $paths[0] );
 			$paths = array_values( $paths );
 		}
 
-		$title = $this->makeTitle( $paths );
+		$key = $this->makeTitleKey( $paths );
 		if ( $file->getExtension() === 'meta' ) {
-			$this->output->writeln( "Add meta for: $title" );
-			$this->dataBuckets->addData( 'page-meta-map', $title, $file->getPathname(), true, true );
+			$this->output->writeln( "Add meta: {$file->getRealPath()}" );
+			$this->dataBuckets->addData( 'page-meta-map', $key, $file->getPathname(), true, true );
 		} else {
-			$this->output->writeln( "Add changes for: $title" );
-			$this->dataBuckets->addData( 'page-changes-map', $title, $file->getPathname(), true, true );
+			$this->output->writeln( "Add changes: {$file->getRealPath()}" );
+			$this->dataBuckets->addData( 'page-changes-map', $key, $file->getPathname(), true, true );
 		}
 	}
 
 	/**
-	 * @param array $paths
+	 * @param array &$paths
+	 * @param SplFileInfo $file
 	 * @param bool $history
-	 * @return string
+	 * @return void
 	 */
-	private function makeTitle( array $paths, bool $history = false ): string {
-		return $this->titleBuilder->build( $paths, $history, $this->advancedConfig );
+	private function namespaceMainpage( array &$paths, SplFileInfo $file, $history = false ): void {
+		// Removing file extension
+		$dir = substr( $file->getRealPath(), 0, strrpos( $file->getRealPath(), '.' ) );
+		if ( $history ) {
+			// Removing timestamp
+			$dir = substr( $dir, 0, strrpos( $dir, '.' ) );
+		}
+		if ( is_dir( $dir ) ) {
+			$namespace = trim( $paths[0] );
+			$namespace = trim( $namespace, '.txt' );
+			$namespace = trim( $namespace, " _\t" );
+			$namespace = str_replace( [ '-', ' ' ], '_', $namespace );
+
+			$paths[1] = $paths[0];
+			$paths[0] = $namespace;
+		}
 	}
 
 	/**
@@ -422,32 +343,7 @@ class DokuwikiAnalyzer
 	 * @param array $paths
 	 * @return string
 	 */
-	private function makeTitleDoubleKey( array $paths ): string {
-		return $this->titleKeyBuilder->buildDoubleKey( $paths );
-	}
-
-	/**
-	 * @param array $paths
-	 * @param bool $history
-	 * @return string
-	 */
-	private function makeFileTitle( array $paths, $history = false ): string {
-		return $this->fileTitleBuilder->build( $paths, $history, $this->advancedConfig );
-	}
-
-	/**
-	 * @param array $paths
-	 * @return string
-	 */
 	private function makeFileKey( array $paths ): string {
 		return $this->fileKeyBuilder->build( $paths );
-	}
-
-		/**
-		 * @param array $paths
-		 * @return string
-		 */
-	private function makeFileDoubleKey( array $paths ): string {
-		return $this->fileKeyBuilder->buildDoubleKey( $paths );
 	}
 }

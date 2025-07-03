@@ -4,3 +4,13 @@ sit amet [[Tools:Toolbox/Wrench]]
 
 * sit amet [[Tools:Toolbox/Screwdriver]]
 * sit amet [[Tools:Toolbox/Screwdriver|Tools:Toolbox/Screwdriver]]
+
+External links
+* http://example.com
+* http://example.com
+* [http://example.com external link label]
+* [http://example.com http://example.com]
+
+Windows share
+* [file:////abc/def //abc/def]
+* [file:////abc/def windows share label]
