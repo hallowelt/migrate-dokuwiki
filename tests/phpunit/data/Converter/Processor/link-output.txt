@@ -25,5 +25,5 @@ External links
 * #####PRESERVEEXTERNALLINKOPEN#####http://example.com http://example.com#####PRESERVEEXTERNALLINKCLOSE#####
 
 Windows share
-* #####PRESERVEEXTERNALLINKOPEN#####\\abc\def#####PRESERVEEXTERNALLINKCLOSE#####
-* #####PRESERVEEXTERNALLINKOPEN#####\\abc\def windows share label#####PRESERVEEXTERNALLINKCLOSE#####
+* #####PRESERVEEXTERNALLINKOPEN#####file:////abc/def //abc/def#####PRESERVEEXTERNALLINKCLOSE#####
+* #####PRESERVEEXTERNALLINKOPEN#####file:////abc/def windows share label#####PRESERVEEXTERNALLINKCLOSE#####

@@ -72,10 +72,19 @@ class Link implements IProcessor {
 	private function handleWindowsShare( string $data ): string {
 		if ( $this->hasLabel( $data ) ) {
 			$linkParts = $this->getLinkParts( $data );
-			$linkParts = $this->fixEmptyLabel( $linkParts, $linkParts[0] );
+			$target = $linkParts[0];
+			$target = str_replace( '\\', '/', $target );
+			$linkParts = $this->fixEmptyLabel( $linkParts, $target );
+			$linkParts[0] = 'file://' . $target;
 			return $this->getPreservedExternalLinkReplacement( $linkParts );
 		} else {
-			return $this->getPreservedExternalLinkReplacement( [ $data ] );
+			$target = $data;
+			$target = str_replace( '\\', '/', $target );
+			$linkParts = [
+				'file://' . $target,
+				$target
+			];
+			return $this->getPreservedExternalLinkReplacement( $linkParts );
 		}
 	}
 

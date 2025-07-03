@@ -218,7 +218,7 @@ class DokuwikiAnalyzer
 		if ( count( $paths ) > 1 ) {
 			// Creating namespace id for bucket.
 			$namespaceId = $this->makeTitleKey( [ $paths[0] ] );
-			$this->dataBuckets->addData( 'namespace-ids', 'namespace-ids', $namespaceId, false, true );
+			$this->dataBuckets->addData( 'namespace-ids', 'namespace-ids', $namespaceId, true, true );
 		}
 		$this->output->writeln( "Add latest page revision: {$file->getRealPath()}" );
 		$this->dataBuckets->addData( 'pages-map', $key, $file->getPathname(), true, false );
