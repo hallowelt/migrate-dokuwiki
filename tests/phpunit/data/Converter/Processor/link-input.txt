@@ -17,3 +17,13 @@ Link to a page with missing page key
 * sit amet [[abc.def@example.com]]
 * sit amet [[|Label]]
 * sit amet [[ä:xyz:test | Accented page key]]
+
+External links
+* http://example.com
+* [[http://example.com ]]
+* [[http://example.com | external link label ]]
+* [[http://example.com | ]]
+
+Windows share
+* [[\\abc\def ]]
+* [[\\abc\def | windows share label ]]
