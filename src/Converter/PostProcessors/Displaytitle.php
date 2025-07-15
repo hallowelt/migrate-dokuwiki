@@ -15,6 +15,10 @@ class Displaytitle implements IProcessor {
 	public function process( string $text, string $path = '' ): string {
 		$lines = explode( "\n", $text );
 
+		if ( count( $lines ) < 2 ) {
+			return $text;
+		}
+
 		$hasDisplayTitle = false;
 		$headingMatches = [];
 		preg_match( '#(=+)\s*(.*?)\s*(=+)#', $lines[1], $headingMatches );
