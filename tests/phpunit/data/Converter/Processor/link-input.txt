@@ -27,3 +27,7 @@ External links
 Windows share
 * [[\\abc\def ]]
 * [[\\abc\def | windows share label ]]
+
+Interwiki
+* [[test>tools:Toolbox:screwdriver]]
+* [[test>tools:Toolbox:screwdriver|Interwikilink label]]

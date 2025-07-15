@@ -43,6 +43,9 @@ class Link implements IProcessor {
 				return $this->handleMailToLink( $target );
 			}
 
+			if ( $this->isInterwikiLink( $target ) ) {
+				return $this->handleInterwikiLink( $target );
+			}
 			return $this->handlePageLink( $target );
 		 }, $text );
 
@@ -155,6 +158,53 @@ class Link implements IProcessor {
 			$linkParts = [ $data, $data ];
 			$replacement = $this->getPreservedMailLinkReplacement( $linkParts );
 		}
+
+		return $replacement;
+	}
+
+	/**
+	 * @param string $target
+	 * @return boolean
+	 */
+	private function isInterwikiLink( string $target ): bool {
+		if ( str_contains( $target, '>' ) ) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * @param string $target
+	 * @return string
+	 */
+	private function handleInterwikiLink( string $target ): string {
+		$prefix = substr( $target, 0, strpos( $target, '>' ) );
+		$data = substr( $target, strpos( $target, '>' ) + 1 );
+		$replacement = '';
+
+		if ( $this->hasLabel( $data ) ) {
+			$linkParts = $this->getLinkParts( $data );
+			$target = trim( $linkParts[0], ':' );
+			// Some page names hava a slash (page name "car/bike")
+			// but in filesystem they are stored with underscore (filename car_bike.txt)
+			$target = str_replace( [ '/' ], '_', $target );
+
+			$hash = $this->getHash( $target );
+
+			$title = $this->getTargetWikiTitle( $target );
+			$linkParts[0] = $title . $hash;
+			$linkParts = $this->fixEmptyLabel( $linkParts, $title );
+
+			$replacement = $this->getPreservedLinkReplacement( $linkParts, $prefix );
+		} else {
+			$hash = $this->getHash( $data );
+			$target = $this->getTargetWikiTitle( $data );
+
+			$replacement = $this->getPreservedLinkReplacement( [ $target . $hash ], $prefix );
+		}
+
+		$category = CategoryBuilder::getPreservedMigrationCategory( 'Interwiki link' );
+		$replacement .= " {$category}";
 
 		return $replacement;
 	}
@@ -338,11 +388,15 @@ class Link implements IProcessor {
 
 	/**
 	 * @param array $linkParts
+	 * @param string $prefix
 	 * @return string
 	 */
-	private function getPreservedLinkReplacement( array $linkParts ): string {
+	private function getPreservedLinkReplacement( array $linkParts, string $prefix = '' ): string {
 		$data = implode( '#####PRESERVEINTERNALLINKPIPE#####', $linkParts );
-		$replacement = "#####PRESERVEINTERNALLINKOPEN#####$data#####PRESERVEINTERNALLINKCLOSE#####";
+		if ( $prefix !== '' ) {
+			$data = ":{$prefix}:{$data}";
+		}
+		$replacement = "#####PRESERVEINTERNALLINKOPEN#####{$data}#####PRESERVEINTERNALLINKCLOSE#####";
 		if ( $linkParts[0] === '' ) {
 			$replacement .= ' ' . CategoryBuilder::getPreservedMigrationCategory( 'Missing link target' );
 		}
