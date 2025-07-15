@@ -1,0 +1,9 @@
+<noinclude>
+Replacement for Dokuwiki include
+</noinclude>
+<onlyinclude>
+{{#ifeq:{{{type|}}}|page
+|{{#if: {{{page|}}} | {{ {{{page}}} }} | [[Category:Broken_include]] }}
+| [[Category:Broken_include]]
+}}
+</onlyinclude>

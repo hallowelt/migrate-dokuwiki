@@ -82,6 +82,14 @@ class TitleBuilder {
 			}
 		}
 
+		$reverse = array_reverse( explode( ':', $id ) );
+		if ( isset( $reverse[2] ) && $reverse[0] === $reverse[1] ) {
+			// some dokuwiki have the subpage content inside the directory,
+			// ohters inside the parent directory. The first case prduces a double
+			// key which creates a double title part.
+			array_pop( $paths );
+		}
+
 		$subpageText = array_pop( $paths );
 
 		for ( $index = 0; $index < count( $paths ); $index++ ) {

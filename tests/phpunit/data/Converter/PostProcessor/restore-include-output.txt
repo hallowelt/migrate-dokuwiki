@@ -1,0 +1,9 @@
+{{Include | type = page | page = Projects:Types/Ab.type_01}}
+
+{{Include | type = page | page = Projects:Types/Ab.type_01 | flags = firstseconly, footer}}
+
+{{Include | type = section | page = Projects:Types/Ab.type_01 | section = test_section | flags = firstseconly, footer}}
+
+{{Include | type = namespace | page = Projects | section = test_section | flags = firstseconly, footer}}
+
+{{Include | type = tagtopic | page = Tagname | flags = firstseconly, footer}}
