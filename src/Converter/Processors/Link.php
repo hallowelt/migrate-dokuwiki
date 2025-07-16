@@ -164,7 +164,7 @@ class Link implements IProcessor {
 
 	/**
 	 * @param string $target
-	 * @return boolean
+	 * @return bool
 	 */
 	private function isInterwikiLink( string $target ): bool {
 		if ( str_contains( $target, '>' ) ) {
