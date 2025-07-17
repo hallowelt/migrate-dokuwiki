@@ -14,22 +14,15 @@ class TitleKeyBuilder {
 	public function build( array $paths ): string {
 		$this->makeTitleKeyFromPaths( $paths );
 
-		$key = implode( ':', $this->titleSegments );
-		return $key;
-	}
-
-	/**
-	 * @param array $paths
-	 * @return string
-	 */
-	public function buildDoubleKey( array $paths ): string {
-		$this->makeTitleKeyFromPaths( $paths );
-
-		$doubleKey = end( $this->titleSegments );
-		$this->titleSegments[] = $doubleKey;
+		$reverse = array_reverse( $this->titleSegments );
+		if ( isset( $reverse[2] ) && $reverse[0] === $reverse[1] ) {
+			// some dokuwiki have the subpage content inside the directory,
+			// ohters inside the parent directory. The first case prduces a double
+			// key which creates a double title part.
+			array_pop( $this->titleSegments );
+		}
 
 		$key = implode( ':', $this->titleSegments );
-
 		return $key;
 	}
 

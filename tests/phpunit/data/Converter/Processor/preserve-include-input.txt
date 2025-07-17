@@ -1,0 +1,9 @@
+{{page>projects:types:ab.type_01}}
+
+{{page>projects:types:ab.type_01&firstseconly&footer}}
+
+{{section>projects:types:ab.type_01#test_section&firstseconly&footer}}
+
+{{namespace>projects#test_section&firstseconly&footer}}
+
+{{tagtopic>tagname&firstseconly&footer}}

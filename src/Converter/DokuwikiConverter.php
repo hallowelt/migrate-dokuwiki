@@ -14,6 +14,7 @@ use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Link as LinkPostProcessor
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\RestoreCategories;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\RestoreCode;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\RestoreImageCaption;
+use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\RestoreInclude;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\RestoreIndexMenu;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\RestoreWrap;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Table\Colspan as ColspanPostProcessor;
@@ -32,6 +33,7 @@ use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\Table\RemoveLinebreakAtEnd
 use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\Table\RemoveLinebreakBeforeTable;
 use HalloWelt\MigrateDokuwiki\Converter\Processors\Image as ImageProcessor;
 use HalloWelt\MigrateDokuwiki\Converter\Processors\Link;
+use HalloWelt\MigrateDokuwiki\Converter\Processors\PreserveInclude;
 use HalloWelt\MigrateDokuwiki\IProcessor;
 use SplFileInfo;
 use Symfony\Component\Console\Output\Output;
@@ -71,6 +73,7 @@ class DokuwikiConverter extends PandocDokuwiki implements IOutputAwareInterface 
 	 */
 	private function getProcessors(): array {
 		return [
+			new PreserveInclude( $this->dataBuckets->getBucketData( 'page-id-to-title-map' ) ),
 			new Link( $this->dataBuckets->getBucketData( 'page-id-to-title-map' ) ),
 			new ImageProcessor( $this->dataBuckets->getBucketData( 'media-id-to-title-map' ), $this->advancedConfig )
 		];
@@ -94,7 +97,8 @@ class DokuwikiConverter extends PandocDokuwiki implements IOutputAwareInterface 
 			new RestoreTableWidth(),
 			new RestoreIndexMenu( $this->dataBuckets->getBucketData( 'media-id-to-title-map' ) ),
 			new RestoreCode(),
-			new RestoreCategories()
+			new RestoreCategories(),
+			new RestoreInclude(),
 		];
 	}
 

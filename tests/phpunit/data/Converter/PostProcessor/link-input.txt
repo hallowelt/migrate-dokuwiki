@@ -14,3 +14,7 @@ External links
 Windows share
 * #####PRESERVEEXTERNALLINKOPEN#####file:////abc/def //abc/def#####PRESERVEEXTERNALLINKCLOSE#####
 * #####PRESERVEEXTERNALLINKOPEN#####file:////abc/def windows share label#####PRESERVEEXTERNALLINKCLOSE#####
+
+Interwiki
+* #####PRESERVEINTERNALLINKOPEN#####:test:Tools:Toolbox/Screwdriver#####PRESERVEINTERNALLINKCLOSE##### #####CATEGORYOPEN#####Migration/Interwiki link#####CATEGORYCLOSE#####
+* #####PRESERVEINTERNALLINKOPEN#####:test:Tools:Toolbox/Screwdriver#####PRESERVEINTERNALLINKPIPE#####Interwikilink label#####PRESERVEINTERNALLINKCLOSE##### #####CATEGORYOPEN#####Migration/Interwiki link#####CATEGORYCLOSE#####

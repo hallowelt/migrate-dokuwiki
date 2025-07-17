@@ -22,15 +22,6 @@ class TitleKeyBuilderTest extends TestCase {
 		}
 		$expectedKeys = $this->getExpectedKeys();
 		$this->assertEquals( $expectedKeys, $actualKeys );
-
-		$actualKeys = [];
-		foreach ( $pages as $filepath ) {
-			$paths = explode( '/', trim( $filepath, '/' ) );
-			$actualKeys[] = $titleBuilder->buildDoubleKey( $paths );
-		}
-
-		$expectedKeys = $this->getExpectedDoubleKeys();
-		$this->assertEquals( $expectedKeys, $actualKeys );
 	}
 
 	/**
@@ -58,18 +49,4 @@ class TitleKeyBuilderTest extends TestCase {
 			'tools:toolbox:hammer.01',
 		];
 	}
-
-	/**
-	 * @return array
-	 */
-	private function getExpectedDoubleKeys(): array {
-		return [
-			'start:start',
-			'projects:types:ab.type_01:ab.type_01',
-			'tools:toolbox:wrench:wrench',
-			'tools:toolbox_01:wrench_01:wrench_01',
-			'tools:toolbox:hammer.01:hammer.01',
-		];
-	}
-
 }

@@ -1,0 +1,9 @@
+#####PRESERVEINCLUDEOPEN##########PRESERVEINCLUDEPIPE##### type = page #####PRESERVEINCLUDEPIPE##### page = Projects:Types/Ab.type_01#####PRESERVEINCLUDECLOSE#####
+
+#####PRESERVEINCLUDEOPEN##########PRESERVEINCLUDEPIPE##### type = page #####PRESERVEINCLUDEPIPE##### page = Projects:Types/Ab.type_01 #####PRESERVEINCLUDEPIPE##### flags = firstseconly, footer#####PRESERVEINCLUDECLOSE#####
+
+#####PRESERVEINCLUDEOPEN##########PRESERVEINCLUDEPIPE##### type = section #####PRESERVEINCLUDEPIPE##### page = Projects:Types/Ab.type_01 #####PRESERVEINCLUDEPIPE##### section = test_section #####PRESERVEINCLUDEPIPE##### flags = firstseconly, footer#####PRESERVEINCLUDECLOSE#####
+
+#####PRESERVEINCLUDEOPEN##########PRESERVEINCLUDEPIPE##### type = namespace #####PRESERVEINCLUDEPIPE##### page = Projects #####PRESERVEINCLUDEPIPE##### section = test_section #####PRESERVEINCLUDEPIPE##### flags = firstseconly, footer#####PRESERVEINCLUDECLOSE#####
+
+#####PRESERVEINCLUDEOPEN##########PRESERVEINCLUDEPIPE##### type = tagtopic #####PRESERVEINCLUDEPIPE##### page = Tagname #####PRESERVEINCLUDEPIPE##### flags = firstseconly, footer#####PRESERVEINCLUDECLOSE#####

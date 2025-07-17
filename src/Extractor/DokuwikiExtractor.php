@@ -125,7 +125,25 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 		$pagesMap = $this->dataBuckets->getBucketData( 'pages-map' );
 		$pageMetaMap = $this->dataBuckets->getBucketData( 'page-meta-map' );
 
-		$pagesMeta = [];
+		$metaTitles = [];
+		foreach ( $pageMetaMap as $id => $paths ) {
+			if ( empty( $paths ) ) {
+				continue;
+			}
+
+			// Some dokuwiki have a xyz,meta in the directory xyz and at the same level like directory xyz
+			// In that case we want to handle the second one
+			$path = array_pop( $paths );
+			if ( file_exists( $path ) ) {
+				$metaContent = file_get_contents( $path );
+				$meta = unserialize( $metaContent );
+
+				if ( isset( $meta['current']['title'] ) && $meta['current']['title'] !== '' ) {
+					$metaTitles[$id] = $meta['current']['title'];
+				}
+			}
+		}
+
 		$pageIdToTitlesMap = [];
 		foreach ( $pagesMap as $id => $path ) {
 			$paths = [];
@@ -138,20 +156,12 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 			for ( $index = 0; $index < count( $paths ); $index++ ) {
 				$partialId = implode( ':', array_slice( $paths, 0, $index + 1 ) );
 
-				if ( isset( $pageMetaMap[$partialId] ) && file_exists( $pageMetaMap[$partialId][0] ) ) {
-					$metaContent = file_get_contents( $pageMetaMap[$partialId][0] );
-					$meta = unserialize( $metaContent );
-
-					$pagesMeta[$partialId] = $meta;
-
-					if ( isset( $meta['current']['title'] ) ) {
-						if ( isset( $paths[1] ) && $paths[0] === $paths[1] && $index === 0 ) {
+				if ( isset( $metaTitles[$partialId] ) ) {
+					if ( isset( $paths[1] ) && $paths[0] === $paths[1] && $index === 0 ) {
 							// Namespace and namespace main page
-							$paths[0] = str_replace( ' ', '_', $meta['current']['title'] );
-							$paths[1] = str_replace( ' ', '_', $meta['current']['title'] );
-						} else {
-							$paths[$index] = str_replace( ' ', '_', $meta['current']['title'] );
-						}
+							$paths[0] = $paths[1] = $metaTitles[$partialId];
+					} else {
+						$paths[$index] = $metaTitles[$partialId];
 					}
 				}
 			}
