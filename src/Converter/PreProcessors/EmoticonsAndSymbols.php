@@ -48,8 +48,8 @@ class EmoticonsAndSymbols implements IProcessor {
 		// Dangerous symbols are disabled.
 
 		$defaultSymbols = [
-			# '8-)' => '&#x1F60E;',
-			# '8-O' => '&#x1F60A;',
+			'8-)' => '&#x1F60E;',
+			'8-O' => '&#x1F60A;',
 			':-(' => '&#x1F641;',
 			':-)' => '&#x1F642;',
 			'=)' => '&#x1F600;',
