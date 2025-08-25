@@ -45,9 +45,11 @@ class EmoticonsAndSymbols implements IProcessor {
 	 * @return array
 	 */
 	private function getSymbolsMap(): array {
+		// Dangerous symbols are disabled.
+
 		$defaultSymbols = [
-			'8-)' => '&#x1F60E;',
-			'8-O' => '&#x1F60A;',
+			#'8-)' => '&#x1F60E;',
+			#'8-O' => '&#x1F60A;',
 			':-(' => '&#x1F641;',
 			':-)' => '&#x1F642;',
 			'=)' => '&#x1F600;',
@@ -65,7 +67,20 @@ class EmoticonsAndSymbols implements IProcessor {
 			':!:' => '&#x2757;',
 			'LOL' => '&#x1F923;',
 			'FIXME' => '<span style="padding: 2px; background-color:yellow;">&#x1F527; FIXME</span>',
-			'DELETEME' => '<span style="padding: 2px; background-color:yellow;">&#x1F5D1; DELETEME</span>'
+			'DELETEME' => '<span style="padding: 2px; background-color:yellow;">&#x1F5D1; DELETEME</span>',
+			#'->' => '&#2192;',
+			#'<-' => '&#2190;',
+			#'<->' => '&#2194;',
+			#'=>' => '&#21D2;',
+			#'<=' => '&#21D0;',
+			#'<=>' => '&#21D4;',
+			#'>>' => '',
+			#'<<' => '',
+			#'---' => '&#2014;',
+			#'--' => '&#2013;',
+			#'(c)' => '&#169;',
+			#'(tm)' => '&#8482;',
+			#'(r)' => '&#174;',
 		];
 
 		if ( isset( $this->advancedConfig['custom-symbols'] ) &&
