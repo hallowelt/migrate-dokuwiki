@@ -19,14 +19,19 @@ class Displaytitle implements IProcessor {
 			return $text;
 		}
 
-		$line = $lines[1];
+		$line = $lines[0];
 
 		$hasDisplayTitle = false;
 		$headingMatches = [];
 		preg_match( '#(=+)\s*(.*?)\s*(\1)$#', $line, $headingMatches );
 
 		if ( empty( $headingMatches[0] ) ) {
-			return $text;
+			$line = $lines[1];
+			preg_match( '#(=+)\s*(.*?)\s*(\1)$#', $line, $headingMatches );
+			
+			if ( empty( $headingMatches[0] ) ) {
+				return $text;
+			}
 		}
 
 		if ( isset( $headingMatches[2] ) && $headingMatches[2] !== '' ) {
@@ -39,7 +44,7 @@ class Displaytitle implements IProcessor {
 
 		if ( $hasDisplayTitle ) {
 			$category = CategoryBuilder::getPreservedMigrationCategory( 'Displaytitle set' );
-			$text .= " {$category}";
+			$text .= "\n\n{$category}";
 		}
 		return $text;
 	}

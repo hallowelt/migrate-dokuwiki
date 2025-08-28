@@ -196,14 +196,7 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 				$paths = [ $id ];
 			}
 
-			for ( $index = 0; $index < count( $paths ); $index++ ) {
-				$partialId = implode( ':', array_slice( $paths, 0, $index + 1 ) );
-				if ( isset( $pageIdToTitlesMap[$partialId] ) ) {
-					$paths[$index] = $pageIdToTitlesMap[$partialId];
-				}
-			}
-
-			$title = $this->fileTitleBuilder->build( $paths, false, $this->advancedConfig );
+			$title = $this->fileTitleBuilder->build( $paths, false, $pageIdToTitlesMap, $this->advancedConfig );
 			$mediaIdToTitles[$id] = $title;
 			$this->dataBuckets->addData( 'media-id-to-title-map', $id, $title, false, true );
 
@@ -375,8 +368,6 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 	 */
 	private function extractPageMeta( array $pageIdToTitlesMap ) {
 		$metaMap = $this->dataBuckets->getBucketData( 'page-meta-map' );
-
-		$titleBuilder = new FileTitleBuilder();
 
 		foreach ( $pageIdToTitlesMap as $id => $title ) {
 			if ( !isset( $metaMap[$id] ) || empty( $metaMap[$id] ) ) {
