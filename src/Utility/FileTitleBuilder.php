@@ -19,6 +19,7 @@ class FileTitleBuilder {
 	/**
 	 * @param array $paths
 	 * @param bool $history
+	 * @param array $pageIdToTitlesMap
 	 * @param array $config
 	 * @return string
 	 */
@@ -67,7 +68,6 @@ class FileTitleBuilder {
 	 * @return string
 	 */
 	private function makeTitleFromPaths( array $paths, bool $history, string $namespace = '' ): string {
-
 		// Cut off filename
 		$filename = array_pop( $paths );
 		$filenameParts = explode( '.', $filename );
@@ -95,9 +95,9 @@ class FileTitleBuilder {
 			$title = '';
 			if ( str_contains( $namespace, ':' ) ) {
 				$namespace = substr( $name, 0, strpos( $name, ':' ) );
-				$title =  substr( $name, strpos( $name, ':' ) + 1 ) . '/';
+				$title = substr( $name, strpos( $name, ':' ) + 1 ) . '/';
 			}
-			
+
 			$filename = ucfirst( $filename );
 			$title .= "{$filename}.{$fileExtension}";
 		} else {

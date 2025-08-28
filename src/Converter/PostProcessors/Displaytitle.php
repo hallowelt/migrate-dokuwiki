@@ -28,7 +28,7 @@ class Displaytitle implements IProcessor {
 		if ( empty( $headingMatches[0] ) ) {
 			$line = $lines[1];
 			preg_match( '#(=+)\s*(.*?)\s*(\1)$#', $line, $headingMatches );
-			
+
 			if ( empty( $headingMatches[0] ) ) {
 				return $text;
 			}

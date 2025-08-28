@@ -22,56 +22,56 @@ class FileTitleBuilderTest extends TestCase {
 		 * nsfilerepo disabled
 		 * no prefix config
 		 */
-		$this->runTest_1( $titleBuilder, $pages, $atticPages );
+		$this->runTest1( $titleBuilder, $pages, $atticPages );
 
 		/**
 		 * pageIdToTileMap empty
 		 * nsfilerepo enabled
 		 * no prefix config
 		 */
-		$this->runTest_2( $titleBuilder, $pages, $atticPages );
+		$this->runTest2( $titleBuilder, $pages, $atticPages );
 
 		/**
 		 * pageIdToTileMap empty
 		 * nsfilerepo disabled
 		 * with prefix config
 		 */
-		$this->runTest_3( $titleBuilder, $pages, $atticPages );
+		$this->runTest3( $titleBuilder, $pages, $atticPages );
 
 		/**
 		 * pageIdToTileMap empty
 		 * nsfilerepo enabled
 		 * with prefix config
 		 */
-		$this->runTest_4( $titleBuilder, $pages, $atticPages );
+		$this->runTest4( $titleBuilder, $pages, $atticPages );
 
 		/**
 		 * pageIdToTileMap not empty
 		 * nsfilerepo disabled
 		 * no prefix config
 		 */
-		$this->runTest_5( $titleBuilder, $pages, $atticPages, $pageIdToTitleMap  );
-		
+		$this->runTest5( $titleBuilder, $pages, $atticPages, $pageIdToTitleMap );
+
 		/**
 		 * pageIdToTileMap not empty
 		 * nsfilerepo enabled
 		 * no prefix config
 		 */
-		$this->runTest_6( $titleBuilder, $pages, $atticPages, $pageIdToTitleMap  );
+		$this->runTest6( $titleBuilder, $pages, $atticPages, $pageIdToTitleMap );
 
 		/**
 		 * pageIdToTileMap not empty
 		 * nsfilerepo disabled
 		 * with prefix config
 		 */
-		$this->runTest_7( $titleBuilder, $pages, $atticPages, $pageIdToTitleMap  );
+		$this->runTest7( $titleBuilder, $pages, $atticPages, $pageIdToTitleMap );
 
 		/**
 		 * pageIdToTileMap not empty
 		 * nsfilerepo enabled
 		 * with prefix config
 		 */
-		$this->runTest_8( $titleBuilder, $pages, $atticPages, $pageIdToTitleMap  );
+		$this->runTest8( $titleBuilder, $pages, $atticPages, $pageIdToTitleMap );
 	}
 
 	/**
@@ -142,7 +142,7 @@ class FileTitleBuilderTest extends TestCase {
 	 * @param array $atticPages
 	 * @return void
 	 */
-	private function runTest_1( FileTitleBuilder $titleBuilder, array $pages, array $atticPages ) {
+	private function runTest1( FileTitleBuilder $titleBuilder, array $pages, array $atticPages ) {
 		$expectedTitles = [
 			'Test.png',
 			'Projects_Types_Ab_type_01.png',
@@ -163,13 +163,13 @@ class FileTitleBuilderTest extends TestCase {
 	 * pageIdToTileMap empty
 	 * nsfilerepo enabled
 	 * with prefix config
-	 * 
+	 *
 	 * @param FileTitleBuilder $titleBuilder
 	 * @param array $pages
 	 * @param array $atticPages
 	 * @return void
 	 */
-	private function runTest_2( FileTitleBuilder $titleBuilder, array $pages, array $atticPages ) {
+	private function runTest2( FileTitleBuilder $titleBuilder, array $pages, array $atticPages ) {
 		$expectedTitles = [
 			'Test.png',
 			'Projects:Types_Ab_type_01.png',
@@ -201,7 +201,7 @@ class FileTitleBuilderTest extends TestCase {
 	 * @param array $atticPages
 	 * @return void
 	 */
-	private function runTest_3( FileTitleBuilder $titleBuilder, array $pages, array $atticPages ) {
+	private function runTest3( FileTitleBuilder $titleBuilder, array $pages, array $atticPages ) {
 		$expectedTitles = [
 			'Test.png',
 			'MyNamespace_MyProjects_Types_Ab_type_01.png',
@@ -229,13 +229,13 @@ class FileTitleBuilderTest extends TestCase {
 	 * pageIdToTileMap empty
 	 * nsfilerepo enabled
 	 * no prefix config
-	 * 
+	 *
 	 * @param FileTitleBuilder $titleBuilder
 	 * @param array $pages
 	 * @param array $atticPages
 	 * @return void
 	 */
-	private function runTest_4( FileTitleBuilder $titleBuilder, array $pages, array $atticPages ) {
+	private function runTest4( FileTitleBuilder $titleBuilder, array $pages, array $atticPages ) {
 		$expectedTitles = [
 			'Test.png',
 			'MyNamespace:MyProjects_Types_Ab_type_01.png',
@@ -272,7 +272,9 @@ class FileTitleBuilderTest extends TestCase {
 	 * @param array $pageIdToTitleMap
 	 * @return void
 	 */
-	private function runTest_5( FileTitleBuilder $titleBuilder, array $pages, array $atticPages, array $pageIdToTitleMap ) {
+	private function runTest5(
+		FileTitleBuilder $titleBuilder, array $pages, array $atticPages, array $pageIdToTitleMap
+	) {
 		$expectedTitles = [
 			'Test.png',
 			'P-Projcects_P-Types_Ab_type_01.png',
@@ -300,7 +302,9 @@ class FileTitleBuilderTest extends TestCase {
 	 * @param array $pageIdToTitleMap
 	 * @return void
 	 */
-	private function runTest_6( FileTitleBuilder $titleBuilder, array $pages, array $atticPages, array $pageIdToTitleMap ) {
+	private function runTest6(
+		FileTitleBuilder $titleBuilder, array $pages, array $atticPages, array $pageIdToTitleMap
+	) {
 		$expectedTitles = [
 			'Test.png',
 			'P_Projcects:P-Types_Ab_type_01.png',
@@ -333,7 +337,9 @@ class FileTitleBuilderTest extends TestCase {
 	 * @param array $pageIdToTitleMap
 	 * @return void
 	 */
-	private function runTest_7( FileTitleBuilder $titleBuilder, array $pages, array $atticPages, array $pageIdToTitleMap ) {
+	private function runTest7(
+		FileTitleBuilder $titleBuilder, array $pages, array $atticPages, array $pageIdToTitleMap
+	) {
 		$expectedTitles = [
 			'Test.png',
 			'P-Projcects_P-Types_Ab_type_01.png',
@@ -369,7 +375,9 @@ class FileTitleBuilderTest extends TestCase {
 	 * @param array $pageIdToTitleMap
 	 * @return void
 	 */
-	private function runTest_8( FileTitleBuilder $titleBuilder, array $pages, array $atticPages, array $pageIdToTitleMap ) {
+	private function runTest8(
+		FileTitleBuilder $titleBuilder, array $pages, array $atticPages, array $pageIdToTitleMap
+	) {
 		$expectedTitles = [
 			'Test.png',
 			'P_Projcects:P-Types_Ab_type_01.png',
