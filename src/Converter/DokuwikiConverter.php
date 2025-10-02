@@ -14,7 +14,6 @@ use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Image as ImagePostProcess
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\Link as LinkPostProcessor;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\RestoreCategories;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\RestoreCode;
-use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\RestoreImageCaption;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\RestoreInclude;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\RestoreIndexMenu;
 use HalloWelt\MigrateDokuwiki\Converter\PostProcessors\RestoreWrap;
@@ -26,7 +25,6 @@ use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\ConvertArrowInHeading;
 use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\EmoticonsAndSymbols;
 use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\EnsureListIndention;
 use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\PreserveCode;
-use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\PreserveImageCaption;
 use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\PreserveIndexMenu;
 use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\PreserveWrap;
 use HalloWelt\MigrateDokuwiki\Converter\PreProcessors\RemoveLinebreakBeforeListItems;
@@ -66,7 +64,6 @@ class DokuwikiConverter extends PandocDokuwiki implements IOutputAwareInterface 
 			new ColspanPreProcessor(),
 			new PreserveIndexMenu(),
 			new PreserveWrap(),
-			new PreserveImageCaption(),
 			new EnsureListIndention(),
 			new ConvertArrowInHeading(),
 			new AddLinebreakBevoreHeading(),
@@ -91,7 +88,6 @@ class DokuwikiConverter extends PandocDokuwiki implements IOutputAwareInterface 
 		return [
 			new AddLinebreakAfterHeading(),
 			new Displaytitle(),
-			new RestoreImageCaption(),
 			new ImagePostProcessor( $this->advancedConfig ),
 			new LinkPostProcessor(),
 			new Color(),
