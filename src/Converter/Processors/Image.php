@@ -115,9 +115,6 @@ class Image implements IProcessor {
 			} else {
 				$fileTitle = $this->findFileTitle( $src );
 
-				var_dump( $src );
-				var_dump( $fileTitle );
-
 				$type = "File";
 				if ( $linkOnly ) {
 					$type = "Media";

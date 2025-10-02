@@ -1,24 +1,24 @@
 
-[[File:https://upload.wikimedia.org/wikipedia/mediawiki/thumb/a/a9/Example.jpg/330px-Example.jpg|Image from external source]]
+#####PRESERVEIMAGEOPEN##########PRESERVEIMAGEOPEN#####File:https://upload.wikimedia.org/wikipedia/mediawiki/thumb/a/a9/Example.jpg/330px-Example.jpg|Image from external source#####PRESERVEIMAGECLOSE##########PRESERVEIMAGECLOSE#####
 
-[[File:/https://upload.wikimedia.org/wikipedia/mediawiki/thumb/a/a9/Example.jpg/330px-Example.jpg|Image from external source]]
+#####PRESERVEIMAGEOPEN##########PRESERVEIMAGEOPEN#####File:/https://upload.wikimedia.org/wikipedia/mediawiki/thumb/a/a9/Example.jpg/330px-Example.jpg|Image from external source#####PRESERVEIMAGECLOSE##########PRESERVEIMAGECLOSE#####
 
-[[File:http://upload.wikimedia.org/wikipedia/mediawiki/thumb/a/a9/Example.jpg/330px-Example.jpg|Image from external source]]
+#####PRESERVEIMAGEOPEN##########PRESERVEIMAGEOPEN#####File:http://upload.wikimedia.org/wikipedia/mediawiki/thumb/a/a9/Example.jpg/330px-Example.jpg|Image from external source#####PRESERVEIMAGECLOSE##########PRESERVEIMAGECLOSE#####
 
-[[File:http://upload.wikimedia.org/wikipedia/mediawiki/thumb/a/a9/Example.jpg/330px-Example.jpg]]
+#####PRESERVEIMAGEOPEN##########PRESERVEIMAGEOPEN#####File:http://upload.wikimedia.org/wikipedia/mediawiki/thumb/a/a9/Example.jpg/330px-Example.jpg#####PRESERVEIMAGECLOSE##########PRESERVEIMAGECLOSE#####
 
-[[File:http://upload.wikimedia.org/wikipedia/mediawiki/thumb/a/a9/Example.jpg/330px-Example.jpg|Image from external source]]
+#####PRESERVEIMAGEOPEN##########PRESERVEIMAGEOPEN#####File:http://upload.wikimedia.org/wikipedia/mediawiki/thumb/a/a9/Example.jpg/330px-Example.jpg|Image from external source#####PRESERVEIMAGECLOSE##########PRESERVEIMAGECLOSE#####
 
-[[File:upload.wikimedia.org/wikipedia/mediawiki/thumb/a/a9/Example.jpg/330px-Example.jpg|Image from external source]]
+#####PRESERVEIMAGEOPEN##########PRESERVEIMAGEOPEN#####File:upload.wikimedia.org/wikipedia/mediawiki/thumb/a/a9/Example.jpg/330px-Example.jpg|Image from external source#####PRESERVEIMAGECLOSE##########PRESERVEIMAGECLOSE#####
 
-[[File:/Example.jpg]]
+#####PRESERVEIMAGEOPEN##########PRESERVEIMAGEOPEN#####File:/Example.jpg#####PRESERVEIMAGECLOSE##########PRESERVEIMAGECLOSE#####
 
-[[File:Example.jpg]]
+#####PRESERVEIMAGEOPEN##########PRESERVEIMAGEOPEN#####File:Example.jpg#####PRESERVEIMAGECLOSE##########PRESERVEIMAGECLOSE#####
 
-[[File:|Example.jpg]]
+#####PRESERVEIMAGEOPEN##########PRESERVEIMAGEOPEN#####File:|Example.jpg#####PRESERVEIMAGECLOSE##########PRESERVEIMAGECLOSE#####
 
-[[File:Example.jpg|]]
+#####PRESERVEIMAGEOPEN##########PRESERVEIMAGEOPEN#####File:Example.jpg|#####PRESERVEIMAGECLOSE##########PRESERVEIMAGECLOSE#####
 
-[[File:Example.pdf]]
+#####PRESERVEIMAGEOPEN##########PRESERVEIMAGEOPEN#####File:Example.pdf#####PRESERVEIMAGECLOSE##########PRESERVEIMAGECLOSE#####
 
-[[File:Example.pdf|pdf test]]
+#####PRESERVEIMAGEOPEN##########PRESERVEIMAGEOPEN#####File:Example.pdf|pdf test#####PRESERVEIMAGECLOSE##########PRESERVEIMAGECLOSE#####
