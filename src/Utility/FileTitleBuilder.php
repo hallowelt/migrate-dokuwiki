@@ -173,6 +173,7 @@ class FileTitleBuilder {
 		$segment = preg_replace( '/\\//', '_', $segment );
 		// MediaWiki normalizes multiple spaces/undescores into one single underscore
 		$segment = preg_replace( '#_+#si', '_', $segment );
+		$segment = str_replace( [ '&', '?', '%', '+', ',', '__' ], '_', $segment );
 		$segment = trim( $segment, " _\t" );
 		return trim( $segment );
 	}

@@ -111,6 +111,7 @@ class FileTitleBuilderTest extends TestCase {
 	 */
 	private function getPageFilePaths(): array {
 		return [
+			'i&n?v[]a{}l|i#d<>c%h+a,r s.png',
 			'test.png',
 			'projects:types:ab.type_01.png',
 			'tools:toolbox:wrench.pdf',
@@ -124,6 +125,7 @@ class FileTitleBuilderTest extends TestCase {
 	 */
 	private function getAtticPageFilePaths(): array {
 		return [
+			'i&n?v[]a{}l|i#d<>c%h+a,r s.20251006.png',
 			'test.20250624.png',
 			'projects:types:ab.type_01.20240730.png',
 			'tools:toolbox:wrench.20240730.pdf',
@@ -144,6 +146,7 @@ class FileTitleBuilderTest extends TestCase {
 	 */
 	private function runTest1( FileTitleBuilder $titleBuilder, array $pages, array $atticPages ) {
 		$expectedTitles = [
+			'I_n_v_a_l_i_d_c_h_a_r_s.png',
 			'Test.png',
 			'Projects_Types_Ab_type_01.png',
 			'Tools_Toolbox_Wrench.pdf',
@@ -171,6 +174,7 @@ class FileTitleBuilderTest extends TestCase {
 	 */
 	private function runTest2( FileTitleBuilder $titleBuilder, array $pages, array $atticPages ) {
 		$expectedTitles = [
+			'I_n_v_a_l_i_d_c_h_a_r_s.png',
 			'Test.png',
 			'Projects:Types_Ab_type_01.png',
 			'Tools:Toolbox_Wrench.pdf',
@@ -203,6 +207,7 @@ class FileTitleBuilderTest extends TestCase {
 	 */
 	private function runTest3( FileTitleBuilder $titleBuilder, array $pages, array $atticPages ) {
 		$expectedTitles = [
+			'I_n_v_a_l_i_d_c_h_a_r_s.png',
 			'Test.png',
 			'MyNamespace_MyProjects_Types_Ab_type_01.png',
 			'MyNamespace_Toolbox_Wrench.pdf',
@@ -237,6 +242,7 @@ class FileTitleBuilderTest extends TestCase {
 	 */
 	private function runTest4( FileTitleBuilder $titleBuilder, array $pages, array $atticPages ) {
 		$expectedTitles = [
+			'I_n_v_a_l_i_d_c_h_a_r_s.png',
 			'Test.png',
 			'MyNamespace:MyProjects_Types_Ab_type_01.png',
 			'MyNamespace:Toolbox_Wrench.pdf',
@@ -276,6 +282,7 @@ class FileTitleBuilderTest extends TestCase {
 		FileTitleBuilder $titleBuilder, array $pages, array $atticPages, array $pageIdToTitleMap
 	) {
 		$expectedTitles = [
+			'I_n_v_a_l_i_d_c_h_a_r_s.png',
 			'Test.png',
 			'P-Projcects_P-Types_Ab_type_01.png',
 			'P-Tools_P-Toolbox_Wrench.pdf',
@@ -306,6 +313,7 @@ class FileTitleBuilderTest extends TestCase {
 		FileTitleBuilder $titleBuilder, array $pages, array $atticPages, array $pageIdToTitleMap
 	) {
 		$expectedTitles = [
+			'I_n_v_a_l_i_d_c_h_a_r_s.png',
 			'Test.png',
 			'P_Projcects:P-Types_Ab_type_01.png',
 			'P_Tools:P-Toolbox_Wrench.pdf',
@@ -341,6 +349,7 @@ class FileTitleBuilderTest extends TestCase {
 		FileTitleBuilder $titleBuilder, array $pages, array $atticPages, array $pageIdToTitleMap
 	) {
 		$expectedTitles = [
+			'I_n_v_a_l_i_d_c_h_a_r_s.png',
 			'Test.png',
 			'P-Projcects_P-Types_Ab_type_01.png',
 			'P-Tools_P-Toolbox_Wrench.pdf',
@@ -379,6 +388,7 @@ class FileTitleBuilderTest extends TestCase {
 		FileTitleBuilder $titleBuilder, array $pages, array $atticPages, array $pageIdToTitleMap
 	) {
 		$expectedTitles = [
+			'I_n_v_a_l_i_d_c_h_a_r_s.png',
 			'Test.png',
 			'P_Projcects:P-Types_Ab_type_01.png',
 			'P_Tools:P-Toolbox_Wrench.pdf',

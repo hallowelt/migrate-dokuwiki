@@ -54,6 +54,16 @@ class Displaytitle implements IProcessor {
 	 * @return string
 	 */
 	private function makeReplacement( string $heading ): string {
-		return "{{DISPLAYTITLE:$heading}}";
+		$displayTitle = "{{DISPLAYTITLE:$heading}}";
+		$property = $this->setNameforParserfunctions();
+		return "{$displayTitle} {$property}";
+	}
+
+	/**
+	 * Allows better subpage queries if displaytitle is set.
+	 * @return void
+	 */
+	private function setNameforParserfunctions(): string {
+		return "{{#set:pagename={{PAGENAME}} }}";
 	}
 }
