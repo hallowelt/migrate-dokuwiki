@@ -39,11 +39,11 @@ class Image implements IProcessor {
 
 			$align = '';
 			if ( strlen( $matches[2] ) > 0 && strlen( $matches[5] ) ) {
-				$align = '|center';
+				$align = '#####PRESERVEIMAGEPIPE#####center';
 			} elseif ( strlen( $matches[2] ) > 0 ) {
-				$align = '|right';
+				$align = '#####PRESERVEIMAGEPIPE#####right';
 			} elseif ( strlen( $matches[5] ) > 0 ) {
-				$align = '|right';
+				$align = '#####PRESERVEIMAGEPIPE#####right';
 			}
 
 			$src = '';
@@ -115,25 +115,25 @@ class Image implements IProcessor {
 			} else {
 				$fileTitle = $this->findFileTitle( $src );
 
-				$type = "File";
+				$type = "FILE";
 				if ( $linkOnly ) {
-					$type = "Media";
+					$type = "MEDIA";
 				}
 
 				$attribs = '';
 				if ( $align !== '' ) {
-					$attribs = "|{$align}";
+					$attribs = "#####PRESERVEIMAGEPIPE#####{$align}";
 				}
 				if ( $size !== '' ) {
-					$attribs = "|{$size}";
+					$attribs = "#####PRESERVEIMAGEPIPE#####{$size}";
 				}
 				if ( $caption !== '' ) {
-					$attribs = "|{$caption}";
+					$attribs = "#####PRESERVEIMAGEPIPE#####{$caption}";
 				}
 
-				$replacement = "#####PRESERVEIMAGEOPEN##########PRESERVEIMAGEOPEN#####";
-				$replacement .= "{$type}:{$fileTitle}{$attribs}";
-				$replacement .= "#####PRESERVEIMAGECLOSE##########PRESERVEIMAGECLOSE#####";
+				$replacement = "#####PRESERVEIMAGE{$type}OPEN#####";
+				$replacement .= "{$fileTitle}{$attribs}";
+				$replacement .= "#####PRESERVEIMAGE{$type}CLOSE#####";
 			}
 			return $replacement;
 		}, $text );

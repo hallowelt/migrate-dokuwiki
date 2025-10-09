@@ -49,8 +49,13 @@ class Image implements IProcessor {
 	 * @return string
 	 */
 	private function restoreImageBrackets( string $text ): string {
+		$text = str_replace( '#####PRESERVEIMAGEFILEOPEN#####', '[[File:', $text );
+		$text = str_replace( '#####PRESERVEIMAGEMEDIAOPEN#####', '[[Media:', $text );
+		$text = str_replace( '#####PRESERVEIMAGEFILECLOSE#####', ']]', $text );
+		$text = str_replace( '#####PRESERVEIMAGEMEDIACLOSE#####', ']]', $text );
 		$text = str_replace( '#####PRESERVEIMAGEOPEN#####', '[', $text );
 		$text = str_replace( '#####PRESERVEIMAGECLOSE#####', ']', $text );
+		$text = str_replace( '#####PRESERVEIMAGEPIPE#####', '|', $text );
 		return $text;
 	}
 
