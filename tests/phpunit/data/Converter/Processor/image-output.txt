@@ -1,6 +1,6 @@
 
-lorem ipsum #####PRESERVEIMAGEOPEN##########PRESERVEIMAGEOPEN#####File:Tools_toolbox_hammer.01.svg|20x50#####PRESERVEIMAGECLOSE##########PRESERVEIMAGECLOSE##### dolor #####PRESERVEIMAGEOPEN##########PRESERVEIMAGEOPEN#####File:Start.png|label#####PRESERVEIMAGECLOSE##########PRESERVEIMAGECLOSE#####
+lorem ipsum #####PRESERVEIMAGEFILEOPEN#####Tools_toolbox_hammer.01.svg#####PRESERVEIMAGEPIPE#####20x50#####PRESERVEIMAGEFILECLOSE##### dolor #####PRESERVEIMAGEFILEOPEN#####Start.png#####PRESERVEIMAGEPIPE#####left#####PRESERVEIMAGEPIPE#####label#####PRESERVEIMAGEFILECLOSE#####
 
-sit amet #####PRESERVEIMAGEOPEN##########PRESERVEIMAGEOPEN#####File:Tools_toolbox_wrench.jpg||right#####PRESERVEIMAGECLOSE##########PRESERVEIMAGECLOSE#####
+sit amet #####PRESERVEIMAGEFILEOPEN#####Tools_toolbox_wrench.jpg#####PRESERVEIMAGEPIPE#####right#####PRESERVEIMAGEFILECLOSE#####
 
-#####PRESERVEIMAGEOPEN##########PRESERVEIMAGEOPEN#####File:Tools_toolbox_hammer.01.svg|label#####PRESERVEIMAGECLOSE##########PRESERVEIMAGECLOSE#####
+#####PRESERVEIMAGEFILEOPEN#####Tools_toolbox_hammer.01.svg#####PRESERVEIMAGEPIPE#####center#####PRESERVEIMAGEPIPE#####label#####PRESERVEIMAGEFILECLOSE#####

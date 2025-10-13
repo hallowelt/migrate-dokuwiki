@@ -39,11 +39,11 @@ class Image implements IProcessor {
 
 			$align = '';
 			if ( strlen( $matches[2] ) > 0 && strlen( $matches[5] ) ) {
-				$align = '#####PRESERVEIMAGEPIPE#####center';
+				$align = 'center';
 			} elseif ( strlen( $matches[2] ) > 0 ) {
-				$align = '#####PRESERVEIMAGEPIPE#####right';
+				$align = 'right';
 			} elseif ( strlen( $matches[5] ) > 0 ) {
-				$align = '#####PRESERVEIMAGEPIPE#####right';
+				$align = 'left';
 			}
 
 			$src = '';
@@ -93,9 +93,9 @@ class Image implements IProcessor {
 					$linkOnly = true;
 				} elseif ( $item !== '' ) {
 					$matches = [];
-					preg_match( '#\d*?x\d*?#', $item, $matches );
+					preg_match( '#(\d*x\d*)#', $item, $matches );
 					if ( empty( $matches ) ) {
-						preg_match( '#\d*?#', $item, $matches );
+						preg_match( '#(\d*)#', $item, $matches );
 						if ( empty( $matches ) ) {
 							$size = $item;
 						}
@@ -122,13 +122,13 @@ class Image implements IProcessor {
 
 				$attribs = '';
 				if ( $align !== '' ) {
-					$attribs = "#####PRESERVEIMAGEPIPE#####{$align}";
+					$attribs .= "#####PRESERVEIMAGEPIPE#####{$align}";
 				}
 				if ( $size !== '' ) {
-					$attribs = "#####PRESERVEIMAGEPIPE#####{$size}";
+					$attribs .= "#####PRESERVEIMAGEPIPE#####{$size}";
 				}
 				if ( $caption !== '' ) {
-					$attribs = "#####PRESERVEIMAGEPIPE#####{$caption}";
+					$attribs .= "#####PRESERVEIMAGEPIPE#####{$caption}";
 				}
 
 				$replacement = "#####PRESERVEIMAGE{$type}OPEN#####";
