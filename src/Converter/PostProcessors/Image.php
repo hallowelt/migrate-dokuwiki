@@ -23,10 +23,12 @@ class Image implements IProcessor {
 	 * @return string
 	 */
 	public function process( string $text, string $path = '' ): string {
+		$text = $this->restoreImageBrackets( $text );
 		// remove leading / which is placed by pandoc between File: and the file title
 		$text = $this->removeLeadingSlash( $text );
 		$text = $this->fixExternalFileLinks( $text );
 		$text = $this->markBrokenFileTarget( $text );
+
 		$text = $this->addFileCaption( $text );
 		if ( isset( $this->advancedConfig['ext-ns-file-repo-compat'] )
 			&& $this->advancedConfig['ext-ns-file-repo-compat'] === true
@@ -39,6 +41,21 @@ class Image implements IProcessor {
 			$text = $this->convertToMediaLink( $text, $this->advancedConfig['media-link-extensions'] );
 		}
 		$text = $this->fixAlignment( $text );
+		return $text;
+	}
+
+	/**
+	 * @param string $text
+	 * @return string
+	 */
+	private function restoreImageBrackets( string $text ): string {
+		$text = str_replace( '#####PRESERVEIMAGEFILEOPEN#####', '[[File:', $text );
+		$text = str_replace( '#####PRESERVEIMAGEMEDIAOPEN#####', '[[Media:', $text );
+		$text = str_replace( '#####PRESERVEIMAGEFILECLOSE#####', ']]', $text );
+		$text = str_replace( '#####PRESERVEIMAGEMEDIACLOSE#####', ']]', $text );
+		$text = str_replace( '#####PRESERVEIMAGEOPEN#####', '[', $text );
+		$text = str_replace( '#####PRESERVEIMAGECLOSE#####', ']', $text );
+		$text = str_replace( '#####PRESERVEIMAGEPIPE#####', '|', $text );
 		return $text;
 	}
 
@@ -100,7 +117,7 @@ class Image implements IProcessor {
 			) {
 
 				$namespacePos = strpos( $caption, ':' );
-				$preserveMarker = '#####preserveimagenamespace#####';
+				$preserveMarker = '#####PRESERVEIMAGENAMESPACE#####';
 				$preserveNamespacePos = strpos( $caption, $preserveMarker );
 				if ( $namespacePos !== false ) {
 					$caption = substr( $caption, $namespacePos + 1 );
@@ -256,22 +273,7 @@ class Image implements IProcessor {
 	 * @return string
 	 */
 	private function restoreNamespace( string $text ): string {
-		$originalText = $text;
-
-		$regEx = '#(\[\[File:)(.*?)(\]\])#';
-		$text = preg_replace_callback( $regEx, static function ( $matches ) {
-			$target = $matches[2];
-			$target = str_replace( '#####preserveimagenamespace#####', ':', $target );
-
-			return $matches[1] . $target . $matches[3];
-		},
-		$text );
-
-		if ( !is_string( $text ) ) {
-			$category = CategoryBuilder::getPreservedMigrationCategory( 'Image namespace failure' );
-			$text = "{$originalText} {$category}";
-		}
-
+		$text = str_replace( '#####PRESERVEIMAGENAMESPACE#####', ':', $text );
 		return $text;
 	}
 

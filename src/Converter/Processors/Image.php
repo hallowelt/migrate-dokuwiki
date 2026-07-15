@@ -31,53 +31,109 @@ class Image implements IProcessor {
 		$originalText = $text;
 
 		// replace src url
-		$regEx = '#({{\s*:{0,1})(.*?)(\s*}})#';
+		$regEx = '#({{)(\s*)(:{0,1})(.*?)(\s*)(}})#';
 		$text = preg_replace_callback( $regEx, function ( $matches ) {
 			$replacement = $matches[0];
 			$matches[0] = '';
-			$target = $matches[2];
+			$target = $matches[4];
+
+			$align = '';
+			if ( strlen( $matches[2] ) > 0 && strlen( $matches[5] ) ) {
+				$align = 'center';
+			} elseif ( strlen( $matches[2] ) > 0 ) {
+				$align = 'right';
+			} elseif ( strlen( $matches[5] ) > 0 ) {
+				$align = 'left';
+			}
 
 			$src = '';
-			$alt = '';
+			$caption = '';
 			if ( str_contains( $target, '|' ) ) {
 				$markupParts = explode( '|', $target );
 				$src = array_shift( $markupParts );
-				$alt = array_shift( $markupParts );
+				$caption = array_shift( $markupParts );
 			} else {
 				$src = $target;
 			}
-			if ( !$this->isExternalUrl( $src ) ) {
-				$queryPos = strpos( $src, '?' );
-				$hashPos = strpos( $src, '#' );
-				$hash = '';
 
-				$separator = '';
-				if ( $queryPos && !$hashPos ) {
-					$separator = '?';
-				} elseif ( !$queryPos && $hashPos ) {
-					$separator = '#';
-				} elseif ( $queryPos < $hashPos ) {
-					$separator = '?';
-				} elseif ( $queryPos > $hashPos ) {
-					$separator = '#';
+			$queryPos = strpos( $src, '?' );
+			$hashPos = strpos( $src, '#' );
+			$hash = '';
+			$query = '';
+
+			if ( $queryPos && !$hashPos ) {
+				$query = substr( $src, $queryPos + 1 );
+
+				$src = substr( $src, 0, $queryPos );
+			} elseif ( !$queryPos && $hashPos ) {
+				$hash = substr( $src, $hashPos + 1 );
+
+				$src = substr( $src, 0, $hashPos );
+			} elseif ( $queryPos < $hashPos ) {
+				$hash = substr( $src, $hashPos + 1 );
+
+				$query = substr( $src, $queryPos + 1 );
+				$query = str_replace( "#{$hash}", '', $query );
+
+				$src = substr( $src, 0, $queryPos );
+			} elseif ( $queryPos > $hashPos ) {
+				$query = substr( $src, $queryPos + 1 );
+
+				$hash = substr( $src, $hashPos + 1 );
+				$hash = str_replace( "?{$query}", '', $hash );
+
+				$src = substr( $src, 0, $hashPos );
+			}
+
+			$linkOnly = false;
+			$size = '';
+			$queries = explode( '&', $query );
+			foreach ( $queries as $item ) {
+				if ( str_contains( $item, 'linkonly' ) ) {
+					$linkOnly = true;
+				} elseif ( $item !== '' ) {
+					$matches = [];
+					preg_match( '#(\d*x\d*)#', $item, $matches );
+					if ( empty( $matches ) ) {
+						preg_match( '#(\d*)#', $item, $matches );
+						if ( empty( $matches ) ) {
+							$size = $item;
+						}
+					} else {
+						$size = $item;
+					}
+				}
+			}
+
+			if ( $this->isExternalUrl( $src ) ) {
+				$attribs = '';
+				if ( $caption !== '' ) {
+					$caption = " {$caption}";
 				}
 
-				if ( $separator !== '' ) {
-					$hash = substr( $src, strpos( $src, $separator ) );
-					$src = str_replace( $hash, '', $src );
-				}
-
-				$fileTitle = $this->findFileTitle( $src );
-				$matches[2] = $fileTitle . $hash;
-				if ( $alt !== '' ) {
-					$matches[2] .= "|$alt";
-				}
-				$replacement = implode( '', $matches );
+				$replacement = "#####PRESERVEIMAGEOPEN#####{$src}{$caption}#####PRESERVEIMAGECLOSE#####";
 			} else {
-				if ( str_contains( $target, '|' ) ) {
-					$matches[2] = str_replace( '|', ' ', $target );
+				$fileTitle = $this->findFileTitle( $src );
+
+				$type = "FILE";
+				if ( $linkOnly ) {
+					$type = "MEDIA";
 				}
-				$replacement = implode( '', $matches );
+
+				$attribs = '';
+				if ( $align !== '' ) {
+					$attribs .= "#####PRESERVEIMAGEPIPE#####{$align}";
+				}
+				if ( $size !== '' ) {
+					$attribs .= "#####PRESERVEIMAGEPIPE#####{$size}";
+				}
+				if ( $caption !== '' ) {
+					$attribs .= "#####PRESERVEIMAGEPIPE#####{$caption}";
+				}
+
+				$replacement = "#####PRESERVEIMAGE{$type}OPEN#####";
+				$replacement .= "{$fileTitle}{$attribs}";
+				$replacement .= "#####PRESERVEIMAGE{$type}CLOSE#####";
 			}
 			return $replacement;
 		}, $text );
@@ -124,7 +180,7 @@ class Image implements IProcessor {
 			if ( $namespacePos !== false ) {
 				$fileTitle = substr_replace(
 					$fileTitle,
-					'#####preserveimagenamespace#####',
+					'#####PRESERVEIMAGENAMESPACE#####',
 					$namespacePos, strlen( ':' )
 				);
 			}

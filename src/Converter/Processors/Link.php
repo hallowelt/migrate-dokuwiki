@@ -9,7 +9,7 @@ use HalloWelt\MigrateDokuwiki\Utility\CategoryBuilder;
 class Link implements IProcessor {
 
 	/** @var array */
-	private $pageKeyToTitleMap;
+	protected $pageKeyToTitleMap;
 
 	/**
 	 * @param array $pageKeyToTitleMap
@@ -271,7 +271,7 @@ class Link implements IProcessor {
 	 * @param string $text
 	 * @return string
 	 */
-	private function generalizeItem( string $text ): string {
+	protected function generalizeItem( string $text ): string {
 		$text = str_replace( ' ', '_', $text );
 		$text = mb_strtolower( $text );
 
@@ -285,7 +285,7 @@ class Link implements IProcessor {
 	 * @param string $text
 	 * @return string
 	 */
-	private function getGuessedTitle( string $text ): string {
+	protected function getGuessedTitle( string $text ): string {
 		$trimmed = trim( $text, ':' );
 		$parts = explode( ':', $trimmed );
 		$title = '';
@@ -329,7 +329,7 @@ class Link implements IProcessor {
 	 * @param string $target
 	 * @return string
 	 */
-	private function getTargetWikiTitle( string $target ): string {
+	protected function getTargetWikiTitle( string $target ): string {
 		$targetKey = $this->generalizeItem( $target );
 		if ( isset( $this->pageKeyToTitleMap[$targetKey] ) ) {
 			return $this->pageKeyToTitleMap[$targetKey];
@@ -339,6 +339,29 @@ class Link implements IProcessor {
 		if ( isset( $this->pageKeyToTitleMap[$targetKey] ) ) {
 			return $this->pageKeyToTitleMap[$targetKey];
 		}
+
+		// Fallback if key is "ab:ab" but target is "ab" or key is "ab:cd:cd" and target is "ab:cd"
+		$targetKey = $this->generalizeItem( $target );
+
+		if ( str_contains( $targetKey, ':' ) ) {
+			$parts = explode( ':', $targetKey );
+			$lastId = array_pop( $parts );
+			$parts[] = $lastId;
+			$parts[] = $lastId;
+			$doubleTargetKey = implode( ':', $parts );
+		} else {
+			$doubleTargetKey = "{$targetKey}:{$targetKey}";
+		}
+
+		if ( isset( $this->pageKeyToTitleMap[$doubleTargetKey] ) ) {
+			return $this->pageKeyToTitleMap[$doubleTargetKey];
+		}
+		// Try again with accented characters
+		$targetKey = AccentedChars::normalizeAccentedText( $doubleTargetKey );
+		if ( isset( $this->pageKeyToTitleMap[$doubleTargetKey] ) ) {
+			return $this->pageKeyToTitleMap[$doubleTargetKey];
+		}
+
 		// Guess wiki title if targetKey is not set in map
 		$guessedTitle = $this->getGuessedTitle( $target );
 		return $guessedTitle;
