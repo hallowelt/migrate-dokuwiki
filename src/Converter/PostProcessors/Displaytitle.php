@@ -35,7 +35,7 @@ class Displaytitle implements IProcessor {
 
 		if ( $hasDisplayTitle ) {
 			$category = CategoryBuilder::getPreservedMigrationCategory( 'Displaytitle set' );
-			$text .= " {$category}";
+			$text .= "\n\n{$category}";
 		}
 		return $text;
 	}

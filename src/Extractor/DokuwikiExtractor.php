@@ -171,8 +171,13 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 			$title = $this->titleBuilder->build( $id, $paths, false, $this->advancedConfig );
 			$pageIdToTitlesMap[$id] = $title;
 			$this->dataBuckets->addData( 'page-id-to-title-map', $id, $title, false, true );
-			$doubleId = explode( ':', $id );
-			$lastId = array_pop( $doubleId );
+			if ( str_contains( $id, ':' ) ) {
+				$doubleId = explode( ':', $id );
+				$lastId = array_pop( $doubleId );
+			} else {
+				$doubleId = [];
+				$lastId = $id;
+			}
 			$doubleId[] = $lastId;
 			$doubleId[] = $lastId;
 			$doubleId = implode( ':', $doubleId );
@@ -211,8 +216,13 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 			$title = $this->fileTitleBuilder->build( $paths, false, $this->advancedConfig );
 			$mediaIdToTitles[$id] = $title;
 			$this->dataBuckets->addData( 'media-id-to-title-map', $id, $title, false, true );
-			$doubleId = explode( ':', $id );
-			$lastId = array_pop( $doubleId );
+			if ( str_contains( $id, ':' ) ) {
+				$doubleId = explode( ':', $id );
+				$lastId = array_pop( $doubleId );
+			} else {
+				$doubleId = [];
+				$lastId = $id;
+			}
 			$doubleId[] = $lastId;
 			$doubleId[] = $lastId;
 			$doubleId = implode( ':', $doubleId );
