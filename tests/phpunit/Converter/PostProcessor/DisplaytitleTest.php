@@ -21,7 +21,9 @@ TEXT;
 		$expected = <<<TEXT
 <span id="test"></span>
 {{DISPLAYTITLE:Test}}
-lorem ipsum dolor #####CATEGORYOPEN#####Migration/Displaytitle set#####CATEGORYCLOSE#####
+lorem ipsum dolor
+
+#####CATEGORYOPEN#####Migration/Displaytitle set#####CATEGORYCLOSE#####
 TEXT;
 		$actual = $processor->process( $input );
 		$this->assertEquals( $expected, $actual );
@@ -35,7 +37,9 @@ TEXT;
 		$expected = <<<TEXT
 <span id="new-test"></span>
 {{DISPLAYTITLE:New test}}
-lorem ipsum dolor #####CATEGORYOPEN#####Migration/Displaytitle set#####CATEGORYCLOSE#####
+lorem ipsum dolor
+
+#####CATEGORYOPEN#####Migration/Displaytitle set#####CATEGORYCLOSE#####
 TEXT;
 		$actual = $processor->process( $input );
 		$this->assertEquals( $expected, $actual );
