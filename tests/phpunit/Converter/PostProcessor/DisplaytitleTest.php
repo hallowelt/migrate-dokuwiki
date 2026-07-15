@@ -20,7 +20,7 @@ TEXT;
 
 		$expected = <<<TEXT
 <span id="test"></span>
-{{DISPLAYTITLE:Test}}
+{{DISPLAYTITLE:Test}} {{#set:pagename={{PAGENAME}} }}
 lorem ipsum dolor
 
 #####CATEGORYOPEN#####Migration/Displaytitle set#####CATEGORYCLOSE#####
@@ -36,7 +36,39 @@ TEXT;
 
 		$expected = <<<TEXT
 <span id="new-test"></span>
-{{DISPLAYTITLE:New test}}
+{{DISPLAYTITLE:New test}} {{#set:pagename={{PAGENAME}} }}
+lorem ipsum dolor
+
+#####CATEGORYOPEN#####Migration/Displaytitle set#####CATEGORYCLOSE#####
+TEXT;
+		$actual = $processor->process( $input );
+		$this->assertEquals( $expected, $actual );
+
+		$input = <<<TEXT
+<span id="arrow-test-1"></span>
+= Arrow test -> test 1 =
+lorem ipsum dolor
+TEXT;
+
+		$expected = <<<TEXT
+<span id="arrow-test-1"></span>
+{{DISPLAYTITLE:Arrow test -> test 1}} {{#set:pagename={{PAGENAME}} }}
+lorem ipsum dolor
+
+#####CATEGORYOPEN#####Migration/Displaytitle set#####CATEGORYCLOSE#####
+TEXT;
+		$actual = $processor->process( $input );
+		$this->assertEquals( $expected, $actual );
+
+		$input = <<<TEXT
+<span id="arrow-test-2"></span>
+= Arrow test -> test 2 =
+lorem ipsum dolor
+TEXT;
+
+		$expected = <<<TEXT
+<span id="arrow-test-2"></span>
+{{DISPLAYTITLE:Arrow test -> test 2}} {{#set:pagename={{PAGENAME}} }}
 lorem ipsum dolor
 
 #####CATEGORYOPEN#####Migration/Displaytitle set#####CATEGORYCLOSE#####

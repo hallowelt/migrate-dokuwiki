@@ -1,6 +1,6 @@
 
-lorem ipsum {{Tools_toolbox_hammer.01.svg?20x50}} dolor {{:Start.png|label }}
+lorem ipsum #####PRESERVEIMAGEFILEOPEN#####Tools_toolbox_hammer.01.svg#####PRESERVEIMAGEPIPE#####20x50#####PRESERVEIMAGEFILECLOSE##### dolor #####PRESERVEIMAGEFILEOPEN#####Start.png#####PRESERVEIMAGEPIPE#####left#####PRESERVEIMAGEPIPE#####label#####PRESERVEIMAGEFILECLOSE#####
 
-sit amet {{ Tools_toolbox_wrench.jpg}}
+sit amet #####PRESERVEIMAGEFILEOPEN#####Tools_toolbox_wrench.jpg#####PRESERVEIMAGEPIPE#####right#####PRESERVEIMAGEFILECLOSE#####
 
-{{ :Tools_toolbox_hammer.01.svg?600|label}}
+#####PRESERVEIMAGEFILEOPEN#####Tools_toolbox_hammer.01.svg#####PRESERVEIMAGEPIPE#####center#####PRESERVEIMAGEPIPE#####label#####PRESERVEIMAGEFILECLOSE#####

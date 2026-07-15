@@ -17,8 +17,8 @@
 
 [[File:|Example.jpg]]
 
-[[File:ABC#####preserveimagenamespace#####Example.jpg|]]
+[[File:ABC#####PRESERVEIMAGENAMESPACE#####Example.jpg|]]
 
-[[File:Test#####preserveimagenamespace#####Example.pdf]]
+[[File:Test#####PRESERVEIMAGENAMESPACE#####Example.pdf]]
 
 [[File:Example.pdf|pdf test]]

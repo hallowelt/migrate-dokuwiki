@@ -19,15 +19,24 @@ class Displaytitle implements IProcessor {
 			return $text;
 		}
 
+		$line = $lines[0];
+
 		$hasDisplayTitle = false;
 		$headingMatches = [];
-		preg_match( '#(=+)\s*(.*?)\s*(=+)#', $lines[1], $headingMatches );
+		preg_match( '#(=+)\s*(.*?)\s*(\1)$#', $line, $headingMatches );
+
 		if ( empty( $headingMatches[0] ) ) {
-			return $text;
+			$line = $lines[1];
+			preg_match( '#(=+)\s*(.*?)\s*(\1)$#', $line, $headingMatches );
+
+			if ( empty( $headingMatches[0] ) ) {
+				return $text;
+			}
 		}
 
 		if ( isset( $headingMatches[2] ) && $headingMatches[2] !== '' ) {
 			$heading = $headingMatches[2];
+
 			$replacement = $this->makeReplacement( $heading );
 			$text = str_replace( $headingMatches[0], $replacement, $text );
 			$hasDisplayTitle = true;
@@ -45,6 +54,16 @@ class Displaytitle implements IProcessor {
 	 * @return string
 	 */
 	private function makeReplacement( string $heading ): string {
-		return "{{DISPLAYTITLE:$heading}}";
+		$displayTitle = "{{DISPLAYTITLE:$heading}}";
+		$property = $this->setNameforParserfunctions();
+		return "{$displayTitle} {$property}";
+	}
+
+	/**
+	 * Allows better subpage queries if displaytitle is set.
+	 * @return void
+	 */
+	private function setNameforParserfunctions(): string {
+		return "{{#set:pagename={{PAGENAME}} }}";
 	}
 }

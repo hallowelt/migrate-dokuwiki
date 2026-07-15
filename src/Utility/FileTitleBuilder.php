@@ -8,6 +8,9 @@ class FileTitleBuilder {
 	private $titleSegments = [];
 
 	/** @var array */
+	private $pageIdToTitlesMap = [];
+
+	/** @var array */
 	private $prefixMap = [];
 
 	/** @var bool */
@@ -16,12 +19,15 @@ class FileTitleBuilder {
 	/**
 	 * @param array $paths
 	 * @param bool $history
+	 * @param array $pageIdToTitlesMap
 	 * @param array $config
 	 * @return string
 	 */
-	public function build( array $paths, bool $history = false, array $config = [] ) {
+	public function build( array $paths, bool $history = false, array $pageIdToTitlesMap = [], array $config = [] ) {
 		$this->titleSegments = [];
 		$this->prefixMap = [];
+
+		$this->pageIdToTitlesMap = $pageIdToTitlesMap;
 
 		$this->nsFileRepoCompat = $this->getNSFileRepoConfig( $config );
 
@@ -62,21 +68,7 @@ class FileTitleBuilder {
 	 * @return string
 	 */
 	private function makeTitleFromPaths( array $paths, bool $history, string $namespace = '' ): string {
-		$namespace = '';
-		if ( count( $paths ) > 1 ) {
-			$namespace = $paths[0];
-
-			if ( isset( $this->prefixMap[$namespace] ) ) {
-				$namespace = $this->prefixMap[$namespace];
-			} else {
-				$namespace = ucfirst( $paths[0] );
-				$namespace .= ':';
-			}
-
-			unset( $paths[0] );
-			$paths = array_values( $paths );
-		}
-
+		// Cut off filename
 		$filename = array_pop( $paths );
 		$filenameParts = explode( '.', $filename );
 		$fileExtension = array_pop( $filenameParts );
@@ -85,33 +77,75 @@ class FileTitleBuilder {
 		}
 		$filename = implode( '_', $filenameParts );
 
-		if ( count( $paths ) > 0 ) {
-			for ( $index = 0; $index < count( $paths ); $index++ ) {
-				if ( ( $index === count( $paths ) - 1 )
-					&& $paths[$index] === $filename ) {
-					break;
+		// Find page title for file
+		$name = '';
+		for ( $index = 0; $index < count( $paths ); $index++ ) {
+			$key = array_slice( $paths, 0, count( $paths ) - $index );
+			$key = implode( ':', $key );
+			if ( isset( $this->pageIdToTitlesMap[$key] ) ) {
+				$name = $this->pageIdToTitlesMap[$key];
+				break;
+			}
+		}
+
+		// Make array and cut off namespace
+		$namespace = '';
+		if ( $name !== '' ) {
+			$namespace = $name;
+			$title = '';
+			if ( str_contains( $namespace, ':' ) ) {
+				$namespace = substr( $name, 0, strpos( $name, ':' ) );
+				$title = substr( $name, strpos( $name, ':' ) + 1 ) . '/';
+			}
+
+			$filename = ucfirst( $filename );
+			$title .= "{$filename}.{$fileExtension}";
+		} else {
+			if ( !empty( $paths ) ) {
+				$namespace = $paths[0];
+				unset( $paths[0] );
+				$paths = array_values( $paths );
+			}
+
+			if ( isset( $this->prefixMap[$namespace] ) ) {
+				$namespace = $this->prefixMap[$namespace];
+			}
+
+			if ( !empty( $paths ) ) {
+				for ( $index = 0; $index < count( $paths ); $index++ ) {
+					if ( ( $index === count( $paths ) - 1 )
+						&& $paths[$index] === $filename ) {
+						break;
+					}
+					$this->appendTitleSegment( $paths[$index] );
 				}
-				$this->appendTitleSegment( $paths[$index] );
 			}
+			$this->appendTitleSegment( $filename );
+
+			$title = implode( '/', $this->titleSegments );
+			$title .= ".$fileExtension";
 		}
 
-		$this->appendTitleSegment( $filename );
+		// Prepend namespace
+		$namespace = trim( $namespace, ":/" );
 
-		$title = implode( '_', $this->titleSegments );
-		$title .= ".$fileExtension";
-
+		$prefix = '';
 		if ( $namespace !== '' ) {
-			$namespace = str_replace( [ ':', '/' ], '_', $namespace );
-			$namespace = trim( $namespace, '_' );
-			$prefix = $namespace . '_';
 			if ( $this->nsFileRepoCompat ) {
-				$prefix = $namespace . ':';
-				$prefix = str_replace( [ '-', ' ' ], '_', $prefix );
-				$title = ucfirst( $title );
-				$title = trim( $title, '_' );
+				$namespace = str_replace( '-', '_', $namespace );
+				if ( str_contains( $namespace, ':' ) ) {
+					$prefix = "{$namespace}_";
+				} else {
+					$prefix = "{$namespace}:";
+				}
+			} else {
+				$namespace = str_replace( ':', '_', $namespace );
+				$prefix = "{$namespace}_";
 			}
-			$title = $prefix . $title;
 		}
+
+		$title = ucfirst( $prefix ) . ucfirst( $title );
+		$title = str_replace( '/', '_', $title );
 
 		return ucfirst( $title );
 	}
@@ -139,6 +173,7 @@ class FileTitleBuilder {
 		$segment = preg_replace( '/\\//', '_', $segment );
 		// MediaWiki normalizes multiple spaces/undescores into one single underscore
 		$segment = preg_replace( '#_+#si', '_', $segment );
+		$segment = str_replace( [ '&', '?', '%', '+', ',', '__' ], '_', $segment );
 		$segment = trim( $segment, " _\t" );
 		return trim( $segment );
 	}
