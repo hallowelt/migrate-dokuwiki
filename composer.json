@@ -28,12 +28,12 @@
 		"symfony/yaml": "~4"
 	},
 	"require-dev": {
-		"mediawiki/mediawiki-codesniffer": "43.0.0",
-		"mediawiki/mediawiki-phan-config": "0.14.0",
-		"mediawiki/minus-x": "1.1.1",
-		"php-parallel-lint/php-console-highlighter": "1.0.0",
-		"php-parallel-lint/php-parallel-lint": "1.4.0",
-		"phpunit/phpunit": "^8"
+		"mediawiki/mediawiki-codesniffer": "^45.0",
+		"mediawiki/mediawiki-phan-config": "^0.14",
+		"mediawiki/minus-x": "^1.1",
+		"php-parallel-lint/php-console-highlighter": "^1.0",
+		"php-parallel-lint/php-parallel-lint": "^1.4",
+		"phpunit/phpunit": "^9.5"
 	},
 	"autoload": {
 		"psr-4": {
