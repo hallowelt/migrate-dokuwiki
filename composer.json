@@ -25,7 +25,7 @@
 		"hallowelt/mediawiki-lib-migration": "~1",
 		"hallowelt/mediawiki-lib-wikitext": "~1",
 		"ext-dom": "*",
-		"symfony/yaml": "~4"
+		"symfony/yaml": "^7.0"
 	},
 	"require-dev": {
 		"mediawiki/mediawiki-codesniffer": "^45.0",

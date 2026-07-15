@@ -184,7 +184,7 @@ class DokuwikiExtractor implements IExtractor, IOutputAwareInterface {
 			$doubleId = implode( ':', $doubleId );
 			$this->dataBuckets->addData( 'page-id-to-title-map', $id, $title, false, true );
 
-      $this->output->writeln( "\t - $id: $title" );
+			$this->output->writeln( "\t - $id: $title" );
 		}
 
 		return $pageIdToTitlesMap;
