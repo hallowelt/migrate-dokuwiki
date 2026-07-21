@@ -74,9 +74,10 @@ class DokuwikiConverter extends PandocDokuwiki implements IOutputAwareInterface 
 	 * @return array
 	 */
 	private function getProcessors(): array {
+		$titleMap = $this->buildTitleMapWithAliases();
 		return [
-			new PreserveInclude( $this->dataBuckets->getBucketData( 'page-id-to-title-map' ) ),
-			new Link( $this->dataBuckets->getBucketData( 'page-id-to-title-map' ) ),
+			new PreserveInclude( $titleMap ),
+			new Link( $titleMap ),
 			new ImageProcessor( $this->dataBuckets->getBucketData( 'media-id-to-title-map' ), $this->advancedConfig )
 		];
 	}
@@ -117,6 +118,7 @@ class DokuwikiConverter extends PandocDokuwiki implements IOutputAwareInterface 
 			'attic-media-map',
 			'page-id-to-title-map',
 			'media-id-to-title-map',
+			'start-page-aliases',
 			// From this step
 		];
 	}
@@ -145,6 +147,24 @@ class DokuwikiConverter extends PandocDokuwiki implements IOutputAwareInterface 
 	 */
 	public function setOutput( Output $output ) {
 		$this->output = $output;
+	}
+
+	/**
+	 * Returns the page title map enriched with start-page aliases so that links
+	 * like [[foo:start]] resolve correctly when foo/start.txt was treated as the
+	 * namespace main page (no conflicting foo.txt present).
+	 *
+	 * @return array
+	 */
+	private function buildTitleMapWithAliases(): array {
+		$titleMap = $this->dataBuckets->getBucketData( 'page-id-to-title-map' );
+		$aliases = $this->dataBuckets->getBucketData( 'start-page-aliases' );
+		foreach ( $aliases as $aliasId => $canonicalId ) {
+			if ( isset( $titleMap[$canonicalId] ) ) {
+				$titleMap[$aliasId] = $titleMap[$canonicalId];
+			}
+		}
+		return $titleMap;
 	}
 
 	/**

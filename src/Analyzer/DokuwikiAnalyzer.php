@@ -62,6 +62,7 @@ class DokuwikiAnalyzer
 			'page-changes-map',
 			'attic-pages-map',
 			'attic-media-map',
+			'start-page-aliases',
 		] );
 		$this->logger = new NullLogger();
 		$this->titleKeyBuilder = new TitleKeyBuilder();
@@ -212,6 +213,8 @@ class DokuwikiAnalyzer
 			// .txt is a direct child of pages directory.
 			// It has to result in a page in NS_MAIN or it is the main page of a namespace.
 			$this->namespaceMainpage( $paths, $file );
+		} else {
+			$this->handleStartPage( $paths, $file );
 		}
 
 		$key = $this->makeTitleKey( $paths );
@@ -246,6 +249,8 @@ class DokuwikiAnalyzer
 		$timestamp = array_pop( $parts );
 		$parts[] = $extension;
 		$paths[$lastKey] = implode( '.', $parts );
+
+		$this->handleStartPage( $paths, $file );
 
 		$key = $this->makeTitleKey( $paths );
 		$this->output->writeln( "Add attic page revision: {$file->getRealPath()}" );
@@ -305,6 +310,47 @@ class DokuwikiAnalyzer
 			$this->output->writeln( "Add changes: {$file->getRealPath()}" );
 			$this->dataBuckets->addData( 'page-changes-map', $key, $file->getPathname(), true, true );
 		}
+	}
+
+	/**
+	 * When foo/start.txt exists without a sibling foo.txt, treat it as the namespace
+	 * main page (equivalent to foo.txt with a foo/ directory). Stores an alias so that
+	 * links like [[foo:start]] resolve to the same page.
+	 * When both foo.txt and foo/start.txt exist, keep start.txt as a separate page.
+	 *
+	 * @param array &$paths
+	 * @param SplFileInfo $file
+	 * @return void
+	 */
+	private function handleStartPage( array &$paths, SplFileInfo $file ): void {
+		if ( count( $paths ) < 2 || $paths[ count( $paths ) - 1 ] !== 'start.txt' ) {
+			return;
+		}
+		if ( file_exists( $this->getStartPageSiblingPath( $file ) ) ) {
+			// Both foo.txt and foo/start.txt exist → keep start.txt as separate page
+			return;
+		}
+		$originalKey = $this->makeTitleKey( $paths );
+		$namespaceName = $paths[ count( $paths ) - 2 ];
+		$paths[ count( $paths ) - 1 ] = $namespaceName . '.txt';
+		$this->dataBuckets->addData( 'start-page-aliases', $originalKey, $this->makeTitleKey( $paths ), false, true );
+	}
+
+	/**
+	 * Returns the path of the sibling foo.txt that would conflict with foo/start.txt.
+	 * Translates attic paths to the corresponding pages path for the check.
+	 *
+	 * @param SplFileInfo $file
+	 * @return string
+	 */
+	private function getStartPageSiblingPath( SplFileInfo $file ): string {
+		$namespaceDir = dirname( $file->getPathname() );
+		$namespaceName = basename( $namespaceDir );
+		$containingDir = dirname( $namespaceDir );
+		// Translate attic/ to pages/ so history files check against current pages
+		$containingDir = str_replace( '/attic/', '/pages/', $containingDir . '/' );
+		$containingDir = rtrim( $containingDir, '/' );
+		return $containingDir . '/' . $namespaceName . '.txt';
 	}
 
 	/**
