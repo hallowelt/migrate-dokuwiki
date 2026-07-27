@@ -171,6 +171,8 @@ class FileTitleBuilder {
 		$segment = preg_replace( static::getTitleInvalidRegex(), '_', $segment );
 		// Slash is usually a legal char, but not in the segment
 		$segment = preg_replace( '/\\//', '_', $segment );
+		// Colon creates namespace separators in MediaWiki; not valid inside a title segment
+		$segment = str_replace( ':', '_', $segment );
 		// MediaWiki normalizes multiple spaces/undescores into one single underscore
 		$segment = preg_replace( '#_+#si', '_', $segment );
 		$segment = str_replace( [ '&', '?', '%', '+', ',', '__' ], '_', $segment );
