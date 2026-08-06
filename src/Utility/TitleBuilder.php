@@ -85,10 +85,6 @@ class TitleBuilder {
 		$subpageText = array_pop( $paths );
 
 		for ( $index = 0; $index < count( $paths ); $index++ ) {
-			if ( ( $index === count( $paths ) - 1 )
-				&& $paths[$index] === $subpageText ) {
-				break;
-			}
 			$this->appendTitleSegment( $paths[$index] );
 		}
 
